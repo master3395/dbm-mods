@@ -245,113 +245,116 @@ module.exports = {
   // so be sure to provide checks for variable existence.
   // ---------------------------------------------------------------------
   async action(cache) {
-    const data = cache.actions[cache.index];
-    const msg = await this.getMessageFromData(
-      data.message,
-      data.varName,
-      cache,
-    );
+    try {
+      const data = cache.actions[cache.index];
+      const msg = await this.getMessageFromData(
+        data.message,
+        data.varName,
+        cache
+      );
 
-    if (!msg) {
-      this.callNextAction(cache);
-      return;
+      if (!msg) {
+        this.callNextAction(cache);
+        return;
+      }
+
+      const info = parseInt(data.info, 10);
+      let result;
+      switch (info) {
+        case 0:
+          result = msg;
+          break;
+        case 1:
+          result = msg.id;
+          break;
+        case 2:
+          result = msg.content;
+          break;
+        case 3:
+          result = msg.member ?? msg.author;
+          break;
+        case 4:
+          result = msg.channel;
+          break;
+        case 5:
+          result = msg.createdTimestamp;
+          break;
+        case 6:
+          result = msg.pinned;
+          break;
+        case 7:
+          result = msg.tts;
+          break;
+        case 8:
+          result = [...msg.attachments.values()];
+          break;
+        case 9:
+          result = msg.edits;
+          break;
+        case 12:
+          result = msg.reactions.cache.size;
+          break;
+        case 13:
+          result = [...msg.mentions.users.values()];
+          break;
+        case 14:
+          result = msg.mentions.users.size;
+          break;
+        case 15:
+          result = msg.url;
+          break;
+        case 16:
+          result = msg.createdAt;
+          break;
+        case 17:
+          result = msg.content.length;
+          break;
+        case 18:
+          result = msg.attachments.size;
+          break;
+        case 19:
+          result = msg.guild;
+          break;
+        case 20:
+          result = msg.type;
+          break;
+        case 21:
+          result = msg.webhookId;
+          break;
+        case 22:
+          result = msg.embeds[0];
+          break;
+        case 23:
+          result = msg.reference;
+          break;
+        case 24:
+          result = msg.reference?.messageId;
+          break;
+        case 25:
+          result = msg.reference?.channelId;
+          break;
+        case 26:
+          result = msg.reference?.guildId;
+          break;
+        case 27:
+          result = msg.type === 'REPLY' && msg.reference?.messageId !== undefined;
+          break;
+        case 28:
+          result = msg.stickers ? msg.stickers.size : 0;
+          break;
+        default:
+          result = undefined;
+          break;
+      }
+
+      if (result !== undefined) {
+        const storage = parseInt(data.storage, 10);
+        const varName2 = this.evalMessage(data.varName2, cache);
+        this.storeValue(result, storage, varName2, cache);
+      }
+    } catch (error) {
+      console.error('Error in Store Message Info action:', error);
     }
-
-    const info = parseInt(data.info, 10);
-
-    let result;
-    switch (info) {
-      case 0:
-        result = msg;
-        break;
-      case 1:
-        result = msg.id;
-        break;
-      case 2:
-        result = msg.content;
-        break;
-      case 3:
-        result = msg.member ?? msg.author;
-        break;
-      case 4:
-        result = msg.channel;
-        break;
-      case 5:
-        result = msg.createdTimestamp;
-        break;
-      case 6:
-        result = msg.pinned;
-        break;
-      case 7:
-        result = msg.tts;
-        break;
-      case 8:
-        result = [...msg.attachments.values()];
-        break;
-      case 9:
-        result = msg.edits;
-        break;
-      case 12:
-        result = msg.reactions.cache.size;
-        break;
-      case 13:
-        result = [...msg.mentions.users.values()];
-        break;
-      case 14:
-        result = msg.mentions.users.size;
-        break;
-      case 15:
-        result = msg.url;
-        break;
-      case 16:
-        result = msg.createdAt;
-        break;
-      case 17:
-        result = msg.content.length;
-        break;
-      case 18:
-        result = msg.attachments.size;
-        break;
-      case 19:
-        result = msg.guild;
-        break;
-      case 20:
-        result = msg.type;
-        break;
-      case 21:
-        result = msg.webhookId;
-        break;
-      case 22:
-        result = msg.embeds[0];
-        break;
-      case 23:
-        result = msg.reference;
-        break;
-      case 24:
-        result = msg.reference?.messageId;
-        break;
-      case 25:
-        result = msg.reference?.channelId;
-        break;
-      case 26:
-        result = msg.reference?.guildId;
-        break;
-      case 27:
-        result = msg.type === 'REPLY' && msg.reference?.messageId !== undefined;
-        break;
-      case 28: // Added case for storing sticker count
-        result = msg.stickers ? msg.stickers.size : 0;
-        break;
-      default:
-        break;
-    }
-
-    if (result !== undefined) {
-      const storage = parseInt(data.storage, 10);
-      const varName2 = this.evalMessage(data.varName2, cache);
-      this.storeValue(result, storage, varName2, cache);
-    }
-
     this.callNextAction(cache);
   },
 
