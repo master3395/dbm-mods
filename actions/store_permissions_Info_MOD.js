@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store Permissions Info',
   section: 'Permission Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -168,19 +168,19 @@ module.exports = {
         result = permissions.disallow.toArray();
         break;
       case 4:
-        result = permissions.allow.has('ADMINISTRATOR');
+        result = permissions.allow.has('Administrator');
         break;
       case 5:
-        result = permissions.allow.has('VIEW_AUDIT_LOG');
+        result = permissions.allow.has('ViewAuditLog');
         break;
       case 6:
-        result = permissions.allow.has('MANAGE_GUILD');
+        result = permissions.allow.has('ManageGuild');
         break;
       case 7:
-        result = permissions.allow.has('MANAGE_ROLES');
+        result = permissions.allow.has('ManageRoles');
         break;
       case 8:
-        result = permissions.allow.has('MANAGE_CHANNELS');
+        result = permissions.allow.has('ManageChannels');
         break;
       case 9:
         result = permissions.allow.has('KICK_MEMBERS');
@@ -195,67 +195,67 @@ module.exports = {
         result = permissions.allow.has('CHANGE_NICKNAME');
         break;
       case 13:
-        result = permissions.allow.has('MANAGE_NICKNAMES');
+        result = permissions.allow.has('ManageNicknames');
         break;
       case 14:
         result = permissions.allow.has('MANAGE_EMOJIS');
         break;
       case 15:
-        result = permissions.allow.has('MANAGE_WEBHOOKS');
+        result = permissions.allow.has('ManageWebhooks');
         break;
       case 16:
-        result = permissions.allow.has('VIEW_CHANNEL');
+        result = permissions.allow.has('ViewChannel');
         break;
       case 17:
-        result = permissions.allow.has('SEND_MESSAGES');
+        result = permissions.allow.has('SendMessages');
         break;
       case 18:
-        result = permissions.allow.has('SEND_TTS_MESSAGES');
+        result = permissions.allow.has('SendTTSMessages');
         break;
       case 19:
-        result = permissions.allow.has('MANAGE_MESSAGES');
+        result = permissions.allow.has('ManageMessages');
         break;
       case 20:
-        result = permissions.allow.has('EMBED_LINKS');
+        result = permissions.allow.has('EmbedLinks');
         break;
       case 21:
-        result = permissions.allow.has('ATTACH_FILES');
+        result = permissions.allow.has('AttachFiles');
         break;
       case 22:
-        result = permissions.allow.has('READ_MESSAGE_HISTORY');
+        result = permissions.allow.has('ReadMessageHistory');
         break;
       case 23:
-        result = permissions.allow.has('MENTION_EVERYONE');
+        result = permissions.allow.has('MentionEveryone');
         break;
       case 24:
-        result = permissions.allow.has('USE_EXTERNAL_EMOJIS');
+        result = permissions.allow.has('UseExternalEmojis');
         break;
       case 25:
-        result = permissions.allow.has('ADD_REACTIONS');
+        result = permissions.allow.has('AddReactions');
         break;
       case 26:
-        result = permissions.allow.has('CONNECT');
+        result = permissions.allow.has('Connect');
         break;
       case 27:
-        result = permissions.allow.has('SPEAK');
+        result = permissions.allow.has('Speak');
         break;
       case 28:
-        result = permissions.allow.has('STREAM');
+        result = permissions.allow.has('Stream');
         break;
       case 29:
-        result = permissions.allow.has('MUTE_MEMBERS');
+        result = permissions.allow.has('MuteMembers');
         break;
       case 30:
-        result = permissions.allow.has('DEAFEN_MEMBERS');
+        result = permissions.allow.has('DeafenMembers');
         break;
       case 31:
-        result = permissions.allow.has('MOVE_MEMBERS');
+        result = permissions.allow.has('MoveMembers');
         break;
       case 32:
-        result = permissions.allow.has('USE_VAD');
+        result = permissions.allow.has('UseVAD');
         break;
       case 33:
-        result = permissions.allow.has('PRIORITY_SPEAKER');
+        result = permissions.allow.has('PrioritySpeaker');
         break;
       default:
         break;

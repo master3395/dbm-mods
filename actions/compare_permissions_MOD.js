@@ -3,7 +3,7 @@ module.exports = {
 
   section: 'Permission Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -52,18 +52,18 @@ module.exports = {
     const storage2 = parseInt(data.storage2, 10);
     let newPermissions = this.getVariable(storage2, varName2, cache);
 
-    if (oldPermissions.allow && oldPermissions.allow.bitfield) {
+    if (oldPermissions && oldPermissions.allow && oldPermissions.allow.bitfield) {
       oldPermissions = oldPermissions.allow;
     } else if (!isNaN(oldPermissions)) {
       oldPermissions = new Permissions(oldPermissions);
     }
-    if (newPermissions.allow && newPermissions.allow.bitfield) {
+    if (newPermissions && newPermissions.allow && newPermissions.allow.bitfield) {
       newPermissions = newPermissions.allow;
     } else if (!isNaN(newPermissions)) {
       newPermissions = new Permissions(newPermissions);
     }
 
-    if (oldPermissions.bitfield && newPermissions.bitfield) {
+    if (oldPermissions && oldPermissions.bitfield && newPermissions && newPermissions.bitfield) {
       try {
         const result = newPermissions.missing(oldPermissions.bitfield);
         const storage3 = parseInt(data.storage3, 10);
@@ -73,14 +73,12 @@ module.exports = {
       } catch (err) {
         console.error(err);
       }
-    } else if (!oldPermissions.bitfield && !newPermissions.bitfield) {
-      console.error('Old permissions and new permissions not found.');
-    } else if (!oldPermissions.bitfield) {
+    } else if (!oldPermissions || !oldPermissions.bitfield) {
       console.error('Old permissions not found.');
-    } else if (!newPermissions.bitfield) {
+    } else if (!newPermissions || !newPermissions.bitfield) {
       console.error('New permissions not found.');
     } else {
-      console.error('Something error!!!');
+      console.error('Something errorBoolean(!');
     }
   },
 

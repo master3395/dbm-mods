@@ -16,7 +16,7 @@ module.exports = {
       if (Bot.$evts['Invite Used']) {
         setTimeout(() => {
           Bot.bot.guilds.cache.forEach(async (guild) => {
-            if (guild.me.permissions.has('MANAGE_GUILD')) {
+            if (guild.me.permissions.has('ManageGuild')) {
               const serverinvites = await guild.invites.fetch();
               invites.set(guild.id, new Collection(serverinvites.map((invite) => [invite.code, invite.uses])));
             }
@@ -24,7 +24,7 @@ module.exports = {
         }, 1000).unref();
 
         Bot.bot.on('guildMemberAdd', async (member) => {
-          if (member.guild.me.permissions.has('MANAGE_GUILD')) {
+          if (member.guild.me.permissions.has('ManageGuild')) {
             const newinvites = await member.guild.invites.fetch();
             const oldinvites = invites.get(member.guild.id);
             const invite = newinvites.find((i) => i.uses > oldinvites.get(i.code));
@@ -38,19 +38,19 @@ module.exports = {
         });
 
         Bot.bot.on('inviteDelete', (invite) => {
-          if (invite.guild.members.me.permissions.has('MANAGE_GUILD')) {
+          if (invite.guild.members.me.permissions.has('ManageGuild')) {
             invites.get(invite.guild.id).delete(invite.code);
           }
         });
 
         Bot.bot.on('inviteCreate', (invite) => {
-          if (invite.guild.members.me.permissions.has('MANAGE_GUILD')) {
+          if (invite.guild.members.me.permissions.has('ManageGuild')) {
             invites.get(invite.guild.id).set(invite.code, invite.uses);
           }
         });
 
         Bot.bot.on('guildCreate', (guild) => {
-          if (guild.members.me.permissions.has('MANAGE_GUILD')) {
+          if (guild.members.me.permissions.has('ManageGuild')) {
             guild.invites.fetch().then((guildInvites) => {
               invites.set(guild.id, new Map(guildInvites.map((invite) => [invite.code, invite.uses])));
             });
@@ -64,8 +64,8 @@ module.exports = {
         Bot.bot.on('roleUpdate', (oldrole, newrole) => {
           if (!newrole.tags || !newrole.tags.botId) return;
           if (newrole.tags.botId === Bot.bot.user.id) {
-            const oldroleperms = oldrole.permissions.has('MANAGE_GUILD');
-            const newroleperms = newrole.permissions.has('MANAGE_GUILD');
+            const oldroleperms = oldrole.permissions.has('ManageGuild');
+            const newroleperms = newrole.permissions.has('ManageGuild');
             if (!oldroleperms && newroleperms) {
               newrole.guild.invites.fetch().then((guildInvites) => {
                 invites.set(newrole.guild.id, new Map(guildInvites.map((invite) => [invite.code, invite.uses])));

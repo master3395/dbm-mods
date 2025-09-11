@@ -2,7 +2,7 @@ module.exports = {
   name: 'Custom Image Effects',
   section: 'Image Editing',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -34,7 +34,7 @@ module.exports = {
       <option value="1">Custom Pixelate</option>
     </select><br>
   </div>
-  <div id="intensityContainer" style="float: left; width: 50%;">
+  <div id="intensityContainer" style="float: left; width: 35%;">
     <span class="dbminputlabel">Intensity</span>
     <input id="intensity" class="round" type="text"><br>
   </div>

@@ -2,7 +2,7 @@ module.exports = {
   name: 'Create Webhook',
   section: 'Webhook Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -22,13 +22,13 @@ module.exports = {
 
   html() {
     return `
-<div style="width: 90%;">
+<div >
   <span class="dbminputlabel">Webhook Name</span>
   <input id="webhookName" class="round" type="text">
 </div>
 <br>
 
-<div style="width: 90%;">
+<div >
   <span class="dbminputlabel">Webhook Icon URL</span>
   <input id="webhookIcon" class="round" type="text">
 </div>

@@ -2,7 +2,7 @@ module.exports = {
   name: 'Canvas Draw Image on Image',
   section: 'Image Editing',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -26,7 +26,7 @@ module.exports = {
     <br><br><br>
 
 <div style="padding-top: 8px;">
-  <div style="float: left; width: 50%;">
+  <div style="float: left; width: 35%;">
     <span class="dbminputlabel">X Position</span>
     <input id="x" class="round" type="text" value="0"><br>
   </div>

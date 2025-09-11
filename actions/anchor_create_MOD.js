@@ -2,7 +2,7 @@ module.exports = {
   name: 'Create Anchor',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -36,7 +36,7 @@ module.exports = {
 </div>
 <div style="float: left; width: 24%;">
   <span class="dbminputlabel">Anchor Color</span>
-  <input type="color" id="color"><br>
+  <input type="color" id="color" style="width: 30%;"><br>
 </div>
 <div>
   <div style="float: left; width: 98%;">

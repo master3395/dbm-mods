@@ -2,7 +2,7 @@ module.exports = {
   name: 'Create Stage Voice Channel',
   section: 'Channel Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -58,7 +58,7 @@ module.exports = {
     if (!server?.channels) return this.callNextAction(cache);
     const name = this.evalMessage(data.channelName, cache);
     const storage = parseInt(data.storage, 10);
-    const channelData = { type: 'GUILD_STAGE_VOICE' };
+    const channelData = { type: 'GuildStageVoice' };
     if (data.reason) {
       channelData.reason = this.evalMessage(data.reason, cache);
     }

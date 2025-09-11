@@ -2,7 +2,7 @@ module.exports = {
   name: 'Find Category',
   section: 'Channel Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -95,7 +95,7 @@ module.exports = {
     const data = cache.actions[cache.index];
     const info = parseInt(data.info, 10);
     const find = this.evalMessage(data.find, cache);
-    const channels = server.channels.cache.filter((s) => s.type === 'GUILD_CATEGORY');
+    const channels = server.channels.cache.filter((s) => s.type === 'GuildCategory');
     let result;
 
     switch (info) {

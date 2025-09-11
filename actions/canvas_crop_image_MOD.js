@@ -2,7 +2,7 @@ module.exports = {
   name: 'Canvas Crop Image',
   section: 'Image Editing',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -22,7 +22,7 @@ module.exports = {
 <br><br><br>
 
 <div>
-  <div style="float: left; width: 50%;">
+  <div style="float: left; width: 35%;">
     <span class="dbminputlabel">Crop Width (direct size or percent)</span>
     <input id="width" class="round" type="text" value="100%"><br>
   </div>
@@ -66,7 +66,7 @@ module.exports = {
 <br><br>
 
 <div id="position" style="display: none">
-  <div style="float: left; width: 50%;">
+  <div style="float: left; width: 35%;">
     <span class="dbminputlabel">Position X</span>
     <input id="positionx" class="round" type="text" value="0"><br>
   </div>

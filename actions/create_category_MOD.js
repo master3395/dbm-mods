@@ -2,7 +2,7 @@ module.exports = {
   name: 'Create Category Channel',
   section: 'Channel Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -27,9 +27,9 @@ module.exports = {
     <input id="channelName" class="round" type="text"><br>
   </div>
 
-<div style="float: left; width: 50%;">
+<div style="float: left; width: 35%;">
   <span class="dbminputlabel">Position</span>
-  <input id="position" class="round" type="text" placeholder="Leave blank for default!" style="width: 90%;"><br>
+  <input id="position" class="round" type="text" placeholder="Leave blank for default!" ><br>
 </div>
 <br><br><br><br>
 
@@ -49,7 +49,7 @@ module.exports = {
     const position = this.evalMessage(data.position, cache);
     const storage = parseInt(data.storage, 10);
     server.channels
-      .create(name, { type: 'GUILD_CATEGORY' })
+      .create({ name, type: 'GuildCategory' })
       .then((channel) => {
         channel.setPosition(position);
         const varName = this.evalMessage(data.varName, cache);

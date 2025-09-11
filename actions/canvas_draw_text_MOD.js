@@ -2,7 +2,7 @@ module.exports = {
   name: 'Canvas Draw Text on Image',
   section: 'Image Editing',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -20,12 +20,12 @@ module.exports = {
     <store-in-variable dropdownLabel="Source Image" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
     <br><br><br>
 
-<div style="float: left; width: 50%;">
+<div style="float: left; width: 35%;">
   <span class="dbminputlabel">Local Font URL</span>
   <input id="fontPath" class="round" type="text" value="fonts/"><br>
 
   <span class="dbminputlabel">Alignment</span>
-  <select id="align" class="round" style="width: 90%;">
+  <select id="align" class="round" >
     <option value="0" selected>Top Left</option>
     <option value="1">Top Center</option>
     <option value="2">Top Right</option>

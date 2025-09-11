@@ -2,7 +2,7 @@ module.exports = {
   name: 'Math Operation Plus',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -47,7 +47,7 @@ module.exports = {
 
   html() {
     return `
-<div id="FirstNum" style="width: 90%;">
+<div id="FirstNum" >
   <span class="dbminputlabel">First Number</span>
   <input id="FirstNumber" class="round" type="text">
 </div>
@@ -83,7 +83,7 @@ module.exports = {
 </div>
 <br>
 
-<div id="SecondNum" style="width: 90%;">
+<div id="SecondNum" >
   <span class="dbminputlabel">Second Number</span>
   <input id="SecondNumber" class="round" type="text">
   <br>

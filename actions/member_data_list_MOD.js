@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store Member Data List',
   section: 'Member Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -38,7 +38,7 @@ module.exports = {
 <div id="wrexdiv2" style="width: 550px; height: 350px; overflow-y: scroll;">
   <div>
     <div style="padding-top: 8px;">
-      <div style="float: left; width: 50%;">
+      <div style="float: left; width: 35%;">
         <span class="dbminputlabel">Data Name</span>
         <input id="dataName" class="round" type="text">
       </div>
@@ -85,7 +85,7 @@ module.exports = {
 
     </div>
     <div>
-      <select id="sort" class="round" style="width: 90%;">
+      <select id="sort" class="round" >
         <option value="0" selected>Don't Sort</option>
         <option value="1" selected>Sort from Descending</option>
         <option value="2">Sort from Ascending</option>
@@ -93,7 +93,7 @@ module.exports = {
     </div>
     <br>
     
-    <div style="float: left; width: 50%;">
+    <div style="float: left; width: 35%;">
       <span class="dbminputlabel">Result Limit</span>
       <input id="getresults" class="round" type="text" placeholder="If blank it gets all results.">
     </div>
@@ -105,7 +105,7 @@ module.exports = {
   </div>
   <br><br><br>
 
-  <select id="debu" class="round" style="width: 90%;">
+  <select id="debu" class="round" >
     <option value="0" selected>Debug</option>
     <option value="1" selected>Don't Debug</option>
   </select>

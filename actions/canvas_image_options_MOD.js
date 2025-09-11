@@ -2,7 +2,7 @@ module.exports = {
   name: 'Canvas Image Options',
   section: 'Image Editing',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -36,7 +36,7 @@ module.exports = {
   </div>
 </div><br><br><br>
 <div style="padding-top: 8px;">
-  <div style="float: left; width: 50%;">
+  <div style="float: left; width: 35%;">
     <span class="dbminputlabel">Scale Width (direct size or percent)</span>
     <input id="width" class="round" type="text" value="100%"><br>
   </div>

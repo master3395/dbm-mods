@@ -2,7 +2,7 @@ module.exports = {
   name: 'Convert to Base64',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -23,7 +23,7 @@ module.exports = {
   html() {
     return `
     <div style="float: left; width: 100%">
-      <div style="float: left; width: 50%;">
+      <div style="float: left; width: 35%;">
         <span class="dbminputlabel">Options</span>
         <select id="info" class="round">
           <option value="0" selected>Encode</option>

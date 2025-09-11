@@ -3,7 +3,7 @@ module.exports = {
 
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -37,7 +37,7 @@ module.exports = {
   </div>
   <br>
   
-  <div style="float: left; width: 50%;">
+  <div style="float: left; width: 35%;">
     <span class="dbminputlabel">SMTP Server</span>
     <input id="hostname" class="round" type="text">
   </div>
@@ -52,11 +52,11 @@ module.exports = {
       <option value="no">no</option>
     </select>
   </div>
-  <div style="float: left; width: 50%;">
+  <div style="float: left; width: 35%;">
     <span class="dbminputlabel">Username</span>
     <input id="username" class="round" type="text">
   </div>
-  <div style="float: left; width: 50%;">
+  <div style="float: left; width: 35%;">
     <span class="dbminputlabel">Password</span>
     <input id="password" type="password" class="round" type="text">
   </div>
@@ -68,7 +68,7 @@ module.exports = {
   </div>
   <br><br><br>
   
-  <div style="float: left; width: 50%;">
+  <div style="float: left; width: 35%;">
     <span class="dbminputlabel">Subject</span>
     <input id="subject" class="round" type="text" name="is-eval"><br>
   </div>

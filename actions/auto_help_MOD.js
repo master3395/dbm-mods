@@ -2,7 +2,7 @@ module.exports = {
   name: 'Auto Help',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -24,7 +24,7 @@ module.exports = {
     <a href="https://www.silversunset.net/paste/raw/230" target="_blank">This RAW DATA</a> is <b>required</b> to use this mod.<br>
   </p>
 </div><br>
-<div style="float: left; width: 99%;">
+<div style="float: left;">
   <span class="dbminputlabel">Category</span>
   <input id="Category" class="round" type="text" style="width:99%"><br>
   <span class="dbminputlabel">Description</span>

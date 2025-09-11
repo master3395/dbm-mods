@@ -2,7 +2,7 @@ module.exports = {
   name: 'Send File To Webhook',
   section: 'Webhook Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -23,7 +23,7 @@ module.exports = {
   html() {
     return `
 <div style="padding-top: 8px;">
-  <store-in-variable dropdownLabel="Source Webhook" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
+  <retrieve-from-variable dropdownLabel="Source Webhook" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
 </div>
 <br><br><br>
 

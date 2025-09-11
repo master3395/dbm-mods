@@ -2,7 +2,7 @@ module.exports = {
   name: 'Convert To World Time',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -23,7 +23,7 @@ module.exports = {
   html() {
     return `
 <div>
-  <div style="width: 90%;">
+  <div >
     <span class="dbminputlabel">Timezone To Convert</span>
     <input id="textbox" class="round" type="text">
   </div>

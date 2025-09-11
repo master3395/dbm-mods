@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store Category Info',
   section: 'Channel Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -178,20 +178,20 @@ module.exports = {
       case 8:
         result = [
           ...targetCategory.children
-            .filter((c) => ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(c.type))
+            .filter((c) => ['GuildText', 'GUILD_NEWS', 'GUILD_STORE'].includes(c.type))
             .values(),
         ]; // Category Text Channel List
         break;
       case 9:
         result = targetCategory.children.filter((c) =>
-          ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(c.type),
+          ['GuildText', 'GUILD_NEWS', 'GUILD_STORE'].includes(c.type),
         ).size; // Category Text Channel Count
         break;
       case 10:
-        result = [...targetCategory.children.filter((c) => c.type === 'GUILD_VOICE').values()]; // Category Voice Channel List
+        result = [...targetCategory.children.filter((c) => c.type === 'GuildVoice').values()]; // Category Voice Channel List
         break;
       case 11:
-        result = targetCategory.children.filter((c) => c.type === 'GUILD_VOICE').size; // Category Voice Channel Count
+        result = targetCategory.children.filter((c) => c.type === 'GuildVoice').size; // Category Voice Channel Count
         break;
       default:
         break;

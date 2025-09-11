@@ -2,7 +2,7 @@ module.exports = {
   name: 'Basic Math Operation',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -23,7 +23,7 @@ module.exports = {
 
   html() {
     return `
-<div style="width: 90%;">
+<div >
   <span class="dbminputlabel">First Number</span>
   <input id="FirstNumber" class="round" type="text">
 </div><br>
@@ -37,7 +37,7 @@ module.exports = {
       <option value="3">Division</option>
   </select>
 </div><br>
-<div style="width: 90%;">
+<div >
   <span class="dbminputlabel">Second Number</span>
   <input id="SecondNumber" class="round" type="text">
 </div>

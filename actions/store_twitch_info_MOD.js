@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store Twitch Info',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -1044,7 +1044,7 @@ module.exports = {
               break;
             }
             default:
-              console.log('Please update mod or the input from dbm!!!');
+              console.log('Please update mod or the input from dbmBoolean(!');
           }
           this.storeValue(result, storage, varName, cache);
         } else if (json && json.message) {

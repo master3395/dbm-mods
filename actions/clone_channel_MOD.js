@@ -3,7 +3,7 @@ module.exports = {
   displayName: 'Clone Channel',
   section: 'Channel Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -154,14 +154,14 @@ module.exports = {
       defaultReactionEmoji: channel.defaultReactionEmoji,
     };
 
-    if (channel.type === 'GUILD_VOICE') {
+    if (channel.type === 'GuildVoice') {
       Object.assign(options, {
         userLimit: data.userLimit === '1' ? channel.userLimit : 0,
         bitrate: data.bitrate === '1' ? channel.bitrate : undefined,
         rtcRegion: channel.rtcRegion,
         videoQualityMode: channel.videoQualityMode,
       });
-    } else if (channel.type === 'GUILD_TEXT') {
+    } else if (channel.type === 'GuildText') {
       Object.assign(options, {
         topic: data.topic === '1' ? channel.topic : undefined,
         defaultAutoArchiveDuration: channel.defaultAutoArchiveDuration,
