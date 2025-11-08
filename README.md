@@ -1,7 +1,6 @@
 <p align="center">
   <a title="DBM Mods" href="https://discord.gg/djcvWRpgHm" target="_blank">
-    <img src="https://dl.dropboxusercontent.com/s/h1bscek2emoa1p2/mods-logo-dark.png" width="200" alt="DBM Mods" />
-  </a>
+  </a><img width="80" height="80" alt="DBM-Mods" src="https://github.com/user-attachments/assets/95f2a9da-e476-42f7-bb5b-4c0a9f0c71c7" />
 </p>
 <p align="center">
   <a title="Contributors" href="https://github.com/dbm-network/mods/contributors" target="_blank">
