@@ -1,6 +1,6 @@
 <p align="center">
   <a title="DBM Mods" href="https://discord.gg/djcvWRpgHm" target="_blank">
-    </a><img width="80" height="80" alt="DBM-Mods" src="https://github.com/user-attachments/assets/95f2a9da-e476-42f7-bb5b-4c0a9f0c71c7" />
+    <img width="80" height="80" alt="DBM-Mods" src="https://github.com/user-attachments/assets/95f2a9da-e476-42f7-bb5b-4c0a9f0c71c7" />
   </a>
 </p>
 <p align="center">
