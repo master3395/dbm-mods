@@ -6,7 +6,7 @@ module.exports = {
   section: 'File Stuff',
   fields: ['filepath', 'action', 'title', 'contentTitle', 'contentText', 'newTitle', 'oldTitle', 'deleteContentTitle'],
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',

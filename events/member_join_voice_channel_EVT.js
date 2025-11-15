@@ -27,7 +27,9 @@ module.exports = {
     const { onReady } = Bot;
     Bot.onReady = function memberJoinVoiceChannelOnReady(...params) {
       Bot.bot.on('voiceStateUpdate', DBM.Events.memberJoinVoiceChannel);
-      onReady.apply(this, ...params);
+      if (typeof onReady === 'function') {
+        onReady.apply(this, params);
+      }
     };
   },
 };

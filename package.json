@@ -1,6 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "mods",
+  "version": "2.2.0",
+  "description": "DBM Mods - Actions, Events, and Extensions for Discord Bot Maker. Compatible with DBM 1.7/2.2.0 and Discord.js 14.24.2",
   "repository": "https://github.com/dbm-network/mods",
   "private": true,
   "license": "MIT",

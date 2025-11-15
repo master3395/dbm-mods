@@ -2,11 +2,11 @@ module.exports = {
   name: 'Remove Member from Thread',
   section: 'Channel Control',
   meta: {
-    version: '2.1.7',
-    preciseCheck: false,
+    version: '2.2.0',
+    preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/remove_member_from_thread_MOD.js',
+    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/remove_member_from_thread_MOD.js',
   },
 
   fields: ['storage', 'varName', 'member', 'varName2', 'iffalse', 'iffalseVal'],

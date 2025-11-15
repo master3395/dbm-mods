@@ -1,14 +1,36 @@
 module.exports = {
+  //---------------------------------------------------------------------
+  //region Action Name
+  //---------------------------------------------------------------------
+
   name: 'Separator',
+
+  //---------------------------------------------------------------------
+  //region Action Section
+  //---------------------------------------------------------------------
+
   section: 'Other',
+
+  //---------------------------------------------------------------------
+  //region Action Fields
+  //---------------------------------------------------------------------
+
   fields: ['separator', 'color', 'bold', 'underline', 'fontSize'],
 
+  //---------------------------------------------------------------------
+  //region Action Meta Data
+  //---------------------------------------------------------------------
+
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/seperator_MOD.js',
+    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/seperator_MOD.js',
   },
+
+  //---------------------------------------------------------------------
+  // Action Subtitle
+  //---------------------------------------------------------------------
 
   subtitle(data) {
     let style = '';
@@ -19,6 +41,10 @@ module.exports = {
     const color = data.color || '#000000';
     return `<span style="color: ${color};${style}">${separator}</span>`;
   },
+
+  //---------------------------------------------------------------------
+  //region Command HTML
+  //---------------------------------------------------------------------
 
   html() {
     return `
@@ -43,6 +69,10 @@ module.exports = {
       </div>
     </div>`;
   },
+
+  //---------------------------------------------------------------------
+  //region Action Editor Init Code
+  //---------------------------------------------------------------------
 
   init() {
     const { document } = this;
@@ -78,6 +108,10 @@ module.exports = {
     updateSubtitle();
   },
 
+  //---------------------------------------------------------------------
+  //region Action Bot Function
+  //---------------------------------------------------------------------
+
   async action(cache) {
     const data = cache.actions[cache.index];
     const separator = this.evalMessage(data.separator, cache);
@@ -107,6 +141,10 @@ module.exports = {
 
     this.callNextAction(cache);
   },
+
+  //---------------------------------------------------------------------
+  //region Action Bot Mod
+  //---------------------------------------------------------------------
 
   mod() {},
 };

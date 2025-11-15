@@ -2,11 +2,11 @@ module.exports = {
   name: 'Add Member to Thread',
   section: 'Channel Control',
   meta: {
-    version: '2.1.7',
-    preciseCheck: false,
+    version: '2.2.0',
+    preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/add_member_to_thread_MOD.js',
+    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/add_member_to_thread_MOD.js',
   },
 
   subtitle(data, presets) {

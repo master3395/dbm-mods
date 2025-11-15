@@ -11,10 +11,11 @@ module.exports = {
   },
   fields: ['consoleInputVar', 'separator', 'partIndex', 'storage', 'varName'],
   meta: {
-    version: '2.1.7',
-    preciseCheck: false,
+    version: '2.2.0',
+    preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
+    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/console_input_store_MOD.js',
   },
   html() {
     return `

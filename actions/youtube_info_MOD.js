@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store YouTube Info',
   section: 'YouTube Tools',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -175,7 +175,7 @@ module.exports = {
         result = video.author.id;
         break;
       case 6: // Thumbnail URL (auto)
-        result = sr.bestThumbnail.url;
+        result = sr.thumbnail;
         break;
       case 10: // Is unlisted
         result = video.isUnlisted;
@@ -214,7 +214,7 @@ module.exports = {
         result = video.age_restricted;
         break;
       case 24: // Video Channel Avatar URL
-        result = sr.author.bestAvatar.url;
+        result = video.author.thumbnails[0].url;
         break;
       case 25: // Is channel verified?
         result = video.author.verified;

@@ -13,7 +13,13 @@ module.exports = {
     return [data.varName2, 'Number'];
   },
 
-  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+  meta: {
+    version: '2.2.0',
+    preciseCheck: true,
+    author: null,
+    authorUrl: null,
+    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/get_list_length_MOD.js',
+  },
 
   fields: ['list', 'varName', 'storage', 'varName2'],
 

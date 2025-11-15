@@ -1,8 +1,8 @@
 module.exports = {
   name: 'Store Track Info',
-  section: 'Audio Control',
+  section: 'Music Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -12,14 +12,7 @@ module.exports = {
   fields: ['trackObject', 'varName', 'info', 'storage', 'varName1'],
 
   subtitle({ info }) {
-    const names = [
-      'Track Title',
-      'Track Thumbnail',
-      'Track URL',
-      'Track Author',
-      'Track Duration (In seconds)',
-      'Requested By (User ID)',
-    ];
+    const names = ['Track Title', 'Track Thumbnail', 'Track URL', 'Track Author', 'Track Duration', 'Requested By'];
     return `${names[parseInt(info, 10)]}`;
   },
 
@@ -44,8 +37,8 @@ module.exports = {
     <option value="1">Track Thumbnail</option>
     <option value="2">Track URL</option>
     <option value="3">Track Author</option>
-    <option value="4">Track Duration (In seconds)</option>
-    <option value="5">Requested By (User ID)</option>
+    <option value="4">Track Duration</option>
+    <option value="5">Requested By</option>
   </select>
 </div>
 <br><br><br><br>
@@ -64,8 +57,9 @@ module.exports = {
 
     const type = parseInt(data.trackObject, 10);
     const varName = this.evalMessage(data.varName, cache);
-    const track = this.getVariable(type, varName, cache);
+    let track = this.getVariable(type, varName, cache);
     if (!track) return this.callNextAction(cache);
+    if (track.tracks) track = track.tracks[0];
 
     let result;
     switch (info) {

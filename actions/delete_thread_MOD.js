@@ -4,7 +4,13 @@ module.exports = {
   subtitle(data, presets) {
     return `Delete Thread: "${presets.getChannelText(data.thread, data.threadVarName)}"`;
   },
-  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+  meta: {
+    version: '2.2.0',
+    preciseCheck: true,
+    author: 'Shadow',
+    authorUrl: 'https://github.com/DBM-POLSKA',
+    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/delete_thread_MOD.js',
+  },
   fields: ['thread', 'threadVarName', 'reason'],
   html() {
     return `
@@ -20,15 +26,11 @@ module.exports = {
     const data = cache.actions[cache.index];
     const thread = await this.getChannelFromData(data.thread, data.threadVarName, cache);
     const reason = this.evalMessage(data.reason, cache);
-    if (Array.isArray(thread)) {
-      this.callListFunc(thread, 'delete', [reason]).then(() => this.callNextAction(cache));
-    } else if (thread?.delete) {
-      thread
-        .delete(reason)
-        .then(() => this.callNextAction(cache))
-        .catch((err) => this.displayError(data, cache, err));
-    } else {
-      this.callNextAction(cache);
+
+    this.callNextAction(cache);
+
+    if (thread?.delete) {
+      thread.delete(reason).catch((err) => this.displayError(data, cache, err));
     }
   },
   mod() {},

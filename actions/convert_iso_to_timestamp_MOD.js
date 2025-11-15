@@ -2,10 +2,11 @@ module.exports = {
   name: 'Convert ISO 8601 to Timestamp',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
-    preciseCheck: false,
+    version: '2.2.0',
+    preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
+    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/convert_iso_to_timestamp_MOD.js',
     modAuthors: ['Robskan5300'],
   },
 

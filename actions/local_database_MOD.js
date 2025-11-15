@@ -2,7 +2,7 @@ module.exports = {
   name: 'Local Database',
   section: 'Database',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -36,7 +36,7 @@ module.exports = {
   </div>
  </div>
  <br><br>
-
+ 
  <div>
   <div style="float: left; width: 20%;">
    <span class="dbminputlabel">Operation</span>
@@ -47,17 +47,17 @@ module.exports = {
    </select>
   </div>
   <div id="dbpathdiv" style="padding-left: 15px; float: left; width: 80%;">
-   <div class="dbminputlabel" style="display: inline-block" id="dbpathlabel">Something has broken. You should not be seeing this message.</div>
-   <input id="dbpath" placeholder="" class="round" type="text"><br>
+   <div id="dbpathlabel">Something has broken. You should not be seeing this message.</div>
+   <input id="dbpath" class="round" type="text"><br>
   </div>
  </div>
  <br><br><br>
-
+ 
  <div id="dbvaluediv">
-  <div class="dbminputlabel" id="dbvaluelabel" style="float: left;">
+  <div id="dbvaluelabel" style="float: left;">
    Something has broken. You should not be seeing this message.
   </div>
-  <input id="dbvalue" class="round" type="text"><br>
+  <input id="dbvalue" class="round" type="text" placeholder="Leave blank for no value."><br>
  </div>
 
  <div>
@@ -72,9 +72,8 @@ module.exports = {
       document.getElementById(id).style.display = visible ? null : 'none';
     }
 
-    function updateContents(id, str, pathplaceholder) {
+    function updateContents(id, str) {
       document.getElementById(id).innerHTML = str;
-      if (pathplaceholder) document.getElementById('dbpath').placeholder = pathplaceholder;
     }
 
     glob.onChangeFormat = function onChangeFormat(event) {
@@ -90,7 +89,6 @@ module.exports = {
      <option value="add">Add</option>
      <option value="subtract">Subtract</option>
      <option value="push">Push</option>
-     <option value="pull">Pull</option>
      <option value="all">All</option>`;
           docStr = 'For Quick.db documentation, visit <a href="https://quickdb.js.org/overview/docs">this link</a>';
           break;
@@ -133,35 +131,40 @@ module.exports = {
         case 'quick.db':
           switch (event.value) {
             case 'store':
-              updateContents('dbpathlabel', 'Path string', 'Split path by . (Example: servers.1234567890)');
-              updateContents('dbvaluelabel', 'Value');
+              updateContents(
+                'dbpathlabel',
+                'Path string (split path by .) Example: <b><u><i>servers.1234567890</i></u></b>:',
+              );
+              updateContents('dbvaluelabel', 'Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
               updateVisibility('dbvaluediv', true);
               updateVisibility('dbpathdiv', true);
               break;
             case 'add':
             case 'subtract':
             case 'push':
-              updateContents('dbpathlabel', 'Path string', 'Split path by . (Example: servers.1234567890)');
-              updateContents('dbvaluelabel', 'Value');
-              updateVisibility('dbvaluediv', true);
-              updateVisibility('dbpathdiv', true);
-              break;
-
-            case 'pull':
-              updateContents('dbpathlabel', 'Path string', 'Split path by . (Example: servers.1234567890)');
-              updateContents('dbvaluelabel', 'Value');
+              updateContents(
+                'dbpathlabel',
+                'Path string (split path by .) Example: <b><u><i>servers.1234567890</i></u></b>:',
+              );
+              updateContents('dbvaluelabel', 'Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
               updateVisibility('dbvaluediv', true);
               updateVisibility('dbpathdiv', true);
               break;
             case 'all':
-              updateContents('dbpathlabel', 'Path string', 'Split path by . (Example: servers.1234567890)');
-              updateContents('dbvaluelabel', 'Value');
+              updateContents(
+                'dbpathlabel',
+                'Path string (split path by .) Example: <b><u><i>servers.1234567890</i></u></b>:',
+              );
+              updateContents('dbvaluelabel', 'Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
               updateVisibility('dbvaluediv', false);
               updateVisibility('dbpathdiv', false);
               break;
             default:
-              updateContents('dbpathlabel', 'Path string', 'Split path by . (Example: servers.1234567890)');
-              updateContents('dbvaluelabel', 'Value');
+              updateContents(
+                'dbpathlabel',
+                'Path string (split path by .) Example: <b><u><i>servers.1234567890</i></u></b>:',
+              );
+              updateContents('dbvaluelabel', 'Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
               updateVisibility('dbpathdiv', true);
               updateVisibility('dbvaluediv', false);
               break;
@@ -176,8 +179,11 @@ module.exports = {
             case 'ensure':
               updateVisibility('dbpathdiv', true);
               updateVisibility('dbvaluediv', true);
-              updateContents('dbpathlabel', 'Path string', 'Split path by . (Example: servers.1234567890)');
-              updateContents('dbvaluelabel', 'Value');
+              updateContents(
+                'dbpathlabel',
+                'Path string (split path by .) Example: <b><u><i>servers.1234567890</i></u></b>:',
+              );
+              updateContents('dbvaluelabel', 'Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
               break;
             case 'size':
             case 'count':
@@ -188,25 +194,31 @@ module.exports = {
             case 'array':
               updateVisibility('dbpathdiv', true);
               updateVisibility('dbvaluediv', false);
-              updateContents('dbpathlabel', 'Table string', 'Example: servers');
-              updateContents('dbvaluelabel', 'Value');
+              updateContents('dbpathlabel', 'Table string. Example: <b><u><i>servers</i></u></b>:');
+              updateContents('dbvaluelabel', 'Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
               break;
             case 'increment':
             case 'decrement':
               updateVisibility('dbpathdiv', true);
               updateVisibility('dbvaluediv', false);
-              updateContents('dbpathlabel', 'Path string', 'Split path by . (Example: servers.1234567890)');
-              updateContents('dbvaluelabel', 'Value');
+              updateContents(
+                'dbpathlabel',
+                'Path string (split path by .) Example: <b><u><i>servers.1234567890</i></u></b>:',
+              );
+              updateContents('dbvaluelabel', 'Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
               break;
             case 'randomkey':
               updateVisibility('dbpathdiv', true);
               updateVisibility('dbvaluediv', true);
-              updateContents('dbpathlabel', 'Table string', 'Example: servers');
-              updateContents('dbvaluelabel', 'Number of random keys');
+              updateContents('dbpathlabel', 'Table string. Example: <b><u><i>servers</i></u></b>:');
+              updateContents('dbvaluelabel', 'Number of random keys:');
               break;
             default:
-              updateContents('dbpathlabel', 'Path string', 'Split path by . (Example: servers.1234567890)');
-              updateContents('dbvaluelabel', 'Value');
+              updateContents(
+                'dbpathlabel',
+                'Path string (split path by .) Example: <b><u><i>servers.1234567890</i></u></b>:',
+              );
+              updateContents('dbvaluelabel', 'Value:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
               updateVisibility('dbpathdiv', true);
               updateVisibility('dbvaluediv', false);
               break;
@@ -266,9 +278,6 @@ module.exports = {
             break;
           case 'push':
             output = await db.push(dbpath, dbvalue);
-            break;
-          case 'pull':
-            output = await db.pull(dbpath, dbvalue);
             break;
           case 'all':
             output = await db.all();

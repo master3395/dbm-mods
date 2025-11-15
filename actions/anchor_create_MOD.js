@@ -2,11 +2,11 @@ module.exports = {
   name: 'Create Anchor',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
-    preciseCheck: false,
+    version: '2.2.0',
+    preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/anchor_create_MOD.js',
+    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/anchor_create_MOD.js',
   },
 
   subtitle(data) {

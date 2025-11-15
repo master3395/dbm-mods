@@ -2,11 +2,11 @@ module.exports = {
   name: 'Get Current Timestamp',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'Itz T0kyoo',
     authorUrl: 'https://github.com/ItzT0kyooFR',
-    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/convert_timestamp_to_date_MOD.js',
+    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/get_current_timestamp_MOD.js',
   },
 
   subtitle() {

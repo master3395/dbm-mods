@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store Game Server Info',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -24,32 +24,44 @@ module.exports = {
   },
 
   variableStorage(data, varType) {
-    if (parseInt(data.storage, 10) !== varType) return;
-    let dataType = 'Unknown Type';
-    switch (parseInt(data.info, 10)) {
-      case 0:
-        dataType = 'Server Name';
-        break;
-      case 1:
-        dataType = 'Map';
-        break;
-      case 2:
-        dataType = 'Number';
-        break;
-      case 3:
-        dataType = 'Number';
-        break;
-      case 4:
-        dataType = 'Server Tags';
-        break;
-      case 5:
-        dataType = 'Boolean';
-        break;
+    const primaryType = parseInt(data.storage, 10);
+    if (primaryType === varType) {
+      let dataType = 'Unknown Type';
+      switch (parseInt(data.info, 10)) {
+        case 0:
+          dataType = 'Server Name';
+          break;
+        case 1:
+          dataType = 'Map';
+          break;
+        case 2:
+        case 3:
+        case 4:
+          dataType = 'Number';
+          break;
+        case 5:
+          dataType = 'Server Tags';
+          break;
+        case 6:
+          dataType = 'Boolean';
+          break;
+        case 7:
+          dataType = 'Server Player List';
+          break;
+        default:
+          break;
+      }
+      return [data.varName, dataType];
     }
-    return [data.varName, dataType];
+
+    if (parseInt(data.failureVarStorage, 10) === varType) {
+      return [data.failureVarName, 'Boolean'];
+    }
+
+    return undefined;
   },
 
-  fields: ['serverip', 'serverport', 'game', 'info', 'storage', 'varName'],
+  fields: ['serverip', 'serverport', 'game', 'info', 'storage', 'varName', 'failureVarStorage', 'failureVarName'],
 
   html() {
     return `
@@ -359,6 +371,11 @@ module.exports = {
   </div>
   <br><br><br><br><br><br><br>
 
+  <div style="padding-top: 8px;">
+    <store-in-variable dropdownLabel="Catch Fail In" selectId="failureVarStorage" variableContainerId="failureVarNameContainer" variableInputId="failureVarName"></store-in-variable>
+  </div>
+  <br><br><br>
+
   <div>
     <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
   </div>
@@ -413,55 +430,76 @@ module.exports = {
     const ip = this.evalMessage(data.serverip, cache);
     const port = this.evalMessage(data.serverport, cache);
 
-    const { GameDig } = require('gamedig');
+    const failureStorage = parseInt(data.failureVarStorage, 10);
+    const failureVarName = this.evalMessage(data.failureVarName, cache);
 
-    if (!ip) return console.log('Please provide Server IP & Port.');
-    GameDig.query({
-      type: gametype,
-      host: ip,
-      port,
-      maxAttempts: 3,
-      attemptTimeout: 25000,
-    })
-      .then((state) => {
-        let result;
-        switch (info) {
-          case 0:
-            result = state.name;
-            break;
-          case 1:
-            result = state.map;
-            break;
-          case 2:
-            result = state.raw.numplayers || state.players.length;
-            break;
-          case 3:
-            result = state.raw.numbots;
-            break;
-          case 4:
-            result = state.maxplayers;
-            break;
-          case 5:
-            result = state.raw.tags;
-            break;
-          case 6:
-            result = state.password;
-            break;
-          case 7:
-            result = state.players.map((a) => a.name);
-            break;
-          default:
-            break;
-        }
+    const Mods = this.getMods();
+    const GameDig = Mods.require('gamedig');
 
-        if (result !== undefined) {
-          const storage = parseInt(data.storage, 10);
-          const varName2 = Actions.evalMessage(data.varName, cache);
-          Actions.storeValue(result, storage, varName2, cache);
-        }
-        Actions.callNextAction(cache);
-      })
-      .catch((error) => console.log(`Game Server Info: ${error}`));
+    const markFailure = (flag) => {
+      if (failureVarName) {
+        Actions.storeValue(flag, failureStorage, failureVarName, cache);
+      }
+    };
+
+    if (!ip) {
+      console.error(`[${new Date().toISOString()}][Game Server Info] Missing server IP or port.`);
+      markFailure(true);
+      return Actions.callNextAction(cache);
+    }
+
+    try {
+      const state = await GameDig.query({
+        type: gametype,
+        host: ip,
+        port,
+        maxAttempts: 3,
+        attemptTimeout: 25000,
+      });
+
+      let result;
+      switch (info) {
+        case 0:
+          result = state.name;
+          break;
+        case 1:
+          result = state.map;
+          break;
+        case 2:
+          result = state.raw?.numplayers ?? state.players?.length;
+          break;
+        case 3:
+          result = state.raw?.numbots;
+          break;
+        case 4:
+          result = state.maxplayers;
+          break;
+        case 5:
+          result = state.raw?.tags;
+          break;
+        case 6:
+          result = state.password;
+          break;
+        case 7:
+          result = Array.isArray(state.players) ? state.players.map((player) => player.name) : undefined;
+          break;
+        default:
+          break;
+      }
+
+      if (result !== undefined) {
+        const storage = parseInt(data.storage, 10);
+        const varName = Actions.evalMessage(data.varName, cache);
+        Actions.storeValue(result, storage, varName, cache);
+      }
+
+      markFailure(false);
+      Actions.callNextAction(cache);
+    } catch (error) {
+      console.error(`[${new Date().toISOString()}][Game Server Info] Query failed: ${error}`);
+      markFailure(true);
+      Actions.callNextAction(cache);
+    }
   },
 
   mod() {},

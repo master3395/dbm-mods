@@ -540,9 +540,19 @@
     "section": "#DBM Mods"
   },
   "mod_info_MOD.js": {
-    "description": "A welcome/information message for modifications",
-    "name": "Welcome",
-    "section": "#DBM Mods"
+    "description": "shows MOD Info",
+    "name": "MOD Info",
+    "section": "Other Stuff"
+  },
+  "openai_action_MOD.js": {
+    "description": "Call OpenAI chat or image endpoints with robust configuration",
+    "name": "OpenAI Action",
+    "section": "Other Stuff"
+  },
+  "path_rank_MOD.js": {
+    "description": "Rank JSON data",
+    "name": "Path Rank",
+    "section": "Other Stuff"
   },
   "parse_from_stored_json_MOD.js": {
     "description": "Parse from stored Json",

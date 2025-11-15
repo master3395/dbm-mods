@@ -2,11 +2,11 @@ module.exports = {
   name: 'Create Private Thread',
   section: 'Channel Control',
   meta: {
-    version: '2.1.7',
+    version: '2.2.0',
     preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/create_private_thread_MOD.js',
+    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/create_private_thread_MOD.js',
   },
   fields: ['channel', 'channelVarName', 'threadName', 'autoArchiveDuration', 'reason', 'storage', 'storageVarName'],
 
@@ -65,12 +65,13 @@ module.exports = {
 
   async action(cache) {
     const data = cache.actions[cache.index];
+    const { ChannelType } = require('discord.js');
     const channel = await this.getChannelFromData(data.channel, data.channelVarName, cache);
 
     const thread = await channel.threads.create({
       name: this.evalMessage(data.threadName, cache),
       autoArchiveDuration: data.autoArchiveDuration === 'max' ? 10080 : parseInt(data.autoArchiveDuration, 10),
-      type: 'PrivateThread',
+      type: ChannelType.PrivateThread,
       reason: this.evalMessage(data.reason, cache) || null,
     });
 

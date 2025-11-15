@@ -1,0 +1,26 @@
+{
+  "scripts": {
+    "build": "npm install",
+    "start": "node bot.js",
+    "update": "npm update"
+  },
+  "name": "dbm-dashboard",
+  "version": "1.1.5",
+  "description": "Discord Bot Maker Dashboard Extension - Fully compatible with Node.js 16-22, Express 4.x, and Discord.js 14.24.2",
+  "author": "Great Plains Modding",
+  "license": "ISC",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "figlet": "^1.7.0",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
+    "node-fetch": "^2.7.0"
+  }
+}

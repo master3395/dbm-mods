@@ -2,11 +2,11 @@ module.exports = {
   name: 'Add Commas to Number',
   section: 'Other Stuff',
   meta: {
-    version: '2.1.7',
-    preciseCheck: false,
+    version: '2.2.0',
+    preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    modAuthors: ['Robskan5300'],
+    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/add_commas_to_number_MOD.js',
   },
 
   subtitle(data) {
