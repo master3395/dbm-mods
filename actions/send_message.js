@@ -1,28 +1,28 @@
 ﻿module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   name: 'Send Message MOD',
   displayName: 'Send Message',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   section: 'Messaging',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Size
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  size: function () {
+  size() {
     return { width: 640, height: 550 };
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
     let defaultText = '';
@@ -55,9 +55,9 @@
     return defaultText;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
@@ -65,9 +65,9 @@
     return [data.varName2, data.dontSend ? 'Message Options' : 'Message'];
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   meta: {
     version: '2.2.0',
@@ -77,9 +77,9 @@
     downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/bot-files/actions/send_message.js',
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   fields: [
     'channel',
@@ -120,11 +120,13 @@
     'selectMenuOnTop',
   ],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
+    void isEvent;
+    void data;
     return `
 <div style="position:fixed;bottom:0;left:0;padding:5px;padding-top:5px;padding-bottom:5px;font:13px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'">Creator: Shadow<br><br>Help: <a href='https://discord.gg/9HYB4n3Dz4' target='_blank' style='color:#07f;text-decoration:none'>Discord</a></div><div style="position:fixed;bottom:0;right:0;padding:5px;font:20px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'"><a href='https://dbm-polska.github.io/DBM-14/' target='_blank' style='color:#07f;text-decoration:none'><!--Version-->3.6</a></div>
     
@@ -850,9 +852,9 @@
 </tab-system>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {
     const { document, glob } = this;
@@ -866,35 +868,32 @@
       counter.textContent = `characters: ${textLength}`;
     });
 
-    glob.formatItemButton = function (data) {
+    glob.formatItemButton = function formatItemButton(data) {
       let setcor = '';
-      if (data.type == '1') {
+      if (data.type === '1') {
         setcor = 'rgb(88,101,242)';
       }
-      if (data.type == '2' || data.type == '5') {
+      if (data.type === '2' || data.type === '5') {
         setcor = 'rgb(78,80,88)';
       }
-      if (data.type == '3') {
+      if (data.type === '3') {
         setcor = 'rgb(36,128,70)';
       }
-      if (data.type == '4') {
+      if (data.type === '4') {
         setcor = 'rgb(218,55,60)';
       }
-      let result =
-        '<div style="display: inline-block; width: 100%;"><div style="width:10px;background:' +
-        setcor +
-        ';float:left;margin-left:-10px"><br></div><table style="margin-left:10px"><tr><td style="width:100%">';
+      let result = `<div style="display: inline-block; width: 100%;"><div style="width:10px;background:${setcor};float:left;margin-left:-10px"><br></div><table style="margin-left:10px"><tr><td style="width:100%">`;
       const comp = '0';
       switch (comp) {
         case '0':
-          result += data.emoji + ' ' + data.name;
+          result += `${data.emoji} ${data.name}`;
           break;
       }
 
       return result;
     };
 
-    glob.formatItemSelectMenu = function (data) {
+    glob.formatItemSelectMenu = function formatItemSelectMenu(data) {
       const selectMenuType = data.SelectMenuType;
 
       let result =
@@ -907,7 +906,7 @@
         "</div><div style='float:right;width:190px;text-align:right;padding:0px 10px 0px 0px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>";
 
       if (selectMenuType === 'StringSelectMenu') {
-        result += 'Options: ' + data.options.length + ' / 25';
+        result += `Options: ${data.options.length} / 25`;
       } else {
         result += selectMenuType.replace(/([A-Z])/g, ' $1').trim();
       }
@@ -917,68 +916,60 @@
       return result;
     };
 
-    glob.formatItemEmbed = function (data) {
+    glob.formatItemEmbed = function formatItemEmbed(data) {
       const maxLength = 30;
       const firstLine = data.description.substring(0, maxLength);
       const secondLine =
         data.description.length > maxLength ? data.description.substring(maxLength, maxLength * 2) : '';
 
       const result =
-        '<div style="margin-left:-10px; background:' +
-        data.color +
-        '; float:left; width:10px; overflow:hidden; height:80px;"><br></div>' +
-        '<div style="float:left; width:70%; overflow:hidden; margin-left:5px; white-space: normal; line-height: 1.2;">' +
-        '<br>' +
-        "<strong style='font-weight: bolder;'>" +
-        data.title +
-        '</strong>' +
-        '<br>' +
-        firstLine +
-        '<br>' +
-        secondLine +
-        '</div>' +
-        '<div style="float:right; width:19%; text-align:right; overflow:hidden;">' +
-        (data.formula == 1 || data.formula == 2
-          ? '<span style="float:right;" title="Condition enabled"> 🔘 </span>'
-          : '') +
-        '</div>';
+        `<div style="margin-left:-10px; background:${data.color}; float:left; width:10px; overflow:hidden; height:80px;"><br></div>` +
+        `<div style="float:left; width:70%; overflow:hidden; margin-left:5px; white-space: normal; line-height: 1.2;">` +
+        `<br>` +
+        `<strong style='font-weight: bolder;'>${data.title}</strong>` +
+        `<br>${firstLine}<br>${secondLine}</div>` +
+        `<div style="float:right; width:19%; text-align:right; overflow:hidden;">${
+          Number(data.formula) === 1 || Number(data.formula) === 2
+            ? '<span style="float:right;" title="Condition enabled"> 🔘 </span>'
+            : ''
+        }</div>`;
 
       return result;
     };
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor On Save
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   onSave(data, helpers) {
     if (Array.isArray(data?.buttons)) {
       for (let i = 0; i < data.buttons.length; i++) {
         if (!data.buttons[i].id) {
-          data.buttons[i].id = 'msg-button-' + helpers.generateUUID().substring(0, 7);
+          data.buttons[i].id = `msg-button-${helpers.generateUUID().substring(0, 7)}`;
         }
       }
     }
     if (Array.isArray(data?.selectMenus)) {
       for (let i = 0; i < data.selectMenus.length; i++) {
         if (!data.selectMenus[i].id) {
-          data.selectMenus[i].id = 'msg-select-' + helpers.generateUUID().substring(0, 7);
+          data.selectMenus[i].id = `msg-select-${helpers.generateUUID().substring(0, 7)}`;
         }
       }
     }
     return data;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor On Paste
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   onPaste(data, helpers) {
     if (Array.isArray(data?.buttons)) {
       for (let i = 0; i < data.buttons.length; i++) {
         const id = data.buttons[i].id;
         if (!id || id.startsWith('msg-button-')) {
-          data.buttons[i].id = 'msg-button-' + helpers.generateUUID().substring(0, 7);
+          data.buttons[i].id = `msg-button-${helpers.generateUUID().substring(0, 7)}`;
         }
       }
     }
@@ -986,29 +977,29 @@
       for (let i = 0; i < data.selectMenus.length; i++) {
         const id = data.selectMenus[i].id;
         if (!id || id.startsWith('msg-select-')) {
-          data.selectMenus[i].id = 'msg-select-' + helpers.generateUUID().substring(0, 7);
+          data.selectMenus[i].id = `msg-select-${helpers.generateUUID().substring(0, 7)}`;
         }
       }
     }
     return data;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
 
     process.emitWarning = () => {};
-    process.on('unhandledRejection', (reason, promise) => {
+    process.on('unhandledRejection', (reason) => {
       console.error('[Send Message] An error occurred:', reason);
       this.callNextAction(cache);
     });
 
-    //---------------------------------------------------------------------
-    //region Obsługa Ustawień
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Obsługa Ustawień
+    // ---------------------------------------------------------------------
 
     const settings = {
       reply: data.reply,
@@ -1028,19 +1019,19 @@
     const interaction = cache.interaction?.__originalInteraction ?? cache.interaction;
     const channel = parseInt(data.channel, 10);
     let target = await this.getSendReplyTarget(channel, this.evalMessage(data.varName, cache), cache);
-    let awaitResponses = [];
+    const awaitResponses = [];
 
-    //---------------------------------------------------------------------
-    //region Obsługa Wiadomości
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Obsługa Wiadomości
+    // ---------------------------------------------------------------------
 
     const messageContent = this.evalMessage(data.message, cache);
 
-    //---------------------------------------------------------------------
-    //region Obsługa Embedów
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Obsługa Embedów
+    // ---------------------------------------------------------------------
 
-    let EmbedBuilders = [];
+    const EmbedBuilders = [];
 
     if (Array.isArray(data.embeds)) {
       const { EmbedBuilder, Colors } = this.getDBM().DiscordJS;
@@ -1161,9 +1152,9 @@
       }
     }
 
-    //---------------------------------------------------------------------
-    //region Obsługa Ankiet
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Obsługa Ankiet
+    // ---------------------------------------------------------------------
 
     const pollQuestion = this.evalMessage(data.pollQuestion, cache);
     const pollDuration = this.evalMessage(data.pollDuration, cache) || '24';
@@ -1187,11 +1178,11 @@
       };
     }
 
-    //---------------------------------------------------------------------
-    //region Obsługa Przycisków
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Obsługa Przycisków
+    // ---------------------------------------------------------------------
 
-    let ButtonBuilders = [];
+    const ButtonBuilders = [];
 
     const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = this.getDBM().DiscordJS;
 
@@ -1254,11 +1245,11 @@
       }
     }
 
-    //---------------------------------------------------------------------
-    //region Obsługa Select Menu
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Obsługa Select Menu
+    // ---------------------------------------------------------------------
 
-    let StringSelectMenuBuilders = [];
+    const StringSelectMenuBuilders = [];
 
     const {
       StringSelectMenuBuilder,
@@ -1270,7 +1261,6 @@
     } = this.getDBM().DiscordJS;
 
     if (Array.isArray(data.selectMenus)) {
-      const userId = cache.interaction?.user?.id;
       let currentRow = new ActionRowBuilder();
 
       for (const menu of data.selectMenus) {
@@ -1278,8 +1268,8 @@
         const customId = menu.id;
         const disabled = menu.SelectMenuDisabled === 'true';
         const placeholder = this.evalMessage(menu.placeholder, cache);
-        const min = parseInt(this.evalMessage(menu.min, cache)) || 1;
-        const max = parseInt(this.evalMessage(menu.max, cache)) || 1;
+        const min = parseInt(this.evalMessage(menu.min, cache), 10) || 1;
+        const max = parseInt(this.evalMessage(menu.max, cache), 10) || 1;
 
         let builder;
 
@@ -1395,9 +1385,6 @@
         if (!this.$select) this.$select = {};
         this.$select[id] = menu;
 
-        const mode = menu.mode ?? 'MULTI';
-        const time = menu.time ? parseInt(this.evalMessage(menu.time, cache), 10) : 60000;
-
         if (isSelectMenu) {
           if (currentRow.components.length > 0) {
             StringSelectMenuBuilders.push(currentRow);
@@ -1439,11 +1426,11 @@
       }
     }
 
-    //---------------------------------------------------------------------
-    //region Obsługa Plików
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Obsługa Plików
+    // ---------------------------------------------------------------------
 
-    let messageFiles = [];
+    const messageFiles = [];
 
     const { basename, AttachmentBuilder } = this.getDBM().DiscordJS;
 
@@ -1464,15 +1451,15 @@
       }
     }
 
-    //---------------------------------------------------------------------
-    //region Ustawienia Wiadomości
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Ustawienia Wiadomości
+    // ---------------------------------------------------------------------
 
     const mentionParse = [];
     if (settings.allowMentionUsers) mentionParse.push('users');
     if (settings.allowMentionRoles) mentionParse.push('roles');
     if (settings.allowMentionEveryone) mentionParse.push('everyone');
-    const replied = !!settings.allowMentionCommandUser;
+    const replied = Boolean(settings.allowMentionCommandUser);
 
     const componentButtons = ButtonBuilders;
     const componentSelects = StringSelectMenuBuilders;
@@ -1491,9 +1478,9 @@
       flags |= 4096;
     }
 
-    //---------------------------------------------------------------------
-    //region Tworzenie Wiadomości
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Tworzenie Wiadomości
+    // ---------------------------------------------------------------------
 
     let payload = {
       content: messageContent,
@@ -1509,13 +1496,13 @@
       },
     };
 
-    //---------------------------------------------------------------------
-    //region Wysyłanie wiadomości
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Wysyłanie wiadomości
+    // ---------------------------------------------------------------------
 
-    //-------------------------
+    // -------------------------
     // Nie Wysyłaj
-    //-------------------------
+    // -------------------------
 
     if (settings.dontSend) {
       const varName2 = this.evalMessage(data.varName2, cache);
@@ -1526,9 +1513,9 @@
       return;
     }
 
-    //---------------------------------------------------------------------
-    //region Wysyłanie
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Wysyłanie
+    // ---------------------------------------------------------------------
 
     const { Message } = this.getDBM().DiscordJS;
 
@@ -1545,16 +1532,14 @@
           if (editObject instanceof Message) {
             target = editObject;
             isEdit = 1;
-          } else {
-            payload = payload;
           }
         }
       }
     }
 
-    //---------------------------------------------------------------------
-    //region overwrite Payload
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region overwrite Payload
+    // ---------------------------------------------------------------------
 
     if (!settings.overwrite) {
       let oldPayload = {};
@@ -1585,7 +1570,7 @@
       };
     }
 
-    ////
+    // //
 
     let defaultResultMsg = null;
     const onComplete = (resultMsg) => {
@@ -1699,14 +1684,14 @@
       this.callNextAction(cache);
     }
 
-    //---------------------------------------------------------------------
-    //region Koniec
-    //---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // region Koniec
+    // ---------------------------------------------------------------------
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod Init
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   modInit(data) {
     if (Array.isArray(data?.buttons)) {
@@ -1732,9 +1717,9 @@
     }
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

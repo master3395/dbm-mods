@@ -71,13 +71,13 @@ module.exports = {
     }
 
     const channelData = {
-      name: name,
+      name,
       type: 15, // Forum channel
       reason: this.evalMessage(data.reason, cache),
       topic: this.evalMessage(data.topic, cache),
-      position: parseInt(this.evalMessage(data.position, cache)) || undefined,
+      position: parseInt(this.evalMessage(data.position, cache), 10) || undefined,
       parent: this.evalMessage(data.categoryID, cache) || undefined,
-      rateLimitPerUser: parseInt(this.evalMessage(data.slowmodepost, cache)) || undefined,
+      rateLimitPerUser: parseInt(this.evalMessage(data.slowmodepost, cache), 10) || undefined,
       defaultSortOrder: 0, // Domyślny układ
       defaultForumLayout: 0, // Lista wątków
     };

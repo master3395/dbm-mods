@@ -725,10 +725,10 @@
         embed.setTimestamp(new Date());
         break;
       case 2:
-        if (isNaN(timestamp)) {
+        if (Number.isNaN(Number(timestamp))) {
           embed.setTimestamp(new Date(timestamp));
         } else {
-          embed.setTimestamp(new Date(parseInt(timestamp$(if(10){"$(if(iconURL: 10"}){", iconURL: iconURL: 10"}"}) })$(if(){", url: "}) })));
+          embed.setTimestamp(new Date(parseInt(timestamp, 10)));
         }
         break;
       case 3:

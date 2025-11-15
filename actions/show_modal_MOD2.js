@@ -1,28 +1,28 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   name: 'Show Modal MOD',
   displayName: 'Show Modal MOD',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   section: 'Messaging',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data) {
     return `[${data.modalTitle || 'My Modal'}] - with ${data.modalComponents.length} components`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     if (!Array.isArray(data.modalComponents)) return;
@@ -42,9 +42,9 @@ module.exports = {
     return result.length ? result : undefined;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   meta: {
     version: '2.2.0',
@@ -54,17 +54,18 @@ module.exports = {
     downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/show_modal_MOD2.js',
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   fields: ['modalTitle', 'modalComponents'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(data) {
+    void data;
     return `
 <div style="position:fixed;bottom:0;left:0;padding:5px;padding-top:5px;padding-bottom:5px;font:13px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'">Creator: Shadow<br><br>Help: <a href='https://discord.gg/9HYB4n3Dz4' target='_blank' style='color:#07f;text-decoration:none'>Discord</a></div><div style="position:fixed;bottom:0;right:0;padding:5px;font:20px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'"><a href='https://dbm-polska.github.io/DBM-14/' target='_blank' style='color:#07f;text-decoration:none'><!--Version-->1.0</a></div>
 
@@ -198,14 +199,14 @@ module.exports = {
 `;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {
     const { glob } = this;
 
-    glob.formatItemModalComponent = function (data) {
+    glob.formatItemModalComponent = function formatItemModalComponent(data) {
       const selectMenuType = data.componentType;
       let result =
         '<div style="display: inline-block; width: 100%; padding-left: 8px">' +
@@ -223,9 +224,9 @@ module.exports = {
     };
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -242,7 +243,7 @@ module.exports = {
     const modalTitle = this.evalMessage(data.modalTitle, cache) || 'My Modal';
 
     const finalLabelComponents = [];
-    for (component of data.modalComponents) {
+    for (const component of data.modalComponents) {
       const modalLabel = this.evalMessage(component.modalLabel, cache);
       const modalDescription = this.evalMessage(component.modalDescription, cache);
       const modalPlaceholder = this.evalMessage(component.modalPlaceholder, cache);
@@ -275,13 +276,10 @@ module.exports = {
         const selectsMaxSelectNumber = parseInt(this.evalMessage(component.selectsMaxSelectNumber, cache), 10) || 1;
         const selectsRequired = component.selectsRequired === 'true';
         let selectMenuComponent;
-        if (modalPlaceholder) {
-          selectMenuComponent.setPlaceholder(modalPlaceholder);
-        }
         switch (component.selectsSelectMenuType) {
-          case 'stringSelectMenu':
-            let options = [];
-            for (const option of component.options) {
+          case 'stringSelectMenu': {
+            const options = [];
+            for (const option of component.options ?? []) {
               const payload = {
                 label: option.label || '',
                 description: option.description || '',
@@ -299,6 +297,7 @@ module.exports = {
               .setRequired(selectsRequired);
             labelComponent.setStringSelectMenuComponent(selectMenuComponent);
             break;
+          }
           case 'userSelectMenu':
             selectMenuComponent = new UserSelectMenuBuilder()
               .setCustomId(customId)
@@ -331,8 +330,10 @@ module.exports = {
               .setRequired(selectsRequired);
             labelComponent.setChannelSelectMenuComponent(selectMenuComponent);
             break;
+          default:
+            break;
         }
-        if (modalPlaceholder) {
+        if (modalPlaceholder && selectMenuComponent) {
           selectMenuComponent.setPlaceholder(modalPlaceholder);
         }
       }
@@ -340,14 +341,14 @@ module.exports = {
       finalLabelComponents.push(labelComponent);
     }
 
-    //////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////
 
     const modal = new ModalBuilder()
       .setCustomId(cache.interaction.id)
       .setTitle(modalTitle)
       .setLabelComponents(finalLabelComponents);
 
-    //////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////
 
     this.registerModalSubmitResponses(cache.interaction.id, async (newInteraction) => {
       newInteraction.__originalInteraction = cache.interaction;

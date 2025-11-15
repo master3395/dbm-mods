@@ -91,7 +91,7 @@ module.exports = {
     const data = cache.actions[cache.index];
     const { TextInputBuilder, ModalBuilder, ActionRowBuilder } = require('discord.js');
     const tempVariableNames = [];
-    let componentsArr = [];
+    const componentsArr = [];
 
     if (Array.isArray(data.textInputs)) {
       const existingTempVars = [];
@@ -100,7 +100,7 @@ module.exports = {
 
         const unusedNameTemplate = 'unusedTempVarName';
         let j = 0;
-        let unusedName = unusedNameTemplate + '0';
+        let unusedName = `${unusedNameTemplate}0`;
         while (existingTempVars.includes(unusedName)) {
           unusedName = unusedNameTemplate + ++j;
         }
@@ -133,7 +133,7 @@ module.exports = {
           .setCustomId(cache.interaction.id)
           .setTitle(this.evalMessage(data.title, cache));
 
-        componentsArr.map((c) => {
+        componentsArr.forEach((c) => {
           const row = new ActionRowBuilder().addComponents(c);
 
           modalData.addComponents(row);

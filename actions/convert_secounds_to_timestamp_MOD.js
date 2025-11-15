@@ -45,7 +45,7 @@ module.exports = {
 
     if (isNaN(time)) return this.callNextAction(cache);
 
-    const futureTimestamp = Math.floor(Date.now() / 1000) + parseInt(time);
+    const futureTimestamp = Math.floor(Date.now() / 1000) + parseInt(time, 10);
 
     const discordTimestamp = `<t:${futureTimestamp}:R>`; // Format Discorda: <t:timestamp:R>
 

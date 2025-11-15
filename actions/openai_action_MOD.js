@@ -387,6 +387,7 @@ module.exports = {
         fs.mkdirSync(helperDir, { recursive: true });
       }
 
+      /* eslint-disable no-template-curly-in-string */
       const helperContent = [
         "const { setTimeout: delay } = require('timers/promises');",
         '',
@@ -541,6 +542,7 @@ module.exports = {
         '};',
         '',
       ].join('\n');
+      /* eslint-enable no-template-curly-in-string */
 
       try {
         fs.writeFileSync(helperPath, helperContent, 'utf8');

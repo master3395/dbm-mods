@@ -1,19 +1,19 @@
 module.exports = {
-  //---------------------------------------------------------------------
-  //region Action Name
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Action Name
+  // ---------------------------------------------------------------------
 
   name: 'Store Giveaway Info',
 
-  //---------------------------------------------------------------------
-  //region Action Section
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Action Section
+  // ---------------------------------------------------------------------
 
   section: 'Giveaway System',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
     const giveaway = data.varName || data.giveawayIdInput || 'Unknown Giveaway';
@@ -127,9 +127,9 @@ module.exports = {
     return `Get info from giveaway (${giveaway}): ${info}`;
   },
 
-  //---------------------------------------------------------------------
-  //region Action Meta Data
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Action Meta Data
+  // ---------------------------------------------------------------------
 
   meta: {
     version: '2.2.0',
@@ -139,9 +139,9 @@ module.exports = {
     downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/g_store_giveaway_info_MOD.js',
   },
 
-  //---------------------------------------------------------------------
-  //region Action Storage Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Action Storage Function
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage2, 10);
@@ -257,15 +257,15 @@ module.exports = {
     return [data.varName2, info];
   },
 
-  //---------------------------------------------------------------------
-  //region Action Fields
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Action Fields
+  // ---------------------------------------------------------------------
 
   fields: ['storage', 'varName', 'giveawayIdInput', 'giveawayInfo', 'storage2', 'varName2'],
 
-  //---------------------------------------------------------------------
-  //region Command HTML
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Command HTML
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -330,9 +330,9 @@ module.exports = {
       `;
   },
 
-  //---------------------------------------------------------------------
-  //region Action Editor Init Code
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Action Editor Init Code
+  // ---------------------------------------------------------------------
 
   init() {
     const { glob, document } = this;
@@ -353,15 +353,15 @@ module.exports = {
     toggleIdField();
   },
 
-  //---------------------------------------------------------------------
-  //region Action Bot Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Action Bot Function
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
     const { GiveawayInfo, GiveawayInfoFields } = require('discord-giveaways-s');
 
-    ///////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////
     const giveawayInfo = parseInt(data.giveawayInfo, 10);
     let gId;
     if (data.storage === 'giveawayById') {
@@ -371,7 +371,7 @@ module.exports = {
       const varName = this.evalMessage(data.varName, cache);
       gId = this.getVariable(type, varName, cache);
     }
-    ///////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////
     let resultInfo;
     switch (giveawayInfo) {
       case 0:
@@ -452,7 +452,7 @@ module.exports = {
       case 25: // Host (object)
         {
           try {
-            let tempHostId = GiveawayInfo({
+            const tempHostId = GiveawayInfo({
               storage: './data/giveaways.json',
               giveawayId: gId,
               info: GiveawayInfoFields.HOST_ID,
@@ -466,7 +466,7 @@ module.exports = {
       case 26: // Guild (object)
         {
           try {
-            let tempGuildId = GiveawayInfo({
+            const tempGuildId = GiveawayInfo({
               storage: './data/giveaways.json',
               giveawayId: gId,
               info: GiveawayInfoFields.GUILD_ID,
@@ -481,7 +481,7 @@ module.exports = {
       case 27: // Channel (object)
         {
           try {
-            let tempChannelId = GiveawayInfo({
+            const tempChannelId = GiveawayInfo({
               storage: './data/giveaways.json',
               giveawayId: gId,
               info: GiveawayInfoFields.CHANNEL_ID,
@@ -495,18 +495,18 @@ module.exports = {
       case 28: // Message (object)
         {
           try {
-            let tempChannelId = GiveawayInfo({
+            const tempChannelId = GiveawayInfo({
               storage: './data/giveaways.json',
               giveawayId: gId,
               info: GiveawayInfoFields.CHANNEL_ID,
             });
             const tempChannel = await this.getChannelFromData(101, tempChannelId, cache);
-            let tempMessageId = GiveawayInfo({
+            const tempMessageId = GiveawayInfo({
               storage: './data/giveaways.json',
               giveawayId: gId,
               info: GiveawayInfoFields.MESSAGE_ID,
             });
-            let tempMessage = await tempChannel.messages.fetch(tempMessageId);
+            const tempMessage = await tempChannel.messages.fetch(tempMessageId);
             resultInfo = tempMessage;
           } catch {
             resultInfo = null;
@@ -529,7 +529,7 @@ module.exports = {
       default:
         break;
     }
-    ///////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////
 
     const info =
       GiveawayInfo({
@@ -544,9 +544,9 @@ module.exports = {
     this.callNextAction(cache);
   },
 
-  //---------------------------------------------------------------------
-  //region Action Bot Mod
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
+  // region Action Bot Mod
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

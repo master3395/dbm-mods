@@ -1,27 +1,27 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   name: 'Check Variable',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   section: 'Conditions',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
     return `${presets.getConditionsText(data)}`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   meta: {
     version: '2.2.0',
@@ -31,17 +31,19 @@ module.exports = {
     downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/bot-files/actions/check_variable.js',
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   fields: ['storage', 'varName', 'comparison', 'value', 'branch'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
+    void isEvent;
+    void data;
     return `
 <retrieve-from-variable allowSlashParams dropdownLabel="Variable" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></retrieve-from-variable>
 
@@ -80,22 +82,22 @@ module.exports = {
 <conditional-input id="branch" style="padding-top: 8px;"></conditional-input>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Pre-Init Code
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   preInit(data, formatters) {
     return formatters.compatibility_2_0_0_iftruefalse_to_branch(data);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {
     const { glob, document } = this;
 
-    glob.onComparisonChanged = function (event) {
+    glob.onComparisonChanged = function onComparisonChanged(event) {
       if (event.value === '0') {
         document.getElementById('directValue').style.display = 'none';
       } else {
@@ -106,9 +108,9 @@ module.exports = {
     glob.onComparisonChanged(document.getElementById('comparison'));
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   action(cache) {
     const data = cache.actions[cache.index];
@@ -126,12 +128,16 @@ module.exports = {
     if (val2 === 'true') val2 = true;
     if (val2 === 'false') val2 = false;
 
+    /* eslint-disable eqeqeq */
+    const isLooselyEqual = (a, b) => a == b;
+    /* eslint-enable eqeqeq */
+
     switch (compare) {
       case 0:
         result = val1 !== undefined;
         break;
       case 1:
-        result = val1 == val2;
+        result = isLooselyEqual(val1, val2);
         break;
       case 2:
         result = val1 === val2;
@@ -142,7 +148,7 @@ module.exports = {
       case 4:
         result = val1 > val2;
         break;
-      case 5:
+      case 5: {
         let includesVal1 = val1;
         if (typeof includesVal1 !== 'string' && !Array.isArray(includesVal1)) {
           includesVal1 = String(includesVal1);
@@ -151,9 +157,10 @@ module.exports = {
           result = includesVal1.includes(val2);
         }
         break;
+      }
       case 6:
         if (typeof val1?.match === 'function') {
-          result = Boolean(val1.match(new RegExp('^' + val2 + '$', 'i')));
+          result = Boolean(val1.match(new RegExp(`^${val2}$`, 'i')));
         }
         break;
       case 7:
@@ -185,18 +192,18 @@ module.exports = {
     this.executeResults(result, data?.branch ?? data, cache);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod Init
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   modInit(data) {
     this.prepareActions(data.branch?.iftrueActions);
     this.prepareActions(data.branch?.iffalseActions);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

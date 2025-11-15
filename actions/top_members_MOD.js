@@ -282,7 +282,7 @@ module.exports = {
     }
 
     topPlayers.forEach(([userId, data], index) => {
-      let prefix = usePrefix ? '> ' : '';
+      const prefix = usePrefix ? '> ' : '';
       let number = useNumbers ? `${index + 1}. ` : '';
       let value = showValues ? `${data[dataName]}` : '';
       let formattedSuffix = suffix ? ` ${suffix}` : '';

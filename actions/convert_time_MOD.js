@@ -1,40 +1,40 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
   //
   // This is the name of the action displayed in the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   name: 'Convert Time',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
   //
   // This is the section the action will fall into.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   section: 'Other Stuff',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
   //
   // This function generates the subtitle displayed next to the name.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  subtitle: function (data) {
+  subtitle(data) {
     const convertFroms = ['Miliseconds', 'Seconds', 'Minutes', 'Hours'];
     const convertTos = ['Miliseconds', 'Seconds', 'Minutes', 'Hours'];
-    return `Convert ${data.time} ${convertFroms[parseInt(data.convertFrom)]} to ${
-      convertTos[parseInt(data.convertTo)]
+    return `Convert ${data.time} ${convertFroms[parseInt(data.convertFrom, 10)]} to ${
+      convertTos[parseInt(data.convertTo, 10)]
     }`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // DBM Mods Manager Variables (Optional but nice to have!)
   //
   // These are variables that DBM Mods Manager uses to show information
   // about the mods for people to see in the list.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   meta: {
     version: '2.2.0',
@@ -44,32 +44,32 @@ module.exports = {
     downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/',
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
   //
   // Stores the relevant variable info for the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  variableStorage: function (data, varType) {
-    const type = parseInt(data.storage);
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
     if (type !== varType) return;
-    let dataType = 'Number';
+    const dataType = 'Number';
     return [data.varName, dataType];
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
   //
   // These are the fields for the action. These fields are customized
   // by creating elements with corresponding IDs in the HTML. These
   // are also the names of the fields stored in the action's JSON data.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   fields: ['time', 'convertFrom', 'convertTo', 'storage', 'varName'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
   //
   // This function returns a string containing the HTML used for
@@ -83,9 +83,9 @@ module.exports = {
   // Each is an array: index 0 for commands, index 1 for events.
   // The names are: sendTargets, members, roles, channels,
   //                messages, servers, variables
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  html: function (isEvent, data) {
+  html(isEvent, data) {
     return `
 <div>
 	<div>
@@ -129,96 +129,96 @@ module.exports = {
 </div>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  init: function () {},
+  init() {},
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existance.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  action: function (cache) {
+  action(cache) {
     const data = cache.actions[cache.index];
-    const amount = parseInt(this.evalMessage(data.time, cache));
+    const amount = parseInt(this.evalMessage(data.time, cache), 10);
     const convFrom = parseFloat(data.convertFrom);
     const convTo = parseFloat(data.convertTo);
-    const storage = parseInt(data.storage);
+    const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
 
-    var result = undefined;
+    let result = undefined;
     function Converter(from, to, amount) {
       switch (from) {
-        case 0: //From miliseconds
+        case 0: // From miliseconds
           switch (to) {
             case 0:
-              result = parseFloat(amount); //Same
+              result = parseFloat(amount); // Same
               break;
             case 1:
-              result = parseFloat(amount / 1000); //To seconds
+              result = parseFloat(amount / 1000); // To seconds
               break;
             case 2:
-              result = parseFloat(amount / 60000); //To minutes
+              result = parseFloat(amount / 60000); // To minutes
               break;
             case 3:
-              result = parseFloat(amount / 3600000); //To hours
+              result = parseFloat(amount / 3600000); // To hours
               break;
           }
           break;
-        case 1: //From seconds
+        case 1: // From seconds
           switch (to) {
             case 0:
-              result = parseFloat(amount * 1000); //To miliseconds
+              result = parseFloat(amount * 1000); // To miliseconds
               break;
             case 1:
-              result = parseFloat(amount); //Same
+              result = parseFloat(amount); // Same
               break;
             case 2:
-              result = parseFloat(amount / 60); //To minutes
+              result = parseFloat(amount / 60); // To minutes
               break;
             case 3:
-              result = parseFloat(amount / 3600); //To hours
+              result = parseFloat(amount / 3600); // To hours
               break;
           }
           break;
-        case 2: //From minutes
+        case 2: // From minutes
           switch (to) {
             case 0:
-              result = parseFloat(amount * 60000); //To miliseconds
+              result = parseFloat(amount * 60000); // To miliseconds
               break;
             case 1:
-              result = parseFloat(amount * 60); //To seconds
+              result = parseFloat(amount * 60); // To seconds
               break;
             case 2:
-              result = parseFloat(amount); //Same
+              result = parseFloat(amount); // Same
               break;
             case 3:
-              result = parseFloat(amount / 60); //To hours
+              result = parseFloat(amount / 60); // To hours
               break;
           }
           break;
-        case 3: //From hours
+        case 3: // From hours
           switch (to) {
             case 0:
-              result = parseFloat(amount * 6000000); //To miliseconds
+              result = parseFloat(amount * 6000000); // To miliseconds
               break;
             case 1:
-              result = parseFloat(amount * 3600); //To seconds
+              result = parseFloat(amount * 3600); // To seconds
               break;
             case 2:
-              result = parseFloat(amount * 60); //To minutes
+              result = parseFloat(amount * 60); // To minutes
               break;
             case 3:
-              result = parseFloat(amount); //Same
+              result = parseFloat(amount); // Same
               break;
           }
           break;
@@ -230,14 +230,14 @@ module.exports = {
     this.callNextAction(cache);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflictions between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  mod: function (DBM) {},
+  mod() {},
 }; // End of module

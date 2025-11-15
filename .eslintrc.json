@@ -11,12 +11,19 @@
   "ignorePatterns": ["node_modules/*"],
   "rules": {
     "func-name-matching": 0,
+    "func-names": 0,
     "no-alert": 0,
     "no-catch-shadow": 0,
     "no-eval": 0,
     "no-negated-condition": 0,
     "no-useless-constructor": 0,
     "prefer-destructuring": 0,
-    "prefer-rest-params": 0
+    "prefer-rest-params": 0,
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "none"
+      }
+    ]
   }
 }
