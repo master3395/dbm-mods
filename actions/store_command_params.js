@@ -1,85 +1,106 @@
 module.exports = {
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Command Only
-  // ---------------------------------------------------------------------
+  //
+  // If this is 'true', then this will only be available for commands.
+  //---------------------------------------------------------------------
 
   commandOnly: true,
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Name
-  // ---------------------------------------------------------------------
+  //
+  // This is the name of the action displayed in the editor.
+  //---------------------------------------------------------------------
 
-  name: 'Store Command Params',
+  name: "Store Command Params",
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Section
-  // ---------------------------------------------------------------------
+  //
+  // This is the section the action will fall into.
+  //---------------------------------------------------------------------
 
-  section: 'Other Stuff',
+  section: "Other Stuff",
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Subtitle
-  // ---------------------------------------------------------------------
+  //
+  // This function generates the subtitle displayed next to the name.
+  //---------------------------------------------------------------------
 
   subtitle(data, presets) {
     const infoSources = [
-      'One Parameter',
-      'Multiple Parameters',
-      'Mentioned Member',
-      'Mentioned Role',
-      'Mentioned Channel',
+      "One Parameter",
+      "Multiple Parameters",
+      "Mentioned Member",
+      "Mentioned Role",
+      "Mentioned Channel",
     ];
     return `${infoSources[parseInt(data.info, 10)]} #${data.infoIndex}`;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Storage Function
-  // ---------------------------------------------------------------------
+  //
+  // Stores the relevant variable info for the editor.
+  //---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
     const info = parseInt(data.info, 10);
-    let dataType = 'None';
+    let dataType = "None";
     switch (info) {
       case 0:
       case 1:
-        dataType = 'Text';
+        dataType = "Text";
         break;
       case 2:
-        dataType = 'Server Member';
+        dataType = "Server Member";
         break;
       case 3:
-        dataType = 'Role';
+        dataType = "Role";
         break;
       case 4:
-        dataType = 'Channel';
+        dataType = "Channel";
         break;
     }
     return [data.varName, dataType];
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Meta Data
-  // ---------------------------------------------------------------------
+  //
+  // Helps check for updates and provides info if a custom mod.
+  // If this is a third-party mod, please set "author" and "authorUrl".
+  //
+  // It's highly recommended "preciseCheck" is set to false for third-party mods.
+  // This will make it so the patch version (0.0.X) is not checked.
+  //---------------------------------------------------------------------
 
-  meta: {
-    version: '2.2.0',
-    preciseCheck: true,
-    author: null,
-    authorUrl: null,
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/bot-files/actions/store_command_params.js',
-  },
+  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Fields
-  // ---------------------------------------------------------------------
+  //
+  // These are the fields for the action. These fields are customized
+  // by creating elements with corresponding IDs in the HTML. These
+  // are also the names of the fields stored in the action's JSON data.
+  //---------------------------------------------------------------------
 
-  fields: ['info', 'infoIndex', 'storage', 'varName'],
+  fields: ["info", "infoIndex", "storage", "varName"],
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Command HTML
-  // ---------------------------------------------------------------------
+  //
+  // This function returns a string containing the HTML used for
+  // editing actions.
+  //
+  // The "isEvent" parameter will be true if this action is being used
+  // for an event. Due to their nature, events lack certain information,
+  // so edit the HTML to reflect this.
+  //---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -105,44 +126,52 @@ module.exports = {
 <store-in-variable style="padding-top: 8px;" dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>`;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Editor Init Code
-  // ---------------------------------------------------------------------
+  //
+  // When the HTML is first applied to the action editor, this code
+  // is also run. This helps add modifications or setup reactionary
+  // functions for the DOM elements.
+  //---------------------------------------------------------------------
 
   init() {
     const { glob, document } = this;
 
     glob.onSourceInfoChanged = function (event) {
       const value = parseInt(event.value, 10);
-      const infoCountLabel = document.getElementById('infoCountLabel');
+      const infoCountLabel = document.getElementById("infoCountLabel");
       switch (value) {
         case 0:
-          infoCountLabel.innerHTML = 'Parameter Number';
+          infoCountLabel.innerHTML = "Parameter Number";
           break;
         case 1:
-          infoCountLabel.innerHTML = 'Starting From Parameter Number';
+          infoCountLabel.innerHTML = "Starting From Parameter Number";
           break;
         case 2:
-          infoCountLabel.innerHTML = 'Member Mention Number';
+          infoCountLabel.innerHTML = "Member Mention Number";
           break;
         case 3:
-          infoCountLabel.innerHTML = 'Role Mention Number';
+          infoCountLabel.innerHTML = "Role Mention Number";
           break;
         case 4:
-          infoCountLabel.innerHTML = 'Channel Mention Number';
+          infoCountLabel.innerHTML = "Channel Mention Number";
           break;
         default:
-          infoCountLabel.innerHTML = '';
+          infoCountLabel.innerHTML = "";
           break;
       }
     };
 
-    glob.onSourceInfoChanged(document.getElementById('info'));
+    glob.onSourceInfoChanged(document.getElementById("info"));
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Function
-  // ---------------------------------------------------------------------
+  //
+  // This is the function for the action within the Bot's Action class.
+  // Keep in mind event calls won't have access to the "msg" parameter,
+  // so be sure to provide checks for variable existence.
+  //---------------------------------------------------------------------
 
   action(cache) {
     const data = cache.actions[cache.index];
@@ -160,24 +189,125 @@ module.exports = {
     let content = null;
     const getContent = () => {
       if (content === null) {
-        separator = Files.data.settings.separator || '\\s+';
+        separator = Files.data.settings.separator || "\\s+";
         Bot.populateTagRegex();
-        content = msg.content?.replace(Bot.tagRegex, '').replace(Bot.checkTag(msg.content), '').trimStart();
+        const raw = String(msg.content || "");
+        const allowPrefixSpace = Files.data.settings.allowPrefixSpace === "true";
+        const globalTag = String(Files.data.settings.tag || "");
+        const guildTag =
+          msg.guild && msg.guild.prefix != null && String(msg.guild.prefix).length > 0
+            ? String(msg.guild.prefix)
+            : globalTag;
+        const escapeRe = (s) => s.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+        const prefixCandidates = [];
+        if (guildTag) {
+          prefixCandidates.push(guildTag);
+        }
+        if (guildTag === ";" && !prefixCandidates.includes("!")) {
+          prefixCandidates.push("!");
+        }
+        if (guildTag === "!" && !prefixCandidates.includes(";")) {
+          prefixCandidates.push(";");
+        }
+        if (globalTag && !prefixCandidates.includes(globalTag)) {
+          prefixCandidates.push(globalTag);
+        }
+
+        let cmdName = "";
+        try {
+          if (typeof Bot.checkTag === "function") {
+            cmdName = Bot.checkTag(msg) || Bot.checkTag(raw) || "";
+          }
+        } catch (e) {
+          cmdName = "";
+        }
+        if (!cmdName) {
+          const firstTok = raw.split(new RegExp(separator))[0];
+          for (let pi = 0; pi < prefixCandidates.length; pi++) {
+            const t = prefixCandidates[pi];
+            if (t && firstTok.startsWith(t)) {
+              cmdName = firstTok.slice(t.length);
+              break;
+            }
+          }
+        }
+
+        let afterPrefix = raw;
+        let stripped = false;
+        for (let pi = 0; pi < prefixCandidates.length; pi++) {
+          const t = prefixCandidates[pi];
+          if (!t) {
+            continue;
+          }
+          const localTagRe = new RegExp(`^${escapeRe(t)}${allowPrefixSpace ? "\\s*" : ""}`);
+          if (localTagRe.test(raw)) {
+            afterPrefix = raw.replace(localTagRe, "");
+            stripped = true;
+            break;
+          }
+        }
+        if (!stripped && Bot.tagRegex && Bot.tagRegex.test(raw)) {
+          afterPrefix = raw.replace(Bot.tagRegex, "");
+        }
+
+        if (cmdName) {
+          afterPrefix = afterPrefix.replace(new RegExp("^" + escapeRe(cmdName) + "\\b"), "").trimStart();
+        } else {
+          afterPrefix = afterPrefix.trimStart();
+        }
+        content = afterPrefix;
       }
       return content;
     };
 
     let source;
+    const resolveSlashOptionAtIndex = (opts, idx) => {
+      const arr = Array.isArray(opts?.data) ? opts.data : [];
+      if (arr.length === 0) {
+        return null;
+      }
+      let candidate = arr[idx];
+      let out = candidate != null ? this.getParameterFromParameterData(candidate) : null;
+      if (out === null || out === undefined) {
+        for (let i = 0; i < arr.length; i++) {
+          const o = arr[i];
+          if (!o || !Object.prototype.hasOwnProperty.call(o, "value")) {
+            continue;
+          }
+          const r = this.getParameterFromParameterData(o);
+          if (r !== null && r !== undefined) {
+            out = r;
+            break;
+          }
+        }
+      }
+      if ((out === null || out === undefined) && cache.interaction && typeof this.getParameterFromInteraction === "function") {
+        const named = arr[idx]?.name || arr[0]?.name;
+        if (named) {
+          try {
+            out = this.getParameterFromInteraction(cache.interaction, named);
+          } catch (_e) {
+            out = null;
+          }
+        }
+      }
+      return out;
+    };
+
     switch (infoType) {
+
       case 0: {
         if (interactionOptions) {
-          const result = this.getParameterFromParameterData(interactionOptions.data[index]);
-          if (result) {
+          const result = resolveSlashOptionAtIndex(interactionOptions, index);
+          if (result !== null && result !== undefined) {
             source = result;
           }
-        } else if (msg && getContent()) {
-          const params = content.split(new RegExp(separator));
-          source = params[index] || '';
+        } else if (msg) {
+          const remainder = getContent();
+          if (remainder != null && remainder !== "") {
+            const params = content.split(new RegExp(separator));
+            source = params[index] || "";
+          }
         }
         break;
       }
@@ -185,9 +315,10 @@ module.exports = {
       case 1: {
         if (interactionOptions) {
           const result = [];
+          const arr = Array.isArray(interactionOptions.data) ? interactionOptions.data : [];
           for (let i = 0; i < index; i++) {
-            const r = this.getParameterFromParameterData(interactionOptions.data[i]);
-            if (r) {
+            const r = this.getParameterFromParameterData(arr[i]);
+            if (r !== null && r !== undefined) {
               result.push(r);
             }
           }
@@ -196,9 +327,9 @@ module.exports = {
           }
         } else if (msg && getContent()) {
           const params = content.split(new RegExp(separator));
-          source = '';
+          source = "";
           for (let i = 0; i < index; i++) {
-            source += `${params[i]} `;
+            source += params[i] + " ";
           }
           const location = content.indexOf(source);
           if (location === 0) {
@@ -210,7 +341,7 @@ module.exports = {
 
       case 2: {
         if (interactionOptions) {
-          const options = interactionOptions.data.filter((option) => option.type === 'USER');
+          const options = interactionOptions.data.filter(option => option.type === "USER");
           if (options[index]) {
             source = options[index].member ?? options[index].user;
           }
@@ -225,7 +356,7 @@ module.exports = {
 
       case 3: {
         if (interactionOptions) {
-          const options = interactionOptions.data.filter((option) => option.type === 'ROLE');
+          const options = interactionOptions.data.filter(option => option.type === "ROLE");
           if (options[index]) {
             source = options[index].role;
           }
@@ -240,7 +371,7 @@ module.exports = {
 
       case 4: {
         if (interactionOptions) {
-          const options = interactionOptions.data.filter((option) => option.type === 'CHANNEL');
+          const options = interactionOptions.data.filter(option => option.type === "CHANNEL");
           if (options[index]) {
             source = options[index].channel;
           }
@@ -258,7 +389,7 @@ module.exports = {
       }
     }
 
-    if (source) {
+    if (typeof source !== "undefined" && source !== null && (source !== "" || interactionOptions)) {
       const storage = parseInt(data.storage, 10);
       const varName = this.evalMessage(data.varName, cache);
       this.storeValue(source, storage, varName, cache);
@@ -267,9 +398,14 @@ module.exports = {
     this.callNextAction(cache);
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Mod
-  // ---------------------------------------------------------------------
+  //
+  // Upon initialization of the bot, this code is run. Using the bot's
+  // DBM namespace, one can add/modify existing functions if necessary.
+  // In order to reduce conflicts between mods, be sure to alias
+  // functions you wish to overwrite.
+  //---------------------------------------------------------------------
 
   mod() {},
 };

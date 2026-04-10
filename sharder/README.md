@@ -7,7 +7,7 @@ Allows your bot created by Discord Bot Maker to take advantage of sharding!
 ## Requirements
 
 - Node.js 18+
-- discord.js **14.24.2** or newer (matches the mods repository)
+- discord.js **14.26.2** or newer (matches the mods repository)
 - A valid bot token supplied in one of the following ways:
   - `--token=YOUR_TOKEN_HERE`
   - Environment variable (`DBM_SHARD_TOKEN`, `DISCORD_TOKEN`, `DBM_TOKEN`, `BOT_TOKEN`, or `TOKEN`)

@@ -5,8 +5,8 @@ module.exports = {
     version: '2.2.0',
     preciseCheck: true,
     author: 'Shadow',
-    authorUrl: 'https://github.com/DBM-POLSKA',
-    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/convert_secounds_to_timestamp_MOD.js',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods',
   },
 
   subtitle(data) {
@@ -45,7 +45,7 @@ module.exports = {
 
     if (isNaN(time)) return this.callNextAction(cache);
 
-    const futureTimestamp = Math.floor(Date.now() / 1000) + parseInt(time, 10);
+    const futureTimestamp = Math.floor(Date.now() / 1000) + parseInt(time);
 
     const discordTimestamp = `<t:${futureTimestamp}:R>`; // Format Discorda: <t:timestamp:R>
 

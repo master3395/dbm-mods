@@ -3,7 +3,7 @@ module.exports = {
   name: 'Delete Webhook',
   section: 'Webhook Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -17,7 +17,7 @@ module.exports = {
   fields: ['webhook', 'varName'],
 
   html() {
-    return `<retrieve-from-variable dropdownLabel="Source Webhook" selectId="webhook" variableContainerId="varNameContainer" variableInputId="varName"></retrieve-from-variable>`;
+    return `<store-in-variable dropdownLabel="Source Webhook" selectId="webhook" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>`;
   },
 
   init() {},

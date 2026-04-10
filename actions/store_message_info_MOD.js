@@ -1,23 +1,6 @@
 module.exports = {
-  // ---------------------------------------------------------------------
-  // Action Name
-  //
-  // This is the name of the action displayed in the editor.
-  // ---------------------------------------------------------------------
   name: 'Store Message Info',
-
-  // ---------------------------------------------------------------------
-  // Action Section
-  //
-  // This is the section the action will fall into.
-  // ---------------------------------------------------------------------
   section: 'Messaging',
-
-  // ---------------------------------------------------------------------
-  // Action Subtitle
-  //
-  // This function generates the subtitle displayed next to the name.
-  // ---------------------------------------------------------------------
   subtitle(data, presets) {
     const info = [
       'Message Object',
@@ -53,11 +36,6 @@ module.exports = {
     return `${presets.getMessageText(data.message, data.varName)} - ${info[parseInt(data.info, 10)]}`;
   },
 
-  // ---------------------------------------------------------------------
-  // Action Storage Function
-  //
-  // Stores the relevant variable info for the editor.
-  // ---------------------------------------------------------------------
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
@@ -136,8 +114,6 @@ module.exports = {
         dataType = 'Guild ID';
         break;
       case 27:
-        dataType = 'Boolean';
-        break;
       case 28: // Added case for storing sticker count
         dataType = 'Number';
         break;
@@ -147,43 +123,10 @@ module.exports = {
     return [data.varName2, dataType];
   },
 
-  // ---------------------------------------------------------------------
-  // Action Meta Data
-  //
-  // Helps check for updates and provides info if a custom mod.
-  // If this is a third-party mod, please set "author" and "authorUrl".
-  //
-  // It's highly recommended "preciseCheck" is set to false for third-party mods.
-  // This will make it so the patch version (0.0.X) is not checked.
-  // ---------------------------------------------------------------------
+  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  meta: {
-    version: '2.2.0',
-    preciseCheck: true,
-    author: null,
-    authorUrl: null,
-    downloadUrl: null,
-  },
-
-  // ---------------------------------------------------------------------
-  // Action Fields
-  //
-  // These are the fields for the action. These fields are customized
-  // by creating elements with corresponding IDs in the HTML. These
-  // are also the names of the fields stored in the action's JSON data.
-  // ---------------------------------------------------------------------
   fields: ['message', 'varName', 'info', 'storage', 'varName2'],
 
-  // ---------------------------------------------------------------------
-  // Command HTML
-  //
-  // This function returns a string containing the HTML used for
-  // editing actions.
-  //
-  // The "isEvent" parameter will be true if this action is being used
-  // for an event. Due to their nature, events lack certain information,
-  // so edit the HTML to reflect this.
-  // ---------------------------------------------------------------------
   html() {
     return `
 <message-input dropdownLabel="Source Message" selectId="message" variableContainerId="varNameContainer" variableInputId="varName"></message-input>
@@ -191,36 +134,36 @@ module.exports = {
 <br><br><br>
 
 <div style="padding-top: 8px;">
-  <span class="dbminputlabel">Source Info</span><br>
-  <select id="info" class="round">
-    <option value="0" selected>Message Object</option>
-    <option value="1">Message ID</option>
-    <option value="2">Message Text</option>
-    <option value="3">Message Author</option>
-    <option value="4">Message Channel</option>
-    <option value="5">Message Timestamp</option>
-    <option value="6">Message Is Pinned?</option>
-    <option value="7">Message Is TTS?</option>
-    <option value="8">Message Attachments List</option>
-    <option value="9">Message Edits</option>
-    <option value="12">Messages Reactions Count</option>
-    <option value="13">Messages Mentioned Users List</option>
-    <option value="14">Messages Mentioned Users Count</option>
-    <option value="15">Message URL</option>
-    <option value="16">Message Creation Date</option>
-    <option value="17">Message Content Length</option>
-    <option value="18">Message Attachments Count</option>
-    <option value="19">Message Guild</option>
-    <option value="20">Message Type</option>
-    <option value="21">Message Webhook ID</option>
-    <option value="22">Message Embed Object</option>
-    <option value="23">Message Reference Object</option>
-    <option value="24">Replied-to Message ID</option>
-    <option value="25">Replied-to Message Channel ID</option>
-    <option value="26">Replied-to Message Guild ID</option>
-    <option value="27">Is Reply to Message?</option>
-    <option value="28">Message Stickers Count</option> <!-- Added option for sticker count -->
-  </select>
+	<span class="dbminputlabel">Source Info</span><br>
+	<select id="info" class="round">
+		<option value="0" selected>Message Object</option>
+		<option value="1">Message ID</option>
+		<option value="2">Message Text</option>
+		<option value="3">Message Author</option>
+		<option value="4">Message Channel</option>
+		<option value="5">Message Timestamp</option>
+		<option value="6">Message Is Pinned?</option>
+        <option value="7">Message Is TTS?</option>
+        <option value="8">Message Attachments List</option>
+		<option value="9">Message Edits</option>
+		<option value="12">Messages Reactions Count</option>
+		<option value="13">Messages Mentioned Users List</option>
+		<option value="14">Messages Mentioned Users Count</option>
+		<option value="15">Message URL</option>
+		<option value="16">Message Creation Date</option>
+		<option value="17">Message Content Length</option>
+		<option value="18">Message Attachments Count</option>
+		<option value="19">Message Guild</option>
+		<option value="20">Message Type</option>
+		<option value="21">Message Webhook ID</option>
+		<option value="22">Message Embed Object</option>
+        <option value="23">Message Reference Object</option>
+        <option value="24">Replied-to Message ID</option>
+        <option value="25">Replied-to Message Channel ID</option>
+        <option value="26">Replied-to Message Guild ID</option>
+        <option value="27">Is Reply to Message?</option>
+        <option value="28">Message Stickers Count</option> <!-- Added option for sticker count -->
+	</select>
 </div>
 
 <br>
@@ -228,139 +171,112 @@ module.exports = {
 <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>`;
   },
 
-  // ---------------------------------------------------------------------
-  // Action Editor Init Code
-  //
-  // When the HTML is first applied to the action editor, this code
-  // is also run. This helps add modifications or setup reactionary
-  // functions for the DOM elements.
-  // ---------------------------------------------------------------------
   init() {},
 
-  // ---------------------------------------------------------------------
-  // Action Bot Function
-  //
-  // This is the function for the action within the Bot's Action class.
-  // Keep in mind event calls won't have access to the "msg" parameter,
-  // so be sure to provide checks for variable existence.
-  // ---------------------------------------------------------------------
   async action(cache) {
-    try {
-      const data = cache.actions[cache.index];
-      const msg = await this.getMessageFromData(data.message, data.varName, cache);
+    const data = cache.actions[cache.index];
+    const msg = await this.getMessageFromData(data.message, data.varName, cache);
 
-      if (!msg) {
-        this.callNextAction(cache);
-        return;
-      }
+    if (!msg) {
+      this.callNextAction(cache);
+      return;
+    }
 
-      const info = parseInt(data.info, 10);
-      let result;
-      switch (info) {
-        case 0:
-          result = msg;
-          break;
-        case 1:
-          result = msg.id;
-          break;
-        case 2:
-          result = msg.content;
-          break;
-        case 3:
-          result = msg.member ?? msg.author;
-          break;
-        case 4:
-          result = msg.channel;
-          break;
-        case 5:
-          result = msg.createdTimestamp;
-          break;
-        case 6:
-          result = msg.pinned;
-          break;
-        case 7:
-          result = msg.tts;
-          break;
-        case 8:
-          result = [...msg.attachments.values()];
-          break;
-        case 9:
-          result = msg.edits;
-          break;
-        case 12:
-          result = msg.reactions.cache.size;
-          break;
-        case 13:
-          result = [...msg.mentions.users.values()];
-          break;
-        case 14:
-          result = msg.mentions.users.size;
-          break;
-        case 15:
-          result = msg.url;
-          break;
-        case 16:
-          result = msg.createdAt;
-          break;
-        case 17:
-          result = msg.content.length;
-          break;
-        case 18:
-          result = msg.attachments.size;
-          break;
-        case 19:
-          result = msg.guild;
-          break;
-        case 20:
-          result = msg.type;
-          break;
-        case 21:
-          result = msg.webhookId;
-          break;
-        case 22:
-          result = msg.embeds[0];
-          break;
-        case 23:
-          result = msg.reference;
-          break;
-        case 24:
-          result = msg.reference?.messageId;
-          break;
-        case 25:
-          result = msg.reference?.channelId;
-          break;
-        case 26:
-          result = msg.reference?.guildId;
-          break;
-        case 27:
-          result = msg.type === 'REPLY' && msg.reference?.messageId !== undefined;
-          break;
-        case 28:
-          result = msg.stickers ? msg.stickers.size : 0;
-          break;
-        default:
-          result = undefined;
-          break;
-      }
+    const info = parseInt(data.info, 10);
 
-      if (result !== undefined) {
-        const storage = parseInt(data.storage, 10);
-        const varName2 = this.evalMessage(data.varName2, cache);
-        this.storeValue(result, storage, varName2, cache);
-      }
-    } catch (error) {
-      console.error('Error in Store Message Info action:', error);
+    let result;
+    switch (info) {
+      case 0:
+        result = msg;
+        break;
+      case 1:
+        result = msg.id;
+        break;
+      case 2:
+        result = msg.content;
+        break;
+      case 3:
+        result = msg.member ?? msg.author;
+        break;
+      case 4:
+        result = msg.channel;
+        break;
+      case 5:
+        result = msg.createdTimestamp;
+        break;
+      case 6:
+        result = msg.pinned;
+        break;
+      case 7:
+        result = msg.tts;
+        break;
+      case 8:
+        result = [...msg.attachments.values()];
+        break;
+      case 9:
+        result = msg.edits;
+        break;
+      case 12:
+        result = msg.reactions.cache.size;
+        break;
+      case 13:
+        result = [...msg.mentions.users.values()];
+        break;
+      case 14:
+        result = msg.mentions.users.size;
+        break;
+      case 15:
+        result = msg.url;
+        break;
+      case 16:
+        result = msg.createdAt;
+        break;
+      case 17:
+        result = msg.content.length;
+        break;
+      case 18:
+        result = msg.attachments.size;
+        break;
+      case 19:
+        result = msg.guild;
+        break;
+      case 20:
+        result = msg.type;
+        break;
+      case 21:
+        result = msg.webhookId;
+        break;
+      case 22:
+        result = msg.embeds[0];
+        break;
+      case 23:
+        result = msg.reference;
+        break;
+      case 24:
+        result = msg.reference?.messageId;
+        break;
+      case 25:
+        result = msg.reference?.channelId;
+        break;
+      case 26:
+        result = msg.reference?.guildId;
+        break;
+      case 27:
+        result = msg.type === 'REPLY' && msg.reference?.messageId !== undefined;
+        break;
+      case 28: // Added case for storing sticker count
+        result = msg.stickers ? msg.stickers.size : 0;
+        break;
+      default:
+        break;
+    }
+    if (result !== undefined) {
+      const storage = parseInt(data.storage, 10);
+      const varName2 = this.evalMessage(data.varName2, cache);
+      this.storeValue(result, storage, varName2, cache);
     }
     this.callNextAction(cache);
   },
 
-  // ---------------------------------------------------------------------
-  // Action Bot Mod
-  //
-  // Upon initialization of the bot, this code is run. Using the bot's
-  // DBM namespace, one can add/modify existing functions if necessary.
-  // In order to reduce conflicts between mods, be sure to alias
-  // functions you wish to overwrite.
-  // ---------------------------------------------------------------------
   mod() {},
 };

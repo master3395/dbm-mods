@@ -3,7 +3,7 @@ module.exports = {
   section: 'Audio Control',
   requiresAudioLibraries: true,
 
-  subtitle(data) {
+  subtitle: function (data) {
     return 'Play media from URL';
   },
 
@@ -11,13 +11,13 @@ module.exports = {
     version: '2.2.0',
     preciseCheck: true,
     author: 'Shadow',
-    authorUrl: 'https://github.com/DBM-POLSKA',
-    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/play_url_MOD.js',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods',
   },
 
   fields: ['url', 'volume', 'bitrate', 'seek', 'type', 'channel', 'varName'],
 
-  html() {
+  html: function () {
     return `
 <div style="position:fixed;bottom:0;left:0;padding:5px;padding-top:5px;padding-bottom:5px;font:13px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'">Creator: Shadow<br><br>Help: <a href='https://discord.gg/9HYB4n3Dz4' target='_blank' style='color:#07f;text-decoration:none'>Discord</a></div><div style="position:fixed;bottom:0;right:0;padding:5px;font:20px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'"><a href='https://dbm-polska.github.io/DBM-14/' target='_blank' style='color:#07f;text-decoration:none'><!--Version-->1.1</a></div>
 
@@ -54,15 +54,16 @@ module.exports = {
 
   init() {},
 
-  async action(cache) {
+  action: async function (cache) {
     const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
     const { VoiceConnectionStatus } = require('@discordjs/voice');
     const data = cache.actions[cache.index];
+    const { client } = cache;
 
-    const guild = cache.guild || cache.server;
+    let guild = cache.guild || cache.server;
     if (!guild) return;
 
-    const voiceChannel = await this.getVoiceChannelFromData(data.channel, data.varName, cache);
+    let voiceChannel = await this.getVoiceChannelFromData(data.channel, data.varName, cache);
     if (!voiceChannel) return;
 
     try {
@@ -74,7 +75,7 @@ module.exports = {
 
       connection.on(VoiceConnectionStatus.Ready, () => {});
 
-      const volume = data.volume ? parseFloat(data.volume) / 100 : 1;
+      let volume = data.volume ? parseFloat(data.volume) / 100 : 1;
 
       const audioResource = createAudioResource(data.url, {
         inputType: data.bitrate ? 'opus' : 'webm',

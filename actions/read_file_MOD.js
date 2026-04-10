@@ -2,7 +2,7 @@ module.exports = {
   name: 'Read File',
   section: 'File Stuff',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -22,15 +22,17 @@ module.exports = {
 
   html() {
     return `
-  <div>
+<div>
+  <div style="float: left; width: 60%">
     <span class="dbminputlabel">Path</span>
     <input id="filename" class="round" type="text">
-  </div>
-  <br>
+  </div><br>
+</div>
+<br><br><br>
 
-  <div>
-    <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>
-  </div>`;
+<div>
+  <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>
+</div>`;
   },
 
   init() {},
@@ -42,9 +44,7 @@ module.exports = {
     try {
       if (path) {
         const output = readFileSync(path, 'utf8');
-        const storage = parseInt(data.storage, 10);
-        const varName2 = this.evalMessage(data.varName2, cache);
-        this.storeValue(output, storage, varName2, cache);
+        this.storeValue(output, parseInt(data.storage, 10), this.evalMessage(data.varName2, cache), cache);
       } else {
         console.log('File path is missing from read file mod!');
       }

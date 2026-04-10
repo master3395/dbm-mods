@@ -3,7 +3,7 @@ module.exports = {
   displayName: 'Clone Channel',
   section: 'Channel Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -152,7 +152,6 @@ module.exports = {
       nsfw: data.nsfw === '1' ? channel.nsfw : false,
       rateLimitPerUser: data.slowmode === '1' ? channel.rateLimitPerUser : 0,
       defaultReactionEmoji: channel.defaultReactionEmoji,
-      name: channel.name,
     };
 
     if (channel.type === 'GUILD_VOICE') {
@@ -170,7 +169,7 @@ module.exports = {
     }
 
     channel.guild.channels
-      .create(options)
+      .create(channel.name, options)
       .then((newChannel) => {
         const storage2 = parseInt(data.storage2, 10);
         const varName2 = this.evalMessage(data.varName2, cache);

@@ -2,7 +2,7 @@ module.exports = {
   name: 'Skip Actions',
   section: 'Other Stuff',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -17,10 +17,12 @@ module.exports = {
 
   html() {
     return `
-  <div>
+<div>
+  <div id="varNameContainer" style="float: left; width: 60%;">
     <span class="dbminputlabel">Actions To Skip</span><br>
     <input id="count" class="round" type="number">
-  </div>`;
+  </div>
+</div>`;
   },
 
   init() {},

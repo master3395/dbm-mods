@@ -2,7 +2,7 @@ module.exports = {
   name: 'Cleverbot',
   section: 'Other Stuff',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -37,7 +37,7 @@ module.exports = {
 <br>
 <div>
   <div>
-    <retrieve-from-variable dropdownLabel="Input Variable" selectId="inputVarType" variableContainerId="varNameContainer" variableInputId="varName"></retrieve-from-variable>
+    <store-in-variable dropdownLabel="Input Variable" selectId="inputVarType" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
   </div>  
   <br><br><br>
 
@@ -73,7 +73,12 @@ module.exports = {
 </div>`;
   },
 
-  init() {},
+  init() {
+    const { glob, document } = this;
+
+    glob.variableChange(document.getElementById('inputVarType'), 'varNameContainer');
+    glob.variableChange(document.getElementById('storage'), 'varNameContainer2');
+  },
 
   async action(cache) {
     const { Actions } = this.getDBM();

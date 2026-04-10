@@ -2,7 +2,7 @@ module.exports = {
   name: 'Find Invite',
   section: 'Invite Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -22,14 +22,16 @@ module.exports = {
 
   html() {
     return `
+<div>
   <div style="padding-top: 8px;">
     <span class="dbminputlabel">Source Invite</span>
-    <input id="invite" class="round" type="text" placeholder="Code or URL | e.g abcdef or discord.gg/abcdef">
+    <textarea class="round" id="invite" rows="1" placeholder="Code or URL | e.g abcdef or discord.gg/abcdef" style="width: 99%; font-family: monospace; white-space: nowrap; resize: none;"></textarea>
   </div><br>
+</div>
 
-  <div style="padding-top: 8px;">
-    <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
-  </div>`;
+<div style="padding-top: 8px;">
+  <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
+</div>`;
   },
 
   init() {},
@@ -47,7 +49,7 @@ module.exports = {
         this.storeValue(invite, storage, varName, cache);
         this.callNextAction(cache);
       })
-      .catch(this.displayError.bind(this, data, cache));
+      .catch(console.error);
   },
 
   mod() {},

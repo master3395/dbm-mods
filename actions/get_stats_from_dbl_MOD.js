@@ -1,9 +1,9 @@
 module.exports = {
   name: 'Get Bot Stats From DBL',
   displayName: 'Get Bot Stats From TopGG',
-  section: 'Bot Stats',
+  section: 'Other Stuff',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -170,7 +170,7 @@ module.exports = {
     if (!topggToken) return console.log('Missing TopGG Token in Get Bot Stats From TopGG');
 
     const Mods = this.getMods();
-    const fetch = Mods.require('node-fetch', '2');
+    const fetch = Mods.require('node-fetch');
 
     fetch(`https://top.gg/api/bots/${botID}`, {
       method: 'GET',

@@ -1,8 +1,8 @@
 module.exports = {
   name: 'Store Queue Info',
-  section: 'Music Control',
+  section: 'Audio Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -18,8 +18,8 @@ module.exports = {
       'Is Playing?',
       'Repeat Mode',
       'Progress Bar',
-      'REMOVED OPTION',
-      'Current Track',
+      'Formatted Track List',
+      'Now Playing',
       'Queue Channel',
       'Queue Object',
     ];
@@ -36,8 +36,8 @@ module.exports = {
         'Is Playing?',
         'Repeat Mode',
         'Progress Bar',
-        'REMOVED OPTION',
-        'Current Track',
+        'Formatted Track List',
+        'Now Playing',
         'Queue Channel',
         'Queue Object',
       ][parseInt(data.info, 10)] || 'Queue Info',
@@ -53,18 +53,20 @@ module.exports = {
     }
 
 <div style="float: left; width: 100%;">
-  <span class="dbminputlabel">Queue Info</span><br>
+<span class="dbminputlabel">Queue Info</span><br>
   <select id="info" class="round">
     <option value="0">Tracks</option>
     <option value="1">Previous Tracks</option>
     <option value="2">Is Playing?</option>
     <option value="3">Repeat Mode</option>
     <option value="4">Progress Bar</option>
-    <option value="6">Current Track</option>
+    <option value="5">Formatted Track List</option>
+    <option value="6">Now Playing</option>
     <option value="7">Queue Channel</option>
     <option value="8">Queue Object</option>
   </select>
 </div>
+<br><br><br><br>
 
 <div style="float: left; width: 100%; padding-top: 16px;">
   <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
@@ -83,12 +85,12 @@ module.exports = {
     let queue = this.getVariable(type, varName, cache);
 
     if (!queue) {
-      const { useQueue } = require('discord-player');
+      const { Bot } = this.getDBM();
 
-      const server = cache.server;
+      const server = cache.msg?.guildId ?? cache.interaction?.guildId;
       if (!server) return this.callNextAction(cache);
 
-      queue = useQueue(server.id);
+      queue = Bot.bot.player.getQueue(server);
       if (!queue) return this.callNextAction(cache);
     }
 
@@ -98,19 +100,22 @@ module.exports = {
         result = queue.tracks;
         break;
       case 1:
-        result = queue.history.tracks;
+        result = queue.previousTracks;
         break;
       case 2:
-        result = queue.node.isPlaying();
+        result = queue.playing;
         break;
       case 3:
         result = queue.repeatMode;
         break;
       case 4:
-        result = queue.node.createProgressBar({ timecodes: true });
+        result = queue.createProgressBar({ timecodes: true });
+        break;
+      case 5:
+        result = queue.toString();
         break;
       case 6:
-        result = queue.currentTrack;
+        result = queue.nowPlaying();
         break;
       case 7:
         result = queue.metadata.channel;

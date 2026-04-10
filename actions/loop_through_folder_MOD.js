@@ -2,7 +2,7 @@ module.exports = {
   name: 'Loop through Folder',
   section: 'Lists and Loops',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -29,11 +29,12 @@ module.exports = {
     - This is a good path: ./resources/images<br>
     - This will turn all filenames in the folder into an array.<br>
   </p>
-  <div>
+  <div style="float: left; width: 60%">
     <span class="dbminputlabel">Folder Path</span>
     <input id="filename" class="round" type="text">
   </div><br>
 </div>
+<br><br><br>
 
 <div>
   <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>

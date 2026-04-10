@@ -2,7 +2,7 @@ module.exports = {
   name: 'Generate Random Word(s)',
   section: 'Other Stuff',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -53,7 +53,7 @@ module.exports = {
     const data = cache.actions[cache.index];
     const type = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
-    const wordsPerString = parseInt(this.evalMessage(data.wps, cache), 10);
+    const wps = parseInt(this.evalMessage(data.wps, cache), 10);
     const min = parseInt(this.evalMessage(data.min, cache), 10);
     const max = parseInt(this.evalMessage(data.max, cache), 10) + 1;
 
@@ -63,12 +63,12 @@ module.exports = {
     } else if (isNaN(max)) {
       console.log(`Error with Generate Random Word(s), Action #${cache.index}: max is not a number`);
       return this.callNextAction(cache);
-    } else if (isNaN(wordsPerString)) {
+    } else if (isNaN(wps)) {
       console.log(`Error with Generate Random Word(s), Action #${cache.index}: Words Per Sentence is not a number`);
       return this.callNextAction(cache);
     }
 
-    const words = randomWords({ min, max, wordsPerString });
+    const words = randomWords({ min, max, wordsPerString: wps });
     this.storeValue(words, type, varName, cache);
     this.callNextAction(cache);
   },

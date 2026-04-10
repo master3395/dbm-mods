@@ -6,7 +6,7 @@ module.exports = {
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/convert_color_MOD.js',
+    downloadURL: 'https://github.com/dbm-network/mods',
   },
 
   subtitle(data) {

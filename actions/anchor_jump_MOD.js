@@ -2,11 +2,11 @@ module.exports = {
   name: 'Jump to Anchor',
   section: 'Other Stuff',
   meta: {
-    version: '2.2.0',
-    preciseCheck: true,
+    version: '2.1.7',
+    preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/anchor_jump_MOD.js',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/anchor_jump_MOD.js',
   },
 
   subtitle(data) {
@@ -53,19 +53,27 @@ module.exports = {
   },
 
   mod(DBM) {
+    function resolveAnchorIndex(actions, id) {
+      return actions.findIndex((a) => {
+        if (a.name === 'Create Anchor' && a.anchor_id === id) return true;
+        if (a.name === 'Action Anchor' && a.anchorName === id) return true;
+        return false;
+      });
+    }
+
     DBM.Actions.anchorJump = function anchorJump(id, cache) {
-      const anchorIndex = cache.actions.findIndex((a) => a.name === 'Create Anchor' && a.anchor_id === id);
-      if (anchorIndex === -1) throw new Error('There was not an anchor found with that exact anchor ID!');
+      const anchorIndex = resolveAnchorIndex(cache.actions, id);
+      if (anchorIndex === -1) {
+        console.warn('[Jump to Anchor] No anchor found for ID: "' + id + '". Continuing to next action.');
+        this.callNextAction(cache);
+        return;
+      }
       cache.index = anchorIndex - 1;
       this.callNextAction(cache);
     };
 
     DBM.Actions.anchorExist = function anchorExist(id, cache) {
-      const anchorIndex = cache.actions.findIndex((a) => a.name === 'Create Anchor' && a.anchor_id === id);
-      if (anchorIndex === -1) {
-        return false;
-      }
-      return true;
+      return resolveAnchorIndex(cache.actions, id) !== -1;
     };
   },
 };

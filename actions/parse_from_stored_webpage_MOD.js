@@ -2,7 +2,7 @@ module.exports = {
   name: 'Parse From Stored Webpage',
   section: 'HTML/XML Things',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -32,7 +32,7 @@ module.exports = {
   </div>
 
   <div>
-    <retrieve-from-variable dropdownLabel="Source HTML" selectId="source" variableContainerId="sourceVarNameContainer" variableInputId="sourceVarName"></retrieve-from-variable>
+    <store-in-variable dropdownLabel="Source HTML" selectId="source" variableContainerId="sourceVarNameContainer" variableInputId="sourceVarName"></store-in-variable>
   </div>
   <br><br><br>
   
@@ -127,7 +127,9 @@ module.exports = {
       const html = this.getVariable(source, sourceVarName, cache);
 
       const xpath = Mods.require('xpath');
-      const DOM = Mods.require('xmldom').DOMParser;
+      // Use @xmldom/xmldom instead of deprecated xmldom
+      const xmldom = Mods.require('@xmldom/xmldom') || Mods.require('xmldom');
+      const DOM = xmldom.DOMParser;
       const ent = Mods.require('ent');
 
       if (myXPath) {

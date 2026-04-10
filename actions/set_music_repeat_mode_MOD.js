@@ -1,8 +1,8 @@
 module.exports = {
   name: 'Set Music Repeat Mode',
-  section: 'Music Control',
+  section: 'Audio Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -32,14 +32,11 @@ module.exports = {
   init() {},
 
   action(cache) {
+    const { Bot } = this.getDBM();
     const data = cache.actions[cache.index];
+    const queue = Bot.bot.player.getQueue(cache.server);
     const action = parseInt(data.action, 10);
-    const { useQueue } = require('discord-player');
 
-    const server = cache.server;
-    if (!server) return this.callNextAction(cache);
-
-    const queue = useQueue(server.id);
     if (!queue) return this.callNextAction(cache);
 
     switch (action) {

@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store Json From WebAPI',
   section: 'JSON Things',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -65,19 +65,17 @@ module.exports = {
     </div>
   </div>
 
-  <div style="float: left; width: 100%;">
+  <div style="float: left; width: 95%;">
     <div style="padding-top: 16px;">
       <span class="dbminputlabel">JSON Path</span>
-      <input id="path" class="round" type="text"></input>
+      <input id="path" class="round" style="width: 75%;" type="text"></input>
     </div>
 
-    <div style="padding-top: 16px;">
-      <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
-    </div>
+    <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
   </div>
 
-  <div style="float: left; width: 100%; padding-top: 16px;">
-    <div style="float: left; width: 35%;">
+  <div style="float: left; width: 95%; padding-top: 16px;">
+    <div style="float: left; width: 47.5%;">
       <label for="reUse"><span class="dbminputlabel">Re-Use Previously Stored</span></label>
       <select id="reUse" class="round" onchange="glob.disallowAlert(this)">
         <option value="1" selected>Allow</option>
@@ -85,7 +83,7 @@ module.exports = {
       </select>
       <p style="margin-left: 4px;">Toggles re-use of previously stored JSON from same URL.</p>
     </div>
-    <div style="float: right; width: 60%;">
+    <div style="float: right; width: 47.5%;">
       <label for="debugMode"><span class="dbminputlabel">Debug Mode</span></label>
       <select id="debugMode" class="round">
         <option value="1">Enabled</option>
@@ -143,7 +141,47 @@ module.exports = {
     const data = cache.actions[cache.index];
     const { Actions } = this.getDBM();
     const Mods = this.getMods();
-    const fetch = Mods.require('node-fetch', '2');
+    let fetch;
+    try {
+      // First try built-in fetch (Node.js 18+)
+      if (typeof globalThis.fetch === 'function') {
+        fetch = globalThis.fetch;
+      } else if (typeof global.fetch === 'function') {
+        fetch = global.fetch;
+      } else {
+        // Fallback to node-fetch if available
+        const nodeFetch = Mods.require('node-fetch');
+        // Handle both ESM and CJS exports
+        if (nodeFetch && typeof nodeFetch.default === 'function') {
+          fetch = nodeFetch.default;
+        } else if (typeof nodeFetch === 'function') {
+          fetch = nodeFetch;
+        } else {
+          throw new Error('node-fetch is not a function');
+        }
+      }
+    } catch (fetchError) {
+      // Last resort: try to use built-in fetch
+      if (typeof globalThis.fetch === 'function') {
+        fetch = globalThis.fetch;
+      } else if (typeof global.fetch === 'function') {
+        fetch = global.fetch;
+      } else {
+        console.error('[Store Json From WebAPI] fetch is not available. Please install node-fetch or use Node.js 18+');
+        const debugMode = parseInt(data.debugMode, 10);
+        if (debugMode) {
+          console.error('[Store Json From WebAPI] Fetch error:', fetchError);
+        }
+        return;
+      }
+    }
+    
+    // Ensure fetch is a function
+    if (typeof fetch !== 'function') {
+      console.error('[Store Json From WebAPI] fetch is not a function. Available:', typeof fetch);
+      return;
+    }
+    
     const debugMode = parseInt(data.debugMode, 10);
     const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
@@ -283,10 +321,45 @@ module.exports = {
 
           try {
             const response = await fetch(url, { headers: setHeaders });
-            const json = await response.json();
+            
+            // Check if response is OK before parsing JSON
+            if (!response.ok) {
+              const text = await response.text();
+              storeData(`HTTP ${response.status}: ${text}`, response, null);
+              return;
+            }
+            
+            // Check content type before parsing JSON
+            const contentType = response.headers.get('content-type') || '';
+            if (!contentType.includes('application/json') && !contentType.includes('text/json')) {
+              // Response is not JSON, read as text
+              const text = await response.text();
+              storeData(`Response is not JSON (content-type: ${contentType})`, response, null);
+              if (debugMode) {
+                console.warn(`WebAPI: Response is not JSON. Content-Type: ${contentType}, First 100 chars: ${text.substring(0, 100)}`);
+              }
+              return;
+            }
+            
+            // Try to parse JSON with error handling
+            let json;
+            try {
+              const text = await response.text();
+              json = JSON.parse(text);
+            } catch (parseError) {
+              // JSON parsing failed - store error instead
+              storeData(`JSON parse error: ${parseError.message}`, response, null);
+              if (debugMode) {
+                console.error('WebAPI: JSON parsing failed:', parseError.message);
+              }
+              return;
+            }
+            
             storeData('', response, json);
           } catch (err) {
             if (debugMode) console.error(err.stack || err);
+            // Store error in variable
+            storeData(err.message || 'Unknown error', { statusCode: 0 }, null);
           }
         }
       } catch (err) {

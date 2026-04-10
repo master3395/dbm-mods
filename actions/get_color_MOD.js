@@ -5,8 +5,8 @@ module.exports = {
     version: '3.2.5',
     preciseCheck: true,
     author: 'Shadow',
-    authorUrl: 'https://github.com/DBM-POLSKA',
-    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/get_color_MOD.js',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods',
   },
 
   subtitle(data) {

@@ -2,13 +2,18 @@
   "$schema": "https://json.schemastore.org/package",
   "name": "mods",
   "version": "2.2.0",
-  "description": "DBM Mods - Actions, Events, and Extensions for Discord Bot Maker. Compatible with DBM 1.7/2.2.0 and Discord.js 14.24.2",
+  "description": "DBM Mods - Actions, Events, and Extensions for Discord Bot Maker. Compatible with DBM 1.7/2.2.0 and Discord.js 14.26.2",
   "repository": "https://github.com/dbm-network/mods",
   "private": true,
   "license": "MIT",
   "scripts": {
     "lint": "eslint --cache actions events extensions sharder",
     "lint:fix": "eslint --fix --cache actions events extensions sharder",
+    "lint:ts": "eslint --cache bot.ts types.ts",
+    "lint:ts:fix": "eslint --fix --cache bot.ts types.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "verify:bot": "npm run typecheck && npm run lint:ts",
+    "lint:all": "npm run lint && npm run lint:ts",
     "prettier:check": "prettier --check **/*.{js,json,yml}",
     "prettier:fix": "prettier --write **/*.{js,json,yml}"
   },
@@ -17,10 +22,15 @@
     "npm": ">=7.0.0"
   },
   "devDependencies": {
+    "@types/node": "^20.19.39",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "discord.js": "^14.26.2",
     "eslint": "^8.0.1",
     "eslint-config-aqua": "^9.0.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "typescript": "~5.4.0"
   }
 }

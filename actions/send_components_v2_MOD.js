@@ -6,16 +6,16 @@ module.exports = {
     preciseCheck: true,
     author: 'Shadow & vxed_',
     authorUrl: 'https://github.com/shadoow051',
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/tree/main/mods/actions/send_components_v2_MOD.js.js',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
-  size() {
+  size: function () {
     return { width: 640, height: 550 };
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // region 📃 Subtitle Text
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   subtitle(data, presets) {
     const components = data.components ?? [];
@@ -24,13 +24,13 @@ module.exports = {
     const selectedType = (components[0]?.componentType || components[0]?.containerComponentType || '').toLowerCase();
 
     const countComponents = (arr, isNested = false) => {
-      let btn = 0;
-      let sel = 0;
-      let txt = 0;
-      let sec = 0;
-      let img = 0;
-      let sep = 0;
-      let file = 0;
+      let btn = 0,
+        sel = 0,
+        txt = 0,
+        sec = 0,
+        img = 0,
+        sep = 0,
+        file = 0;
 
       if (!Array.isArray(arr)) return { btn, sel, txt, sec, img, sep, file };
 
@@ -108,6 +108,10 @@ module.exports = {
       return { btn, sel, txt, sec, img, sep, file };
     };
 
+    const single = components.length === 1 ? components[0] : null;
+    const type = single?.componentType;
+    const isOnlyContainer = type === 'Container' && Array.isArray(single.containerComponents);
+
     const top = countComponents(components);
 
     const parts = [];
@@ -141,9 +145,9 @@ module.exports = {
     return defaultText;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // region 📦 Action Storage
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
@@ -151,9 +155,9 @@ module.exports = {
     return [data.varName2, data.dontSend ? 'Message Options' : 'Message'];
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // region 🔢 Action Fields
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   fields: [
     'channel',
@@ -182,13 +186,11 @@ module.exports = {
     'allowedMentionMember',
   ],
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // region #️⃣ Command HTML
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   html(isEvent, data) {
-    void isEvent;
-    void data;
     return `
   <div style="position:fixed;bottom:0;left:0;padding:5px;padding-top:5px;padding-bottom:5px;font:13px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'">Creator: Shadow & vxed_<br><br>Help: <a href='https://discord.gg/9HYB4n3Dz4' target='_blank' style='color:#07f;text-decoration:none'>Discord</a></div><div style="position:fixed;bottom:0;right:0;padding:5px;font:20px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'"><a href='https://dbm-polska.github.io/DBM-14/' target='_blank' style='color:#07f;text-decoration:none'><!--Version-->3.4.0</a></div>
 
@@ -1171,25 +1173,25 @@ module.exports = {
 </tab-system>`;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Editor Init Code
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   init() {},
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // region 💾 Action Editor Save
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   onSave(data, helpers) {
     const genId = () => `msg-button-${helpers.generateUUID().substring(0, 7)}`;
     const genSelectId = () => `msg-select-${helpers.generateUUID().substring(0, 7)}`;
 
     if (Array.isArray(data?.components)) {
-      for (const comp of data.components) {
+      for (const [i, comp] of data.components.entries()) {
         // Główne Buttons (w Containerze)
         if (Array.isArray(comp.buttons)) {
-          for (const btn of comp.buttons) {
+          for (const [j, btn] of comp.buttons.entries()) {
             if (!btn.id || btn.id === '0') {
               btn.id = genId();
             }
@@ -1198,7 +1200,7 @@ module.exports = {
 
         // Główne SelectMenus
         if (Array.isArray(comp.selectMenus)) {
-          for (const sel of comp.selectMenus) {
+          for (const [j, sel] of comp.selectMenus.entries()) {
             if (!sel.id || sel.id === '0') {
               sel.id = genSelectId();
             }
@@ -1207,7 +1209,7 @@ module.exports = {
 
         // Container Buttons
         if (Array.isArray(comp.containerButtons)) {
-          for (const btn of comp.containerButtons) {
+          for (const [j, btn] of comp.containerButtons.entries()) {
             if (!btn.containerId || btn.containerId === '0') {
               btn.containerId = genId();
             }
@@ -1216,7 +1218,7 @@ module.exports = {
 
         // Container Select Menus
         if (Array.isArray(comp.containerSelectMenus)) {
-          for (const sel of comp.containerSelectMenus) {
+          for (const [j, sel] of comp.containerSelectMenus.entries()) {
             if (!sel.containerId || sel.containerId === '0') {
               sel.containerId = genSelectId();
             }
@@ -1225,7 +1227,7 @@ module.exports = {
 
         // Section Buttons (accessories)
         if (Array.isArray(comp.sectionComponents)) {
-          for (const acc of comp.sectionComponents) {
+          for (const [j, acc] of comp.sectionComponents.entries()) {
             if (acc.accessoryType === 'button' && (!acc.id || acc.id === '0')) {
               acc.id = genId();
             }
@@ -1234,10 +1236,10 @@ module.exports = {
 
         // Container Components (zagnieżdżone)
         if (Array.isArray(comp.containerComponents)) {
-          for (const child of comp.containerComponents) {
+          for (const [k, child] of comp.containerComponents.entries()) {
             // Child Container Buttons
             if (Array.isArray(child.containerButtons)) {
-              for (const btn of child.containerButtons) {
+              for (const [l, btn] of child.containerButtons.entries()) {
                 if (!btn.containerId || btn.containerId === '0') {
                   btn.containerId = genId();
                 }
@@ -1246,7 +1248,7 @@ module.exports = {
 
             // Child Container SelectMenus
             if (Array.isArray(child.containerSelectMenus)) {
-              for (const sel of child.containerSelectMenus) {
+              for (const [l, sel] of child.containerSelectMenus.entries()) {
                 if (!sel.containerId || sel.containerId === '0') {
                   sel.containerId = genSelectId();
                 }
@@ -1255,7 +1257,7 @@ module.exports = {
 
             // Child SectionComponents (buttons w sekcji)
             if (Array.isArray(child.sectionComponents)) {
-              for (const acc of child.sectionComponents) {
+              for (const [l, acc] of child.sectionComponents.entries()) {
                 if (acc.accessoryType === 'button' && (!acc.id || acc.id === '0')) {
                   acc.id = genId();
                 }
@@ -1269,9 +1271,9 @@ module.exports = {
     return data;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // region ✏️ Action Editor Paste
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   onPaste(data, helpers) {
     const genId = () => `msg-button-${helpers.generateUUID().substring(0, 7)}`;
@@ -1349,12 +1351,36 @@ module.exports = {
     return data;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // region 🛠️ Action Functions
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
-  async action(cache) {
+  action: async function (cache) {
     const data = cache.actions[cache.index];
+    const DBM = this.getDBM();
+    const DiscordJS = DBM.DiscordJS;
+    
+    // Version detection for compatibility
+    const version = DiscordJS.version || '0.0.0';
+    const majorVersion = DBM.getDiscordJSMajorVersion ? DBM.getDiscordJSMajorVersion() : parseInt(version.split('.')[0], 10);
+    const isV13 = DBM.isDiscordJSv13 ? DBM.isDiscordJSv13() : majorVersion === 13;
+    const isV14 = DBM.isDiscordJSv14 ? DBM.isDiscordJSv14() : majorVersion === 14;
+    
+    // Message Components v2 are only available in v14.24.0+
+    // For v13, we'll provide a helpful error message
+    if (isV13) {
+      console.error('[Send Components V2] Message Components v2 are only available in Discord.js v14.24.0+. Current version: ' + version);
+      this.callNextAction(cache);
+      return;
+    }
+    
+    // Check if v2 components are available (v14.24.0+)
+    if (isV14 && !DiscordJS.TextDisplayBuilder) {
+      console.error('[Send Components V2] Message Components v2 require Discord.js v14.24.0+. Current version: ' + version);
+      this.callNextAction(cache);
+      return;
+    }
+    
     const {
       MessageFlags,
       ActionRowBuilder,
@@ -1374,7 +1400,7 @@ module.exports = {
       RoleSelectMenuBuilder,
       MentionableSelectMenuBuilder,
       ChannelSelectMenuBuilder,
-    } = this.getDBM().DiscordJS;
+    } = DiscordJS;
     let targetChannel = null;
     const channelType = data.channel;
     const varNameRaw = data.varName;
@@ -1466,17 +1492,19 @@ module.exports = {
 
     const allComponents = Array.isArray(data.components) ? data.components.flat() : [];
 
-    // ////////////////////////////////
+    allComponents.forEach((component, index) => {});
+
+    //////////////////////////////////
     // region ! CREATE COMP !
-    // ////////////////////////////////
+    //////////////////////////////////
 
     const attachments = [];
     const finalComponents = [];
 
     for (const c of allComponents) {
-      // ////////////////////////////////
+      //////////////////////////////////
       // region ## Content
-      // ////////////////////////////////
+      //////////////////////////////////
       if (c.componentType === 'Content' && typeof c.message === 'string' && c.message.trim().length > 0) {
         const parsed = this.evalMessage(c.message, cache);
 
@@ -1486,9 +1514,9 @@ module.exports = {
 
         continue;
       }
-      // ////////////////////////////////
+      //////////////////////////////////
       // region ## Separators
-      // ////////////////////////////////
+      //////////////////////////////////
       if (c.componentType === 'Separators' && Array.isArray(c.separators) && c.separators.length > 0) {
         for (const separator of c.separators) {
           const sizeName = separator.separatorSize;
@@ -1500,9 +1528,9 @@ module.exports = {
         continue;
       }
 
-      // ////////////////////////////////
+      //////////////////////////////////
       // region ## Media Gallery
-      // ////////////////////////////////
+      //////////////////////////////////
       if (c.componentType === 'Images' && Array.isArray(c.images) && c.images.length > 0) {
         const mediaItems = c.images
           .map((img) => {
@@ -1535,9 +1563,9 @@ module.exports = {
         continue;
       }
 
-      // ////////////////////////////////
+      //////////////////////////////////
       // region ## Files
-      // ////////////////////////////////
+      //////////////////////////////////
       if (c.componentType === 'Files' && Array.isArray(c.files) && c.files.length > 0) {
         for (const file of c.files) {
           const filePath = path.resolve(file.fileUrl);
@@ -1557,9 +1585,9 @@ module.exports = {
         continue;
       }
 
-      // ////////////////////////////////
+      //////////////////////////////////
       // region ## Buttons
-      // ////////////////////////////////
+      //////////////////////////////////
       if (Array.isArray(c.buttons) && c.buttons.length > 0) {
         const row = new ActionRowBuilder();
 
@@ -1601,7 +1629,7 @@ module.exports = {
             }
 
             const disabled =
-              typeof btn.ButtonDisabled === 'string' ? btn.ButtonDisabled === 'true' : Boolean(btn.ButtonDisabled);
+              typeof btn.ButtonDisabled === 'string' ? btn.ButtonDisabled === 'true' : !!btn.ButtonDisabled;
 
             button.setDisabled(disabled);
 
@@ -1613,7 +1641,7 @@ module.exports = {
               button.actions = actions;
 
               const mode = btn.mode || 'MULTI';
-              const time = parseInt(btn.time, 10) || 60000;
+              const time = parseInt(btn.time) || 60000;
               const userId = cache.getUser()?.id;
 
               btn.actions = actions; // KLUCZOWE!
@@ -1651,9 +1679,9 @@ module.exports = {
         continue;
       }
 
-      // ////////////////////////////////
+      //////////////////////////////////
       // region ## Select menus
-      // ////////////////////////////////
+      //////////////////////////////////
       if (c.componentType === 'Select Menus' && Array.isArray(c.selectMenus)) {
         for (const menu of c.selectMenus) {
           const BuilderMap = {
@@ -1702,7 +1730,7 @@ module.exports = {
 
             const id = menu.id;
             const mode = menu.mode || 'MULTI';
-            const time = parseInt(menu.time, 10) || 60000;
+            const time = parseInt(menu.time) || 60000;
             const userId = cache.getUser()?.id;
 
             menu.actions = actions; // ⬅️ TO DODAJ
@@ -1732,9 +1760,9 @@ module.exports = {
         continue;
       }
 
-      // ////////////////////////////////
+      //////////////////////////////////
       // region ## Sections
-      // ////////////////////////////////
+      //////////////////////////////////
       if (c.componentType === 'Section' && Array.isArray(c.sectionComponents)) {
         const content = c.sectionMessage?.trim() || '\u200B';
 
@@ -1745,9 +1773,9 @@ module.exports = {
           // 2) SectionBuilder
           const section = new SectionBuilder().addTextDisplayComponents(textComp);
 
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Thumbnail accessory
-          // ////////////////////////////////
+          //////////////////////////////////
           if (sec.accessoryType === 'thumbnail' && sec.thumbnailUrl) {
             section.setThumbnailAccessory(
               new ThumbnailBuilder({
@@ -1757,9 +1785,9 @@ module.exports = {
             );
           }
 
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Button accessory
-          // ////////////////////////////////
+          //////////////////////////////////
           if (sec.accessoryType === 'button') {
             const style = sec.type === 'link' ? ButtonStyle.Link : Number(sec.type) || ButtonStyle.Primary;
 
@@ -1768,9 +1796,9 @@ module.exports = {
             const btnBuilder = new ButtonBuilder().setStyle(style);
 
             if (label) {
-              btnBuilder.setLabel(label);
+              button.setLabel(label);
             } else if (!sec.emoji) {
-              btnBuilder.setLabel('Button');
+              button.setLabel('Button');
             }
 
             if (style === ButtonStyle.Link) {
@@ -1792,7 +1820,7 @@ module.exports = {
               const disabledRaw =
                 sec.ButtonDisabled ?? sec.containerButtonDisabled ?? sec.ButtonSectionDisabled ?? false;
 
-              const disabled = typeof disabledRaw === 'string' ? disabledRaw === 'true' : Boolean(disabledRaw);
+              const disabled = typeof disabledRaw === 'string' ? disabledRaw === 'true' : !!disabledRaw;
 
               btnBuilder.setDisabled(disabled);
 
@@ -1802,7 +1830,7 @@ module.exports = {
                 btnBuilder.actions = actions;
 
                 const mode = sec.mode || 'MULTI';
-                const time = parseInt(sec.time, 10) || 60000;
+                const time = parseInt(sec.time) || 60000;
                 const userId = cache.getUser()?.id;
 
                 sec.actions = actions;
@@ -1836,9 +1864,9 @@ module.exports = {
         continue;
       }
 
-      // ////////////////////////////////
+      //////////////////////////////////
       // region ## Container
-      // ////////////////////////////////
+      //////////////////////////////////
       if (c.componentType === 'Container' && Array.isArray(c.containerComponents) && c.containerComponents.length > 0) {
         const container = new ContainerBuilder()
           .setAccentColor(
@@ -1849,30 +1877,30 @@ module.exports = {
           .setSpoiler(c.containerSpoiler);
 
         for (const child of c.containerComponents) {
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Content
-          // ////////////////////////////////
+          //////////////////////////////////
           const parsed = this.evalMessage(child.containerMessage, cache);
 
           if (typeof parsed === 'string' && parsed.trim().length > 0) {
             container.addTextDisplayComponents(new TextDisplayBuilder().setContent(parsed));
           }
 
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Separators
-          // ////////////////////////////////
+          //////////////////////////////////
           if (child.containerComponentType === 'Separators' && Array.isArray(child.containerSeparators)) {
             for (const sep of child.containerSeparators) {
               const sizeEnum = SeparatorSpacingSize[sep.containerSeparatorSize];
-              if (sizeEnum !== null && sizeEnum !== undefined) {
+              if (sizeEnum != null) {
                 container.addSeparatorComponents(new SeparatorBuilder().setSpacing(sizeEnum));
               }
             }
           }
 
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Images
-          // ////////////////////////////////
+          //////////////////////////////////
           if (child.containerComponentType === 'Images' && Array.isArray(child.containerImages)) {
             const items = child.containerImages
               .map((i) => {
@@ -1904,9 +1932,9 @@ module.exports = {
             }
           }
 
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Files
-          // ////////////////////////////////
+          //////////////////////////////////
           if (child.containerComponentType === 'Files' && Array.isArray(child.containerFiles)) {
             for (const f of child.containerFiles) {
               const filePath = path.resolve(f.containerFileUrl);
@@ -1926,9 +1954,9 @@ module.exports = {
             }
           }
 
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Buttons
-          // ////////////////////////////////
+          //////////////////////////////////
           if (child.containerComponentType === 'Buttons' && Array.isArray(child.containerButtons)) {
             const row = new ActionRowBuilder();
 
@@ -1943,8 +1971,8 @@ module.exports = {
 
                 const rawLabel = this.evalMessage(btn.containerName, cache);
                 const label = rawLabel?.trim();
-                const hasLabel = Boolean(label);
-                const hasEmoji = Boolean(btn.containerEmoji);
+                const hasLabel = !!label;
+                const hasEmoji = !!btn.containerEmoji;
 
                 const rawUrl = btn.containerUrl?.trim();
                 const url = this.evalMessage(rawUrl, cache);
@@ -1980,8 +2008,8 @@ module.exports = {
 
                 button = new ButtonBuilder().setStyle(style).setCustomId(id);
 
-                const hasLabel = Boolean(label);
-                const hasEmoji = Boolean(btn.containerEmoji);
+                const hasLabel = !!label;
+                const hasEmoji = !!btn.containerEmoji;
 
                 if (hasLabel) {
                   button.setLabel(label);
@@ -1997,7 +2025,7 @@ module.exports = {
                 const disabled =
                   typeof btn.containerButtonDisabled === 'string'
                     ? btn.containerButtonDisabled === 'true'
-                    : Boolean(btn.containerButtonDisabled);
+                    : !!btn.containerButtonDisabled;
 
                 button.setDisabled(disabled);
 
@@ -2008,7 +2036,7 @@ module.exports = {
 
                   const id = btn.containerId;
                   const mode = btn.containerMode || 'MULTI';
-                  const time = parseInt(btn.containerTime, 10) || 60000;
+                  const time = parseInt(btn.containerTime) || 60000;
                   const userId = cache.getUser()?.id;
 
                   btn.actions = actions; // ⬅️ ważne!
@@ -2040,9 +2068,9 @@ module.exports = {
             container.addActionRowComponents(row);
           }
 
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Select Menus
-          // ////////////////////////////////
+          //////////////////////////////////
           if (child.containerComponentType === 'Select Menus' && Array.isArray(child.containerSelectMenus)) {
             for (const menu of child.containerSelectMenus) {
               const BuilderMap = {
@@ -2092,7 +2120,7 @@ module.exports = {
 
                 const id = menu.containerId;
                 const mode = menu.containerMode || 'MULTI';
-                const time = parseInt(menu.time, 10) || 60000;
+                const time = parseInt(menu.time) || 60000;
                 const userId = cache.getUser()?.id;
 
                 menu.actions = actions; // ⬅️ TO DODAJ
@@ -2123,9 +2151,9 @@ module.exports = {
             }
           }
 
-          // ////////////////////////////////
+          //////////////////////////////////
           // region ^ Section
-          // ////////////////////////////////
+          //////////////////////////////////
           if (
             child.containerComponentType === 'Section' &&
             Array.isArray(child.sectionComponents) &&
@@ -2194,7 +2222,7 @@ module.exports = {
                     btnBuilder.actions = actions;
 
                     const mode = sec.mode || 'MULTI';
-                    const time = parseInt(sec.time, 10) || 60000;
+                    const time = parseInt(sec.time) || 60000;
                     const userId = cache.getUser()?.id;
 
                     sec.actions = actions;
@@ -2232,9 +2260,9 @@ module.exports = {
       }
     }
 
-    // ////////////////////////////////
+    //////////////////////////////////
     // region % SENDING MESS
-    // ////////////////////////////////
+    //////////////////////////////////
 
     const interaction = cache.interaction;
     const inputChannelId = this.evalMessage(data.varName, cache);
@@ -2279,7 +2307,7 @@ module.exports = {
       if (data.editMessage === 'intUpdate' && interaction?.isMessageComponent?.()) {
         message = interaction.message;
       } else {
-        message = this.getVariable(parseInt(data.editMessage, 10), data.editMessageVarName, cache);
+        message = this.getVariable(parseInt(data.editMessage), data.editMessageVarName, cache);
       }
 
       if (message?.edit) {
@@ -2341,7 +2369,7 @@ module.exports = {
 
       // 🧠 Zapisz wiadomość do zmiennej (Store In)
       if (sentMessage && data.storage !== 'none') {
-        this.storeValue(sentMessage, parseInt(data.storage, 10), data.varName2, cache);
+        this.storeValue(sentMessage, parseInt(data.storage), data.varName2, cache);
       }
       for (let i = 0; i < awaitResponses.length; i++) {
         const response = awaitResponses[i];
@@ -2379,9 +2407,9 @@ module.exports = {
     this.callNextAction(cache);
   },
 
-  // ////////////////////////////////
+  //////////////////////////////////
   // region ! Bot Mod Init !
-  // ////////////////////////////////
+  //////////////////////////////////
 
   modInit(data) {
     if (!Array.isArray(data?.components)) return;
@@ -2441,9 +2469,9 @@ module.exports = {
     data.components.forEach(walk);
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Mod
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   mod() {},
 };

@@ -2,7 +2,7 @@ module.exports = {
   name: 'Create Server',
   section: 'Server Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -52,7 +52,7 @@ module.exports = {
     if (!serverName) return this.callNextAction(cache);
 
     botClient.guilds
-      .create({ name: serverName })
+      .create(serverName)
       .then((server) => {
         const storage = parseInt(data.storage, 10);
         const varName = this.evalMessage(data.varName, cache);

@@ -13,8 +13,8 @@ module.exports = {
     version: '2.2.0',
     preciseCheck: true,
     author: 'Shadow',
-    authorUrl: 'https://github.com/DBM-POLSKA',
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/control_channel_data_MOD.js',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
   fields: ['channel', 'varName', 'dataName', 'changeType', 'value'],

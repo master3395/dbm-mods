@@ -39,7 +39,7 @@ module.exports = {
     preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/get_item_from_object_MOD.js',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
   // ---------------------------------------------------------------------

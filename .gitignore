@@ -3,3 +3,7 @@
 node_modules
 .history
 .eslintcache
+.env
+.env.*
+**/config.secrets.json
+extensions/dashboard_EXT/data/

@@ -1,9 +1,9 @@
 module.exports = {
   name: 'Sends Stats to DBL',
   displayName: 'Send Stats to TopGG',
-  section: 'Bot Stats',
+  section: 'Other Stuff',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -29,9 +29,14 @@ module.exports = {
   <div style="float: left; width: 100%; padding-top: 8px;">
     <span class="dbminputlabel">Info to Send</span>
     <select id="info" class="round">
-      <option value="0">Send Server Count Only</option>
-      <option value="1">Send Shard & Server Count</option>
-    </select>
+    <option value="0">Send Server Count Only</option>
+    <option value="1">Send Shard & Server Count</option>
+  </select>
+  <br>
+  
+  <p>
+    • Do not send anything about shards if you don't shard your bot, otherwise it'll crash your bot!
+  </p>
   </div>
 </div>`;
   },
@@ -43,7 +48,7 @@ module.exports = {
     const token = this.evalMessage(data.dblToken, cache);
     const info = parseInt(data.info, 10);
     const Mods = this.getMods();
-    const fetch = Mods.require('node-fetch', '2');
+    const fetch = Mods.require('node-fetch');
     const client = this.getDBM().Bot.bot;
 
     const body = [

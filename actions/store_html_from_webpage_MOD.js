@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store HTML From Webpage',
   section: 'HTML/XML Things',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -39,7 +39,7 @@ module.exports = {
 
   async action(cache) {
     const Mods = this.getMods();
-    const fetch = Mods.require('node-fetch', '2');
+    const fetch = Mods.require('node-fetch');
 
     const data = cache.actions[cache.index];
 

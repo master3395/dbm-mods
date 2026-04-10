@@ -6,7 +6,7 @@ module.exports = {
     preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/canvas_create_primitive_MOD.js',
+    downloadURL: 'https://github.com/dbm-network/mods',
   },
 
   subtitle(data) {

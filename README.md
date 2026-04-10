@@ -20,12 +20,20 @@
 ## Compatibility
 
 - **DBM Versions:** 1.7, 2.2.0
-- **Discord.js Version:** 14.24.2
-- **Total Actions:** 406
-- **Total Events:** 40
+- **Discord.js Version:** 14.26.2
+- **Total Actions:** 515
+- **Total Events:** 47
 - **Total Extensions:** Includes dashboard, command info, server prefixes, topgg, pastebin, and more
 
-This repository has been fully updated to support Discord.js v14.24.2 with all deprecated methods replaced (EmbedBuilder, ButtonBuilder, ActionRowBuilder, PermissionFlagsBits, etc.). All files are English-only and follow DBM best practices.
+### Dashboard leaderboard database (MySQL / MariaDB)
+
+If you use the **dashboard** extension with the **leaderboard** feature, create the tables from [`sql/leveling_system_schema.sql`](sql/leveling_system_schema.sql):
+
+1. Copy `sql/leveling_system_schema.sql` to your **DBM bot project root** (next to `bot.js`), keeping the path `sql/leveling_system_schema.sql`.
+2. In `extensions/dashboard_EXT/config.json`, set `leaderboard.database` (`host`, `user`, `password`, `database`). Do not commit real credentials.
+3. In the dashboard admin UI, use the leaderboard database setup (or run the SQL manually in MySQL).
+
+This repository has been fully updated to support Discord.js v14.26.2 with all deprecated methods replaced (EmbedBuilder, ButtonBuilder, ActionRowBuilder, PermissionFlagsBits, etc.). All files are English-only and follow DBM best practices.
 
 # Downloads
 

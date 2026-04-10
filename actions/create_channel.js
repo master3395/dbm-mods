@@ -1,66 +1,87 @@
 module.exports = {
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Name
-  // ---------------------------------------------------------------------
+  //
+  // This is the name of the action displayed in the editor.
+  //---------------------------------------------------------------------
 
-  name: 'Create Text Channel',
+  name: "Create Text Channel",
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Section
-  // ---------------------------------------------------------------------
+  //
+  // This is the section the action will fall into.
+  //---------------------------------------------------------------------
 
-  section: 'Channel Control',
+  section: "Channel Control",
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Subtitle
-  // ---------------------------------------------------------------------
+  //
+  // This function generates the subtitle displayed next to the name.
+  //---------------------------------------------------------------------
 
   subtitle(data, presets) {
     return `${data.channelName}`;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Storage Function
-  // ---------------------------------------------------------------------
+  //
+  // Stores the relevant variable info for the editor.
+  //---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
-    return [data.varName, 'Channel'];
+    return [data.varName, "Channel"];
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Meta Data
-  // ---------------------------------------------------------------------
+  //
+  // Helps check for updates and provides info if a custom mod.
+  // If this is a third-party mod, please set "author" and "authorUrl".
+  //
+  // It's highly recommended "preciseCheck" is set to false for third-party mods.
+  // This will make it so the patch version (0.0.X) is not checked.
+  //---------------------------------------------------------------------
 
-  meta: {
-    version: '2.2.0',
-    preciseCheck: true,
-    author: null,
-    authorUrl: null,
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/bot-files/actions/create_channel.js',
-  },
+  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Fields
-  // ---------------------------------------------------------------------
+  //
+  // These are the fields for the action. These fields are customized
+  // by creating elements with corresponding IDs in the HTML. These
+  // are also the names of the fields stored in the action's JSON data.
+  //---------------------------------------------------------------------
 
-  fields: ['server', 'varName2', 'channelName', 'categoryID', 'topic', 'position', 'reason', 'storage', 'varName'],
+  fields: ["channelName", "topic", "position", "storage", "varName", "categoryID", "reason"],
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Command HTML
-  // ---------------------------------------------------------------------
+  //
+  // This function returns a string containing the HTML used for
+  // editing actions.
+  //
+  // The "isEvent" parameter will be true if this action is being used
+  // for an event. Due to their nature, events lack certain information,
+  // so edit the HTML to reflect this.
+  //---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
-<server-input dropdownLabel="Server" selectId="server" variableContainerId="varNameContainer2" variableInputId="varName2"></server-input>
-<br><br><br>
 <span class="dbminputlabel">Name</span><br>
 <input id="channelName" class="round" type="text">
+
 <br>
+
 <span class="dbminputlabel">Category ID</span><br>
 <input id= "categoryID" class="round" type="text" placeholder="Leave blank for default!">
+
 <br>
+
 <div style="float: left; width: calc(50% - 12px);">
 	<span class="dbminputlabel">Topic</span><br>
 	<input id="topic" class="round" type="text"><br>
@@ -69,37 +90,50 @@ module.exports = {
 	<span class="dbminputlabel">Position</span><br>
 	<input id="position" class="round" type="text" placeholder="Leave blank for default!"><br>
 </div>
+
+<br><br><br><br>
+
+<hr class="subtlebar" style="margin-top: 0px;">
+
 <br>
+
 <div>
   <span class="dbminputlabel">Reason</span>
   <input id="reason" placeholder="Optional" class="round" type="text">
 </div>
+
 <br>
+
 <store-in-variable allowNone selectId="storage" variableInputId="varName" variableContainerId="varNameContainer"></store-in-variable>`;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Editor Init Code
-  // ---------------------------------------------------------------------
+  //
+  // When the HTML is first applied to the action editor, this code
+  // is also run. This helps add modifications or setup reactionary
+  // functions for the DOM elements.
+  //---------------------------------------------------------------------
 
   init() {},
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Function
-  // ---------------------------------------------------------------------
+  //
+  // This is the function for the action within the Bot's Action class.
+  // Keep in mind event calls won't have access to the "msg" parameter,
+  // so be sure to provide checks for variable existence.
+  //---------------------------------------------------------------------
 
-  async action(cache) {
+  action(cache) {
     const data = cache.actions[cache.index];
-    const server = (await this.getServerFromData(data.server, data.varName2, cache)) ?? cache.server;
+    const server = cache.server;
     if (!server?.channels?.create) {
       this.callNextAction(cache);
     }
 
-    const name = this.evalMessage(data.channelName, cache);
-    const channelData = {
-      name,
-      reason: this.evalMessage(data.reason, cache),
-    };
+    const name = this.evalMessage(data.channelName, cache); 
+    const channelData = { reason: this.evalMessage(data.reason, cache) };
     if (data.topic) {
       channelData.topic = this.evalMessage(data.topic, cache);
     }
@@ -111,7 +145,7 @@ module.exports = {
     }
 
     server.channels
-      .create(channelData)
+      .create(name, channelData)
       .then((channel) => {
         const storage = parseInt(data.storage, 10);
         const varName = this.evalMessage(data.varName, cache);
@@ -121,9 +155,14 @@ module.exports = {
       .catch((err) => this.displayError(data, cache, err));
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Mod
-  // ---------------------------------------------------------------------
+  //
+  // Upon initialization of the bot, this code is run. Using the bot's
+  // DBM namespace, one can add/modify existing functions if necessary.
+  // In order to reduce conflicts between mods, be sure to alias
+  // functions you wish to overwrite.
+  //---------------------------------------------------------------------
 
   mod() {},
 };

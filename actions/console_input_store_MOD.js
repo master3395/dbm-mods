@@ -15,7 +15,7 @@ module.exports = {
     preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/console_input_store_MOD.js',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
   html() {
     return `

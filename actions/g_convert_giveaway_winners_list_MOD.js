@@ -1,22 +1,21 @@
 module.exports = {
-  // ---------------------------------------------------------------------
-  // region Action Name
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Action Name
+  //---------------------------------------------------------------------
 
   name: 'Convert Giveaway Winners List',
 
-  // ---------------------------------------------------------------------
-  // region Action Section
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Action Section
+  //---------------------------------------------------------------------
 
   section: 'Giveaway System',
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Subtitle
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   subtitle(data, presets) {
-    void presets;
     const formats = [
       'IDs (comma)',
       'IDs (lines)',
@@ -29,21 +28,21 @@ module.exports = {
     return `Convert winners list to: ${formats[idx] || formats[0]}`;
   },
 
-  // ---------------------------------------------------------------------
-  // region Action Meta Data
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Action Meta Data
+  //---------------------------------------------------------------------
 
   meta: {
     version: '2.2.0',
     preciseCheck: true,
     author: 'Shadow',
-    authorUrl: 'https://github.com/DBM-POLSKA',
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/g_convert_giveaway_winners_list_MOD.js',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
-  // ---------------------------------------------------------------------
-  // region Action Storage Function
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Action Storage Function
+  //---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage2, 10);
@@ -51,19 +50,17 @@ module.exports = {
     return [data.varName2, 'Winners'];
   },
 
-  // ---------------------------------------------------------------------
-  // region Action Fields
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Action Fields
+  //---------------------------------------------------------------------
 
   fields: ['storage', 'varName', 'convertType', 'storage2', 'varName2'],
 
-  // ---------------------------------------------------------------------
-  // region Command HTML
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Command HTML
+  //---------------------------------------------------------------------
 
   html(isEvent, data) {
-    void isEvent;
-    void data;
     return `
 <div style="position:fixed;bottom:0;left:0;padding:5px;padding-top:5px;padding-bottom:5px;font:13px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'">Creator: Shadow<br><br>Help: <a href='https://discord.gg/9HYB4n3Dz4' target='_blank' style='color:#07f;text-decoration:none'>Discord</a></div><div style="position:fixed;bottom:0;right:0;padding:5px;font:20px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'"><a href='https://dbm-polska.github.io/DBM-14/' target='_blank' style='color:#07f;text-decoration:none'><!--Version-->3.1</a></div>
 
@@ -89,26 +86,29 @@ module.exports = {
       `;
   },
 
-  // ---------------------------------------------------------------------
-  // region Action Editor Init Code
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Action Editor Init Code
+  //---------------------------------------------------------------------
 
   init() {},
 
-  // ---------------------------------------------------------------------
-  // region Action Bot Function
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Action Bot Function
+  //---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
     const bot = this.getDBM().Bot.bot;
+    const Mods = this.getMods();
+    const nodeFetch = Mods.require('node-fetch');
+    const fetch = nodeFetch.default || nodeFetch;
 
-    // /////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
     const type = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
-    let list = this.getVariable(type, varName, cache);
+    const list = this.getVariable(type, varName, cache);
 
-    // /////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
 
     if (typeof list === 'string') {
       try {
@@ -131,8 +131,9 @@ module.exports = {
         if (!member) return id;
         if (mode < 4) {
           return member.displayName || member.user.username;
+        } else {
+          return `<@${id}>`;
         }
-        return `<@${id}>`;
       }),
     );
     const output = results.join(separator);
@@ -142,9 +143,9 @@ module.exports = {
     this.callNextAction(cache);
   },
 
-  // ---------------------------------------------------------------------
-  // region Action Bot Mod
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+  //region Action Bot Mod
+  //---------------------------------------------------------------------
 
   mod() {},
 };

@@ -2,7 +2,7 @@ module.exports = {
   name: 'Control Permissions',
   section: 'Permission Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -73,7 +73,7 @@ module.exports = {
     return `
 <div style="width: 550px; height: 350px; overflow-y: scroll;">
   <div style="padding-top: 8px;">
-    <retrieve-from-variable dropdownLabel="Source Permissions" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></retrieve-from-variable>
+    <store-in-variable dropdownLabel="Source Permissions" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
   </div>
   <br><br><br>
   
@@ -307,7 +307,7 @@ module.exports = {
 
   async action(cache) {
     const data = cache.actions[cache.index];
-    const { PermissionsBitField } = this.getDBM().DiscordJS;
+    const { Permissions } = this.getDBM().DiscordJS;
     const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
     let permissions = this.getVariable(storage, varName, cache);
@@ -351,7 +351,7 @@ module.exports = {
     permsArray.forEach((perms) => {
       if (data[perms] === 'Allow') {
         if (!permissions.allow || !permissions.allow.has(perms)) {
-          if (!permissions.allow) permissions.allow = new PermissionsBitField();
+          if (!permissions.allow) permissions.allow = new Permissions();
           permissions.allow.add(perms);
         }
         if (permissions.disallow && permissions.disallow.has(perms)) permissions.disallow.remove(perms);
@@ -359,7 +359,7 @@ module.exports = {
           permissions.inherit.splice(permissions.inherit.indexOf(perms), 1);
       } else if (data[perms] === 'Disallow') {
         if (!permissions.disallow || !permissions.disallow.has(perms)) {
-          if (!permissions.disallow) permissions.disallow = new PermissionsBitField();
+          if (!permissions.disallow) permissions.disallow = new Permissions();
           permissions.disallow.add(perms);
         }
         if (permissions.allow && permissions.allow.has(perms)) permissions.allow.remove(perms);

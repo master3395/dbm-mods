@@ -1,51 +1,47 @@
 module.exports = {
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Name
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   name: 'Level System',
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Section
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   section: 'Economy',
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Subtitle
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   subtitle(data, presets) {
-    void data;
-    void presets;
     return `Level and XP management`;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Meta Data
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   meta: {
     version: '2.2.0',
     preciseCheck: true,
     author: 'Shadow',
-    authorUrl: 'https://github.com/DBM-POLSKA',
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/level_system_MOD.js',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Fields
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   fields: ['xpPerMessage', 'xpToLevelUp', 'actions'],
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Command HTML
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   html(isEvent, data) {
-    void isEvent;
-    void data;
     return `
 <div style="position:fixed;bottom:0;left:0;padding:5px;padding-top:5px;padding-bottom:5px;font:13px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'">Creator: Shadow<br><br>Help: <a href='https://discord.gg/9HYB4n3Dz4' target='_blank' style='color:#07f;text-decoration:none'>Discord</a></div><div style="position:fixed;bottom:0;right:0;padding:5px;font:20px sans-serif;border-radius:10px;background:rgba(0,0,0,0.7);color:#999;border:1px solid rgba(50,50,50,.7);z-index:999999;opacity:0.5;transition:all .3s" onmouseover="this.style.opacity='1';this.style.borderColor='gray'" onmouseout="this.style.opacity='0.5';this.style.borderColor='rgba(50,50,50,.7)'"><a href='https://dbm-polska.github.io/DBM-14/' target='_blank' style='color:#07f;text-decoration:none'><!--Version-->1.0</a></div>
   
@@ -73,9 +69,9 @@ module.exports = {
     `;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Storage Function
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const storageType = parseInt(data.storage, 10);
@@ -83,22 +79,22 @@ module.exports = {
     return [data.varName, 'Text'];
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Editor Init Code
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   init() {},
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Function
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   async action(cache) {
     const fs = require('fs');
     const path = require('path');
     const data = cache.actions[cache.index];
-    const xpPerMessage = parseInt(this.evalMessage(data.xpPerMessage, cache), 10);
-    const xpToLevelUp = parseInt(this.evalMessage(data.xpToLevelUp, cache), 10);
+    const xpPerMessage = parseInt(this.evalMessage(data.xpPerMessage, cache));
+    const xpToLevelUp = parseInt(this.evalMessage(data.xpToLevelUp, cache));
 
     const economyFilePath = path.join(__dirname, '..', 'data', 'players.json');
 
@@ -144,15 +140,16 @@ module.exports = {
       if (actions.length > 0) {
         this.executeSubActionsThenNextAction(actions, cache);
         return;
+      } else {
       }
     }
 
     this.callNextAction(cache);
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Mod
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
   mod() {},
 };

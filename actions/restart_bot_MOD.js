@@ -3,7 +3,7 @@ module.exports = {
   name: 'Restart Bot',
   section: 'Bot Client Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -25,10 +25,8 @@ module.exports = {
 <br>
 
 <div>
-  <p>
-    <u>NOTE:</u><br>
-    Any action that is below this mod will not be executed!
-  </p>
+  <p><u>NOTE:</u><br>
+  Any action that is below this mod will not be executed!</p>
 </div>`;
   },
 

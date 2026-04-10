@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store Webhook Info',
   section: 'Webhook Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -51,7 +51,7 @@ module.exports = {
   html() {
     return `
 <div>
-  <retrieve-from-variable dropdownLabel="Source Webhook" selectId="webhook" variableContainerId="varNameContainer" variableInputId="varName"></retrieve-from-variable>
+  <store-in-variable dropdownLabel="Source Webhook" selectId="webhook" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
 </div>
 
 <div style="float: left; width: 100%; padding-top: 16px;">

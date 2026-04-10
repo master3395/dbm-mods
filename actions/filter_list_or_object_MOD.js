@@ -3,7 +3,7 @@ module.exports = {
   displayName: 'Filter List or Object',
   section: 'Lists and Loops',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -25,7 +25,7 @@ module.exports = {
     return `
 <div id ="wrexdiv" style="width: 550px; height: 350px; overflow-y: scroll; overflow-x: hidden;">
   <div style="padding-top: 8px;">
-    <retrieve-from-variable dropdownLabel="Source Variable" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></retrieve-from-variable>
+    <store-in-variable dropdownLabel="Source Variable" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
   </div>
   <br><br><br>
   
@@ -134,6 +134,8 @@ module.exports = {
     };
 
     glob.onChange1(document.getElementById('type'));
+    glob.variableChange(document.getElementById('storage'), 'varNameContainer');
+    glob.variableChange(document.getElementById('storage2'), 'varNameContainer2');
   },
 
   async action(cache) {

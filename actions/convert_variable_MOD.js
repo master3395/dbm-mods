@@ -2,7 +2,7 @@ module.exports = {
   name: 'Convert Variable',
   section: 'Variable Things',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -33,7 +33,7 @@ module.exports = {
   html() {
     return `
 <div>
-  <retrieve-from-variable dropdownLabel="Source Variable" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></retrieve-from-variable>
+  <store-in-variable dropdownLabel="Source Variable" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
 </div>
 <br><br><br>
 

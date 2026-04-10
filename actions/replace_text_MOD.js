@@ -2,7 +2,7 @@ module.exports = {
   name: 'Replace Text',
   section: 'Other Stuff',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -23,36 +23,34 @@ module.exports = {
 
   html() {
     return `
-<div style="float: left; padding-top: 8px; width: 100%;">
+<div style="padding-top: 8px;">
   <span class="dbminputlabel">Source Text</span>
   <textarea id="text" rows="3" placeholder="Insert source text here..." style="width: 99%; font-family: monospace; white-space: nowrap; resize: none;"></textarea>
 </div>
-
-<div style="float: left; padding-top: 8px; width: 100%;">
-  <div style="float: left; padding-top: 8px; width: calc(50% - 8px);">
+<div>
+  <div style="float: left; padding-top: 8px; width: 50%;">
     <span class="dbminputlabel">Replace this</span>
     <input id="text2" class="round" type="text">
   </div>
-  <div style="float: right; padding-top: 8px; width: calc(50% - 8px);">
+  <div style="float: right; padding-top: 8px; width: 50%;">
     <span class="dbminputlabel">To this</span>
     <input id="text3" class="round" type="text">
   </div>
+  <br><br><br><br>
 </div>
-<br><br>
 
-<div style="float: left; width: 35%; padding-top: 16px;">
+<div style="width: 40%;">
   <span class="dbminputlabel">Type</span>
-  <select id="info" class="round">
-    <option value="0" selected>Replace the first result</option>
-    <option value="1">Replace all results</option>
-  </select>
+<select id="info" class="round">
+  <option value="0" selected>Replace the first result</option>
+  <option value="1">Replace all results</option>
+</select>
 </div>
-<br><br>
+<br>
 
-<div style="float: left; padding-top: 16px; width: 100%;">
+<div style="padding-top: 8px;">
   <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
-</div>
-`;
+</div>`;
   },
 
   init() {},

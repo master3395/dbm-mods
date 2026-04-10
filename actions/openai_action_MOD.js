@@ -13,7 +13,7 @@ module.exports = {
     preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
-    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/openai_action_MOD.js',
+    downloadURL: 'https://github.com/dbm-network/mods',
   },
 
   fields: [
@@ -76,7 +76,6 @@ module.exports = {
         <option value="temp" ${apiKeySource === 'temp' ? 'selected' : ''}>Temp Variable</option>
         <option value="server" ${apiKeySource === 'server' ? 'selected' : ''}>Server Variable</option>
         <option value="global" ${apiKeySource === 'global' ? 'selected' : ''}>Global Variable</option>
-        <option value="env" ${apiKeySource === 'env' ? 'selected' : ''}>Environment Variable</option>
       </select>
     </div>
 
@@ -349,13 +348,11 @@ module.exports = {
       const varRow = document.getElementById('apiKeyVariableRow');
       if (!source || !inputRow || !varRow) return;
       const value = source.value;
-      if (value === 'input' || value === 'env') {
-        inputRow.style.display = '';
-        inputRow.querySelector('span').textContent = value === 'env' ? 'Environment Variable Name' : 'API Key';
-        varRow.style.display = 'none';
+      if (value === 'input') {
+        inputRow.style.display = 'block';
+        inputRow.querySelector('span').textContent = 'API Key';
       } else {
         inputRow.style.display = 'none';
-        varRow.style.display = '';
       }
     };
 
@@ -387,7 +384,6 @@ module.exports = {
         fs.mkdirSync(helperDir, { recursive: true });
       }
 
-      /* eslint-disable no-template-curly-in-string */
       const helperContent = [
         "const { setTimeout: delay } = require('timers/promises');",
         '',
@@ -542,7 +538,6 @@ module.exports = {
         '};',
         '',
       ].join('\n');
-      /* eslint-enable no-template-curly-in-string */
 
       try {
         fs.writeFileSync(helperPath, helperContent, 'utf8');
@@ -575,9 +570,6 @@ module.exports = {
         break;
       case 'global':
         apiKey = this.getVariable(3, this.evalMessage(data.apiKeyVar, cache), cache);
-        break;
-      case 'env':
-        apiKey = process.env[this.evalMessage(data.apiKeyInput, cache)];
         break;
       default:
         break;

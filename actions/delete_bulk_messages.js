@@ -1,45 +1,62 @@
 module.exports = {
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Name
-  // ---------------------------------------------------------------------
+  //
+  // This is the name of the action displayed in the editor.
+  //---------------------------------------------------------------------
 
-  name: 'Delete Bulk Messages',
+  name: "Delete Bulk Messages",
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Section
-  // ---------------------------------------------------------------------
+  //
+  // This is the section the action will fall into.
+  //---------------------------------------------------------------------
 
-  section: 'Messaging',
+  section: "Messaging",
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Subtitle
-  // ---------------------------------------------------------------------
+  //
+  // This function generates the subtitle displayed next to the name.
+  //---------------------------------------------------------------------
 
   subtitle(data, presets) {
     return `Delete ${data.count} messages from ${presets.getChannelText(data.channel, data.varName)}`;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Meta Data
-  // ---------------------------------------------------------------------
+  //
+  // Helps check for updates and provides info if a custom mod.
+  // If this is a third-party mod, please set "author" and "authorUrl".
+  //
+  // It's highly recommended "preciseCheck" is set to false for third-party mods.
+  // This will make it so the patch version (0.0.X) is not checked.
+  //---------------------------------------------------------------------
 
-  meta: {
-    version: '2.2.0',
-    preciseCheck: true,
-    author: null,
-    authorUrl: null,
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/bot-files/actions/delete_bulk_messages.js',
-  },
+  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Fields
-  // ---------------------------------------------------------------------
+  //
+  // These are the fields for the action. These fields are customized
+  // by creating elements with corresponding IDs in the HTML. These
+  // are also the names of the fields stored in the action's JSON data.
+  //---------------------------------------------------------------------
 
-  fields: ['channel', 'count', 'condition', 'custom', 'varName'],
+  fields: ["channel", "count", "condition", "custom", "varName"],
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Command HTML
-  // ---------------------------------------------------------------------
+  //
+  // This function returns a string containing the HTML used for
+  // editing actions.
+  //
+  // The "isEvent" parameter will be true if this action is being used
+  // for an event. Due to their nature, events lack certain information,
+  // so edit the HTML to reflect this.
+  //---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -67,39 +84,48 @@ module.exports = {
 </div>`;
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Editor Init Code
-  // ---------------------------------------------------------------------
+  //
+  // When the HTML is first applied to the action editor, this code
+  // is also run. This helps add modifications or setup reactionary
+  // functions for the DOM elements.
+  //---------------------------------------------------------------------
 
   init() {
     const { glob, document } = this;
 
     glob.onChange2 = function (event) {
       const value = parseInt(event.value, 10);
-      const varNameInput = document.getElementById('varNameContainer2');
+      const varNameInput = document.getElementById("varNameContainer2");
       if (value === 0) {
-        varNameInput.style.display = 'none';
+        varNameInput.style.display = "none";
       } else {
         varNameInput.style.display = null;
       }
     };
 
-    glob.onChange2(document.getElementById('condition'));
+    glob.onChange2(document.getElementById("condition"));
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Function
-  // ---------------------------------------------------------------------
+  //
+  // This is the function for the action within the Bot's Action class.
+  // Keep in mind event calls won't have access to the "msg" parameter,
+  // so be sure to provide checks for variable existence.
+  //---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
+    const server = cache.server;
     const source = await this.getChannelFromData(data.channel, data.varName, cache);
 
     if (!source?.messages) return this.callNextAction(cache);
 
     const count = Math.min(parseInt(this.evalMessage(data.count, cache), 10), 100);
     const options = {
-      limit: count,
+      limit: count
     };
 
     if (cache.msg) {
@@ -126,9 +152,9 @@ module.exports = {
           messages = messages.filter((message) => {
             let result = false;
             try {
-              result = Boolean(this.eval(cond, cache));
-            } catch (e) {
-              this.displayError(data, cache, `Error with custom eval:\n${e.stack}`);
+              result = !!this.eval(cond, cache);
+            } catch(e) {
+              this.displayError(data, cache, "Error with custom eval:\n" + e.stack);
             }
             return result;
           });
@@ -141,9 +167,14 @@ module.exports = {
       .catch((err) => this.displayError(data, cache, err));
   },
 
-  // ---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   // Action Bot Mod
-  // ---------------------------------------------------------------------
+  //
+  // Upon initialization of the bot, this code is run. Using the bot's
+  // DBM namespace, one can add/modify existing functions if necessary.
+  // In order to reduce conflicts between mods, be sure to alias
+  // functions you wish to overwrite.
+  //---------------------------------------------------------------------
 
   mod(DBM) {},
 };

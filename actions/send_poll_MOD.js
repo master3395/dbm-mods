@@ -5,15 +5,15 @@ module.exports = {
 
   subtitle(data) {
     const question = data.pollQuestion || 'No question set';
-    return `Send poll: "${question.length > 50 ? `${question.slice(0, 47)}...` : question}"`;
+    return `Send poll: "${question.length > 50 ? question.slice(0, 47) + '...' : question}"`;
   },
 
   meta: {
     version: '2.2.0',
     preciseCheck: true,
     author: 'Shadow',
-    authorUrl: 'https://github.com/DBM-POLSKA',
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/send_poll_MOD.js',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
   fields: [

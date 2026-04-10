@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store User Info',
   section: 'User Control',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -144,7 +144,8 @@ module.exports = {
         break;
       case 4: // User Avatar
         result = user.displayAvatarURL({
-          extension: 'png',
+          dynamic: true,
+          format: 'png',
           size: 4096,
         });
         break;

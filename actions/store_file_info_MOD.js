@@ -2,7 +2,7 @@ module.exports = {
   name: 'Store File Info',
   section: 'File Stuff',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -118,7 +118,6 @@ module.exports = {
           .split(/\r\n|\r|\n/).length;
         break;
     }
-
     this.storeValue(result, storage, varName, cache);
     this.callNextAction(cache);
   },

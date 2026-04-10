@@ -1,8 +1,13 @@
+const _getFetch = () => {
+  if (typeof globalThis.fetch === "function") return globalThis.fetch;
+  try { const nf = require("node-fetch"); return nf.default || nf; } catch (_) {}
+  return null;
+};
 module.exports = {
   name: 'Send Json to WebAPI',
   section: 'JSON Things',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -10,13 +15,7 @@ module.exports = {
   },
 
   subtitle(data) {
-    let str = '';
-    const type = parseInt(data.storage, 10);
-    if (type !== 0 && data.varName?.length > 0) {
-      str += `Store In: ${data.varName} - `;
-    }
-    str += `Debug Mode: ${data.debugMode === '1' ? 'Enabled' : 'Disabled'}`;
-    return str;
+    return `Store: ${data.varName} DebugMode: ${data.debugMode === '1' ? 'Enabled' : 'Disabled'}`;
   },
 
   variableStorage(data, varType) {
@@ -40,7 +39,7 @@ module.exports = {
 
   html() {
     return `
-<div id ="wrexdiv" style="height: 350px; overflow-y: scroll;">
+<div id ="wrexdiv" style="width: 550px; height: 350px; overflow-y: scroll;">
   <div style="padding: 10px;" class="ui toggle checkbox">
     <input type="checkbox" id="toggleAuth" onclick='document.getElementById("authSection").style.display = this.checked  ? "block" : "none";'>
     <label><font color="white" style="font-size: 90%;">Show URL & Connection Options</font></label>
@@ -80,12 +79,12 @@ module.exports = {
   <br>
   
   <div>
-    <store-in-variable allowNone dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
+    <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
     <br><br><br><br>
     
     <div>
       <span class="dbminputlabel">Debug Mode</span>
-      <select id="debugMode" class="round" style="width: 35%">
+      <select id="debugMode" class="round" style="width: 45%">
         <option value="0" selected>Disabled</option>
         <option value="1">Enabled</option>
       </select><br>
@@ -99,6 +98,40 @@ module.exports = {
     </div>
   </div>
 <style>
+  .embed {
+    position: relative;
+  }
+
+  .embedinfo {
+    background: rgba(46,48,54,.45) fixed;
+    border: 1px solid hsla(0,0%,80%,.3);
+    padding: 10px;
+    margin:0 4px 0 7px;
+    border-radius: 0 3px 3px 0;
+  }
+
+  embedleftline {
+    background-color: #eee;
+    width: 4px;
+    border-radius: 3px 0 0 3px;
+    border: 0;
+    height: 100%;
+    margin-left: 4px;
+    position: absolute;
+  }
+
+  span {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+
+  span.embed-auth {
+    color: rgb(255, 255, 255);
+  }
+
+  span.embed-desc {
+    color: rgb(128, 128, 128);
+  }
+
   span.wrexlink {
     color: #99b3ff;
     text-decoration:underline;
@@ -112,7 +145,7 @@ module.exports = {
   },
 
   init() {
-    const { document } = this;
+    const { glob, document } = this;
 
     const wrexlinks = document.getElementsByClassName('wrexlink');
     for (let x = 0; x < wrexlinks.length; x++) {
@@ -127,6 +160,8 @@ module.exports = {
         });
       }
     }
+
+    glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
 
   async action(cache) {
@@ -134,7 +169,6 @@ module.exports = {
     const { Actions } = this.getDBM();
 
     const Mods = this.getMods();
-    const fetch = require('node-fetch', '2');
 
     let url = this.evalMessage(data.postUrl, cache);
     const method = this.evalMessage(data.method, cache);
@@ -198,7 +232,37 @@ module.exports = {
           }
         }
 
-        const jsonData = await fetch(url, { method, body: postJson, headers: setHeaders }).then((r) => r.json());
+        const fetchFn = _getFetch();
+        if (!fetchFn) throw new Error("Send Json to WebAPI: fetch is not available. Use Node 18+ or install node-fetch.");
+        let jsonData;
+        try {
+          const res = await fetchFn(url, { method, body: postJson, headers: setHeaders });
+          const text = typeof res.text === "function" ? await res.text() : "";
+          if (!text || !String(text).trim()) {
+            jsonData = null;
+          } else {
+            try {
+              jsonData = JSON.parse(text);
+            } catch (parseErr) {
+              const errJson = JSON.stringify({
+                error: parseErr.message || String(parseErr),
+                statusCode: res.status || 0,
+                success: false,
+                rawPreview: String(text).slice(0, 200),
+              });
+              if (debugMode) console.error("WebAPI: Response was not valid JSON:", parseErr.message || parseErr);
+              return this.storeValue(errJson, storage, varName, cache);
+            }
+          }
+        } catch (netErr) {
+          const errJson = JSON.stringify({
+            error: netErr.message || String(netErr),
+            statusCode: 0,
+            success: false,
+          });
+          if (debugMode) console.error(netErr.stack || netErr);
+          return this.storeValue(errJson, storage, varName, cache);
+        }
 
         try {
           if (jsonData) {

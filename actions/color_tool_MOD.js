@@ -2,7 +2,7 @@ module.exports = {
   name: 'Color',
   section: 'Tools',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -22,13 +22,11 @@ module.exports = {
 
   html() {
     return `
-    <span class="dbminputlabel">Text Color</span><br>
-    <input type="color" id="color" style="width: 30%;">
-    <br><br>
-
-    <div>
-      <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
-    </div>`;
+Color:<br>
+<input type="color" id="color"><br><br>
+<div>
+  <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
+</div>`;
   },
 
   init() {},

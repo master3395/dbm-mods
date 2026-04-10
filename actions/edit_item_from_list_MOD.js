@@ -3,7 +3,7 @@ module.exports = {
   displayName: 'Edit Item from List',
   section: 'Lists and Loops',
   meta: {
-    version: '2.2.0',
+    version: '2.1.7',
     preciseCheck: false,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
@@ -19,23 +19,26 @@ module.exports = {
   html() {
     return `
 <div>
-  <retrieve-from-variable dropdownLabel="Source List" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></retrieve-from-variable>
+  <store-in-variable dropdownLabel="Source List" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></store-in-variable>
 </div>
 <br><br><br>
 
-<div style="padding-top: 8px">
-  <div style="float: left; width: 35%;">
+<div>
+  <div style="float: left; width: 39%;">
     <span class="dbminputlabel">Position</span>
-    <input id="position" class="round" type="text">
+    <input id="position" class="round" type="text"><br>
   </div>
-  <div style="float: right; width: 60%;">
+  <div style="padding-left: 8px; float: left; width: 61%;">
     <span class="dbminputlabel">Value</span>
     <input id="value" class="round" type="text">
   </div>
 </div>`;
   },
 
-  init() {},
+  init() {
+    const { glob, document } = this;
+    glob.refreshVariableList(document.getElementById('storage'));
+  },
 
   async action(cache) {
     const data = cache.actions[cache.index];

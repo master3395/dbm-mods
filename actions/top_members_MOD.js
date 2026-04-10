@@ -10,8 +10,8 @@ module.exports = {
     version: '2.2.0',
     preciseCheck: true,
     author: 'Shadow',
-    authorUrl: 'https://github.com/DBM-POLSKA',
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/top_members_MOD.js',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
   fields: [
@@ -282,7 +282,7 @@ module.exports = {
     }
 
     topPlayers.forEach(([userId, data], index) => {
-      const prefix = usePrefix ? '> ' : '';
+      let prefix = usePrefix ? '> ' : '';
       let number = useNumbers ? `${index + 1}. ` : '';
       let value = showValues ? `${data[dataName]}` : '';
       let formattedSuffix = suffix ? ` ${suffix}` : '';

@@ -17,8 +17,8 @@ module.exports = {
     version: '2.2.0',
     preciseCheck: true,
     author: null,
-    authorUrl: null,
-    downloadUrl: 'https://github.com/DBM-POLSKA/DBM-14/blob/main/mods/actions/get_list_length_MOD.js',
+    authorUrl: 'https://github.com/master3395/dbm-mods',
+    downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
   fields: ['list', 'varName', 'storage', 'varName2'],
