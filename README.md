@@ -19,7 +19,7 @@
 
 ## Compatibility
 
-- **Node.js:** 22.x+ (`package.json` engines: `>=22 <27`; CI runs on **22** and **24** — Node 26 is omitted from CI until `actions/setup-node` provides it reliably)
+- **Node.js:** 22.x+ (`package.json` engines: `>=22 <27`; CI runs on **22**, **24** (LTS), and **25** (Current); Node **26** is omitted from CI until `actions/setup-node` provides it reliably)
 - **DBM Versions:** 1.7, 2.2.0
 - **Discord.js Version:** 14.26.2
 - **Total Actions:** 515

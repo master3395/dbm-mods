@@ -21,8 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # LTS anchors; omit Node 26 until actions/setup-node publishes linux x64 builds in its version manifest.
-        node-version: [22, 24]
+        # LTS (22, 24) plus Current line (25) from nodejs.org/dist/latest/. Node 26 omitted until setup-node lists it reliably.
+        node-version: [22, 24, 25]
 
     steps:
       - uses: actions/checkout@v4
