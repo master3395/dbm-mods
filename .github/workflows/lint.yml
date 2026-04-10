@@ -10,6 +10,7 @@ on:
       - events
       - extensions
       - sharder
+      - bot.js
       - bot.ts
       - types.ts
 
