@@ -1,31 +1,31 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
   //
   // This is the name of the action displayed in the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  name: "Disable Buttons and Selects",
+  name: 'Disable Buttons and Selects',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
   //
   // This is the section the action will fall into.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  section: "Messaging",
+  section: 'Messaging',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
   //
   // This function generates the subtitle displayed next to the name.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
     return `${presets.getMessageText(data.storage, data.varName)}`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
   //
   // Helps check for updates and provides info if a custom mod.
@@ -33,21 +33,21 @@ module.exports = {
   //
   // It's highly recommended "preciseCheck" is set to false for third-party mods.
   // This will make it so the patch version (0.0.X) is not checked.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
   //
   // These are the fields for the action. These fields are customized
   // by creating elements with corresponding IDs in the HTML. These
   // are also the names of the fields stored in the action's JSON data.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  fields: ["storage", "varName", "type", "disable", "searchValue"],
+  fields: ['storage', 'varName', 'type', 'disable', 'searchValue'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
   //
   // This function returns a string containing the HTML used for
@@ -56,7 +56,7 @@ module.exports = {
   // The "isEvent" parameter will be true if this action is being used
   // for an event. Due to their nature, events lack certain information,
   // so edit the HTML to reflect this.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -93,32 +93,32 @@ module.exports = {
 </div>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {
     const { glob } = this;
 
     glob.onButtonSelectTypeChange = function (event) {
-      const input = document.getElementById("nameContainer");
-      input.style.display = event.value === "findButton" || event.value === "findSelect" ? null : "none";
+      const input = document.getElementById('nameContainer');
+      input.style.display = event.value === 'findButton' || event.value === 'findSelect' ? null : 'none';
     };
 
-    glob.onButtonSelectTypeChange(document.getElementById("type"));
+    glob.onButtonSelectTypeChange(document.getElementById('type'));
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existence.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -136,49 +136,46 @@ module.exports = {
       sourceSelect = cache.interaction.customId;
     }
 
-    const disable = (data.disable ?? "disable") === "disable";
+    const disable = (data.disable ?? 'disable') === 'disable';
     let components = null;
     let searchValue = null;
 
     if (message?.components) {
-
       const { MessageActionRow } = this.getDBM().DiscordJS;
       const oldComponents = message.components;
       const newComponents = [];
 
       for (let i = 0; i < oldComponents.length; i++) {
-
         const compData = oldComponents[i];
-        const comps = (compData instanceof MessageActionRow) ? compData.toJSON() : compData;
+        const comps = compData instanceof MessageActionRow ? compData.toJSON() : compData;
 
         for (let j = 0; j < comps.components.length; j++) {
-
           const comp = comps.components[j];
           const id = comp.custom_id ?? comp.customId;
 
           switch (type) {
-            case "all": {
+            case 'all': {
               comp.disabled = disable;
               break;
             }
-            case "allButtons": {
-              if (comp.type === 2 || comp.type === "BUTTON") comp.disabled = disable;
+            case 'allButtons': {
+              if (comp.type === 2 || comp.type === 'BUTTON') comp.disabled = disable;
               break;
             }
-            case "allSelects": {
-              if (comp.type === 3 || comp.type === "SELECT_MENU") comp.disabled = disable;
+            case 'allSelects': {
+              if (comp.type === 3 || comp.type === 'SELECT_MENU') comp.disabled = disable;
               break;
             }
-            case "sourceButton": {
+            case 'sourceButton': {
               if (id === sourceButton) comp.disabled = disable;
               break;
             }
-            case "sourceSelect": {
+            case 'sourceSelect': {
               if (id === sourceSelect) comp.disabled = disable;
               break;
             }
-            case "findButton":
-            case "findSelect": {
+            case 'findButton':
+            case 'findSelect': {
               if (searchValue === null) searchValue = this.evalMessage(data.searchValue, cache);
               if (id === searchValue || comp.label === searchValue) comp.disabled = disable;
               break;
@@ -187,17 +184,19 @@ module.exports = {
         }
 
         newComponents.push(comps);
-
       }
 
       components = newComponents;
-
     }
 
     if (components) {
       if (Array.isArray(message)) {
-        this.callListFunc(message, "edit", [{ components }]).then(() => this.callNextAction(cache));
-      } else if (cache.interaction?.message?.id === message?.id && cache.interaction?.update && !cache.interaction?.replied) {
+        this.callListFunc(message, 'edit', [{ components }]).then(() => this.callNextAction(cache));
+      } else if (
+        cache.interaction?.message?.id === message?.id &&
+        cache.interaction?.update &&
+        !cache.interaction?.replied
+      ) {
         cache.interaction
           .update({ components })
           .then(() => this.callNextAction(cache))
@@ -218,14 +217,14 @@ module.exports = {
     }
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflicts between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

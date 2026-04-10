@@ -1,90 +1,89 @@
 module.exports = {
-
-  name: "Store Server Info MOD",
-  section: "Server Control",
+  name: 'Store Server Info MOD',
+  section: 'Server Control',
   meta: {
     version: '2.1.6',
     preciseCheck: true,
     author: 'DBM Mods',
     authorUrl: 'https://github.com/dbm-network/mods',
     downloadURL: 'https://github.com/dbm-network/mods',
-    },
+  },
 
   subtitle(data, presets) {
     const info = [
-      "Server Object",
-      "Server ID",
-      "Server Name",
-      "Server Name Acronym",
-      "Server Preferred Language",
-      "Server Icon URL",
-      "Server Verification Level",
-      "Server Default Channel",
-      "Server AFK Channel",
-      "Server System Channel",
-      "Server Default Role",
-      "Server Owner Object",
-      "Server Bot Member",
-      "Server Channels List",
-      "Server Roles List",
-      "Server Members List",
-      "Server Emojis List",
-      "Server Member Count",
-      "Server Created At",
-      "Server AFK Timeout",
-      "Server Available",
-      "Server Large",
-      "Server Joined At",
-      "Server Channels Count",
-      "Server Emojis Count",
-      "Server Embed Enabled",
-      "Server Do Not Disturb Members Count",
-      "Server Online Members Count",
-      "Server Offline Members Count",
-      "Server Idle Members Count",
-      "Server Bot Count",
-      "Server Channels IDs List",
-      "Server Roles IDs List",
-      "Server Members IDs List",
-      "",
-      "Server Human Count",
-      "",
-      "Server Roles Count",
-      "Server Text Channels Count",
-      "Server Voice Channels Count",
-      "Server Verified",
-      "Server Bans List",
-      "Server Invites List",
-      "Server Explicit Content Filter",
-      "Server Boosts Count",
-      "Server Boost Tier",
-      "Server Banner URL",
-      "Server Features List",
-      "Server Owner ID",
-      "Server Vanity URL Code",
-      "Server Widget Channel ID",
-      "Server AFK Channel ID",
-      "Server Progress Bar Enable",
-      "Server Description",
-      "Server Partnered",
-      "Server Rule Channel",
-      "Server Rule Channel ID",
-      "Server Widget Channel",
-      "Server System Channel ID",
-      "Server NSFW Level",
-      "Server MFA/2FA Level",
-      "Server Timestamp",
-      "Template URL",
-      "Template Code",
-      "Template Name",
-      "Template Description",
-      "Times the Template has been used",
-      "Template creator ID",
-      "Timestamp of Template creation",
-      "Timestamp of Template update",
-      "Total members in the voice channel",
-      "List of members by ID present in the voice channels",
-      "List of members present in the voice channels",
+      'Server Object',
+      'Server ID',
+      'Server Name',
+      'Server Name Acronym',
+      'Server Preferred Language',
+      'Server Icon URL',
+      'Server Verification Level',
+      'Server Default Channel',
+      'Server AFK Channel',
+      'Server System Channel',
+      'Server Default Role',
+      'Server Owner Object',
+      'Server Bot Member',
+      'Server Channels List',
+      'Server Roles List',
+      'Server Members List',
+      'Server Emojis List',
+      'Server Member Count',
+      'Server Created At',
+      'Server AFK Timeout',
+      'Server Available',
+      'Server Large',
+      'Server Joined At',
+      'Server Channels Count',
+      'Server Emojis Count',
+      'Server Embed Enabled',
+      'Server Do Not Disturb Members Count',
+      'Server Online Members Count',
+      'Server Offline Members Count',
+      'Server Idle Members Count',
+      'Server Bot Count',
+      'Server Channels IDs List',
+      'Server Roles IDs List',
+      'Server Members IDs List',
+      '',
+      'Server Human Count',
+      '',
+      'Server Roles Count',
+      'Server Text Channels Count',
+      'Server Voice Channels Count',
+      'Server Verified',
+      'Server Bans List',
+      'Server Invites List',
+      'Server Explicit Content Filter',
+      'Server Boosts Count',
+      'Server Boost Tier',
+      'Server Banner URL',
+      'Server Features List',
+      'Server Owner ID',
+      'Server Vanity URL Code',
+      'Server Widget Channel ID',
+      'Server AFK Channel ID',
+      'Server Progress Bar Enable',
+      'Server Description',
+      'Server Partnered',
+      'Server Rule Channel',
+      'Server Rule Channel ID',
+      'Server Widget Channel',
+      'Server System Channel ID',
+      'Server NSFW Level',
+      'Server MFA/2FA Level',
+      'Server Timestamp',
+      'Template URL',
+      'Template Code',
+      'Template Name',
+      'Template Description',
+      'Times the Template has been used',
+      'Template creator ID',
+      'Timestamp of Template creation',
+      'Timestamp of Template update',
+      'Total members in the voice channel',
+      'List of members by ID present in the voice channels',
+      'List of members present in the voice channels',
     ];
     return `${presets.getServerText(data.server, data.varName)} - ${info[parseInt(data.info, 10)]}`;
   },
@@ -93,230 +92,226 @@ module.exports = {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
     const info = parseInt(data.info, 10);
-    let dataType = "Unknown Type";
+    let dataType = 'Unknown Type';
     switch (info) {
       case 0:
-        dataType = "Server";
+        dataType = 'Server';
         break;
       case 1:
-        dataType = "Server ID";
+        dataType = 'Server ID';
         break;
       case 2:
-	    dataType = "Text";
+        dataType = 'Text';
         break;
       case 3:
-	    dataType = "Text";
+        dataType = 'Text';
         break;
       case 4:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 5:
-        dataType = "Icon URL";
+        dataType = 'Icon URL';
         break;
       case 6:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 7:
-	    dataType = "Channel";
+        dataType = 'Channel';
         break;
       case 8:
-        dataType = "Channel";
+        dataType = 'Channel';
         break;
       case 9:
-        dataType = "Channel";
+        dataType = 'Channel';
         break;
       case 10:
-        dataType = "Role";
+        dataType = 'Role';
         break;
       case 11:
-        dataType = "Server Member";
+        dataType = 'Server Member';
         break;
       case 12:
-        dataType = "Server Member";
+        dataType = 'Server Member';
         break;
       case 13:
-        dataType = "Channels List";
+        dataType = 'Channels List';
         break;
       case 14:
-        dataType = "Roles List";
+        dataType = 'Roles List';
         break;
       case 15:
-        dataType = "Members List";
+        dataType = 'Members List';
         break;
       case 16:
-        dataType = "Emojis List";
+        dataType = 'Emojis List';
         break;
       case 17:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 18:
-        dataType = "Date";
+        dataType = 'Date';
         break;
       case 19:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 20:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 21:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 22:
-        dataType = "Date";
+        dataType = 'Date';
         break;
       case 23:
-	    dataType = "Number";
+        dataType = 'Number';
         break;
       case 24:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 25:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 26:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 27:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 28:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 29:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 30:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 31:
-        dataType = "IDs List";
+        dataType = 'IDs List';
         break;
       case 32:
-        dataType = "IDs List";
+        dataType = 'IDs List';
         break;
       case 33:
-        dataType = "IDs List";
+        dataType = 'IDs List';
         break;
       case 35:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 37:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 38:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 39:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 40:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 41:
-        dataType = "Bans List";
+        dataType = 'Bans List';
         break;
       case 42:
-        dataType = "Invites List";
+        dataType = 'Invites List';
         break;
       case 43:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 44:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 45:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 46:
-        dataType = "Banner URL";
+        dataType = 'Banner URL';
         break;
       case 47:
-        dataType = "Server Features List";
+        dataType = 'Server Features List';
         break;
       case 48:
-	    dataType = "Server Member ID";
+        dataType = 'Server Member ID';
         break;
       case 49:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 50:
-        dataType = "Channel ID";
+        dataType = 'Channel ID';
         break;
       case 51:
-        dataType = "Channel ID";
+        dataType = 'Channel ID';
         break;
       case 52:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 53:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 54:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 55:
-        dataType = "Channel";
+        dataType = 'Channel';
         break;
       case 56:
-        dataType = "Channel ID";
+        dataType = 'Channel ID';
         break;
       case 57:
-        dataType = "Channel";
+        dataType = 'Channel';
         break;
       case 58:
-        dataType = "Channel ID";
+        dataType = 'Channel ID';
         break;
       case 59:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 60:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 61:
-        dataType = "Timestamp";
+        dataType = 'Timestamp';
         break;
       case 62:
-        dataType = "URL";
+        dataType = 'URL';
         break;
       case 63:
-        dataType = "Code";
+        dataType = 'Code';
         break;
       case 64:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 65:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 66:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 67:
-        dataType = "ID User";
+        dataType = 'ID User';
         break;
       case 68:
-        dataType = "Timestamp";
+        dataType = 'Timestamp';
         break;
       case 69:
-        dataType = "Timestamp";
+        dataType = 'Timestamp';
         break;
       case 70:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 71:
-        dataType = "List";
+        dataType = 'List';
         break;
       case 72:
-        dataType = "List";
+        dataType = 'List';
         break;
     }
     return [data.varName2, dataType];
   },
 
-
-
-  fields: ["server", "varName", "info", "storage", "varName2"],
-
-
+  fields: ['server', 'varName', 'info', 'storage', 'varName2'],
 
   html(isEvent, data) {
     return `
@@ -433,7 +428,7 @@ module.exports = {
 <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>`;
   },
 
-   init() {},
+  init() {},
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -447,7 +442,7 @@ module.exports = {
       if (targetServer.memberCount !== targetServer.members.cache.size) {
         await targetServer.members.fetch({ withPresences });
       }
-    }
+    };
 
     const info = parseInt(data.info, 10);
 
@@ -465,11 +460,11 @@ module.exports = {
       case 3:
         result = targetServer.nameAcronym;
         break;
-      case 4: 
+      case 4:
         result = targetServer.preferredLocale;
         break;
       case 5:
-        result = targetServer.iconURL({ dynamic: true, format: "png", size: 4096 });
+        result = targetServer.iconURL({ dynamic: true, format: 'png', size: 4096 });
         break;
       case 6:
         result = targetServer.verificationLevel;
@@ -488,7 +483,7 @@ module.exports = {
         break;
       case 11:
         try {
-        result = await targetServer.fetchOwner();
+          result = await targetServer.fetchOwner();
         } catch (error) {
           // Handle case where owner cannot be fetched (e.g., owner left server, bot doesn't have permissions)
           console.warn(`[Store Server Info] Could not fetch owner for server ${targetServer.id}:`, error.message);
@@ -535,23 +530,23 @@ module.exports = {
         result = targetServer.emojis.cache.size;
         break;
       case 25:
-        result = !!targetServer.widgetEnabled;
+        result = Boolean(targetServer.widgetEnabled);
         break;
       case 26:
         await fetchMembers(true);
-        result = targetServer.members.cache.filter((m) => m.presence?.status === "dnd").size;
+        result = targetServer.members.cache.filter((m) => m.presence?.status === 'dnd').size;
         break;
       case 27:
         await fetchMembers(true);
-        result = targetServer.members.cache.filter((m) => m.presence?.status === "online").size;
+        result = targetServer.members.cache.filter((m) => m.presence?.status === 'online').size;
         break;
       case 28:
         await fetchMembers(true);
-        result = targetServer.members.cache.filter((m) => m.presence?.status === "offline").size;
+        result = targetServer.members.cache.filter((m) => m.presence?.status === 'offline').size;
         break;
       case 29:
         await fetchMembers(true);
-        result = targetServer.members.cache.filter((m) => m.presence?.status === "idle").size;
+        result = targetServer.members.cache.filter((m) => m.presence?.status === 'idle').size;
         break;
       case 30:
         result = targetServer.members.cache.filter((m) => m.user?.bot).size;
@@ -574,10 +569,10 @@ module.exports = {
         result = targetServer.roles.cache.size;
         break;
       case 38:
-        result = targetServer.channels.cache.filter((c) => c.type === "GUILD_TEXT" || c.type === "GUILD_NEWS").size;
+        result = targetServer.channels.cache.filter((c) => c.type === 'GUILD_TEXT' || c.type === 'GUILD_NEWS').size;
         break;
       case 39:
-        result = targetServer.channels.cache.filter((c) => c.type === "GUILD_VOICE").size;
+        result = targetServer.channels.cache.filter((c) => c.type === 'GUILD_VOICE').size;
         break;
       case 40:
         result = targetServer.verified;
@@ -600,7 +595,7 @@ module.exports = {
         result = targetServer.premiumTier;
         break;
       case 46:
-        result = targetServer.bannerURL({ format: "png", size: 4096 });
+        result = targetServer.bannerURL({ format: 'png', size: 4096 });
         break;
       case 47:
         result = targetServer.features;
@@ -615,7 +610,7 @@ module.exports = {
         result = targetServer.widgetChannelId;
         break;
       case 51:
-          result = targetServer.afkChannelId;
+        result = targetServer.afkChannelId;
         break;
       case 52:
         result = targetServer.premiumProgressBarEnabled;
@@ -647,40 +642,49 @@ module.exports = {
       case 61:
         result = targetServer.createdTimestamp;
         break;
-        case 62:
-          result = `https://discord.new/${(await targetServer.fetchTemplates()).map(v => v.code)}`;
-          break;
+      case 62:
+        result = `https://discord.new/${(await targetServer.fetchTemplates()).map((v) => v.code)}`;
+        break;
       case 63:
-          result = `${(await targetServer.fetchTemplates()).map(v => v.code)}`;
-          break;
-          case 64:
-          result = `${(await targetServer.fetchTemplates()).map(v => v.name)}`;
-          break;
-          case 65:
-          result = `${(await targetServer.fetchTemplates()).map(v => v.description)}`;
-          break;
-          case 66:
-          result = `${(await targetServer.fetchTemplates()).map(v => v.usageCount)}`;
-          break;
-          case 67:
-          result = `${(await targetServer.fetchTemplates()).map(v => v.creatorId)}`;
-          break;
-          case 68:
-          result = `${(await targetServer.fetchTemplates()).map(v => v.createdAt)}`;
-          break;
-          case 69:
-          result = `${(await targetServer.fetchTemplates()).map(v => v.updatedAt)}`;
-          break; 
-          case 70:
-            result = targetServer.channels.cache.filter(c => c.type === 'GUILD_VOICE').map(c => c.members.size).reduce((s, a) => s + a, 0);
-            break; 
-            case 71:
-              const str = targetServer.channels.cache.filter(c => c.type === 'GUILD_VOICE').map(c => c.members.map(member => member.user.id + ',').join('')).join('');  
-              result = str.substring(0, str.length - 1).split(new RegExp(","));
-              break;     
-              case 72:
-                result = targetServer.channels.cache.filter(d => d.type === 'GUILD_VOICE').map(d => d.members.map(member => member.user).join('')).join('');  
-                break;                 
+        result = `${(await targetServer.fetchTemplates()).map((v) => v.code)}`;
+        break;
+      case 64:
+        result = `${(await targetServer.fetchTemplates()).map((v) => v.name)}`;
+        break;
+      case 65:
+        result = `${(await targetServer.fetchTemplates()).map((v) => v.description)}`;
+        break;
+      case 66:
+        result = `${(await targetServer.fetchTemplates()).map((v) => v.usageCount)}`;
+        break;
+      case 67:
+        result = `${(await targetServer.fetchTemplates()).map((v) => v.creatorId)}`;
+        break;
+      case 68:
+        result = `${(await targetServer.fetchTemplates()).map((v) => v.createdAt)}`;
+        break;
+      case 69:
+        result = `${(await targetServer.fetchTemplates()).map((v) => v.updatedAt)}`;
+        break;
+      case 70:
+        result = targetServer.channels.cache
+          .filter((c) => c.type === 'GUILD_VOICE')
+          .map((c) => c.members.size)
+          .reduce((s, a) => s + a, 0);
+        break;
+      case 71:
+        const str = targetServer.channels.cache
+          .filter((c) => c.type === 'GUILD_VOICE')
+          .map((c) => c.members.map((member) => `${member.user.id},`).join(''))
+          .join('');
+        result = str.substring(0, str.length - 1).split(new RegExp(','));
+        break;
+      case 72:
+        result = targetServer.channels.cache
+          .filter((d) => d.type === 'GUILD_VOICE')
+          .map((d) => d.members.map((member) => member.user).join(''))
+          .join('');
+        break;
       default:
         break;
     }
@@ -691,8 +695,6 @@ module.exports = {
     }
     this.callNextAction(cache);
   },
-
- 
 
   mod() {},
 };

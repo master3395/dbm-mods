@@ -1,37 +1,67 @@
 module.exports = {
+  name: 'Converter',
+  section: 'Other Stuff',
+  short_description: 'Convert an information to text, number or format',
+  meta: {
+    version: '2.1.6',
+    preciseCheck: true,
+    author: 'DBM Extended',
+    authorUrl: 'https://github.com/DBM-Extended/mods',
+    downloadURL: 'https://github.com/DBM-Extended/mods',
+  },
 
-    name: "Converter",  
-    section: "Other Stuff",   
-    short_description: "Convert an information to text, number or format",
-    meta: {
-        version: '2.1.6',
-        preciseCheck: true,
-        author: 'DBM Extended',
-        authorUrl: 'https://github.com/DBM-Extended/mods',
-        downloadURL: 'https://github.com/DBM-Extended/mods',
-      },
-    
-    subtitle: function(data) {
-        const info = ['Whole number (Rounded)', 'Whole number (Up)', 'Whole number (Down)', 'Text', 'Uppercase text', 'Small text', 'Text without spaces', 'Text (Without spaces on both sides)', 'Number with punctuation' , 'Short number', 'R$ money format', 'U$ money format', '€ money format', 'Text without accents', 'Text starting with capital letter', 'Spaced text'];
-        const prse = parseInt(data.into);
-        return `Convert "${data.vAria}" to ${info[prse]}`;
-    },
-    
-    
-    
-    variableStorage: function(data, varType) {
-        const type = parseInt(data.storage);
-        const prse2 = parseInt(data.into);
-        const info2 = ['Number', 'Number', 'Number', 'Text', 'Text', 'Text', 'Text', 'Text', 'Number', 'Number', 'Money', 'Money', 'Money ', 'Text', 'Text', 'Text'];
-        if(type !== varType) return;
-        return ([data.varName2, info2[prse2]]);
-    },
-    
-    
-    fields: ["into", "vAria", "storage", "varName2"],
-    
-    html: function(isEvent, data) {
-        return `
+  subtitle(data) {
+    const info = [
+      'Whole number (Rounded)',
+      'Whole number (Up)',
+      'Whole number (Down)',
+      'Text',
+      'Uppercase text',
+      'Small text',
+      'Text without spaces',
+      'Text (Without spaces on both sides)',
+      'Number with punctuation',
+      'Short number',
+      'R$ money format',
+      'U$ money format',
+      '€ money format',
+      'Text without accents',
+      'Text starting with capital letter',
+      'Spaced text',
+    ];
+    const prse = parseInt(data.into, 10);
+    return `Convert "${data.vAria}" to ${info[prse]}`;
+  },
+
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
+    const prse2 = parseInt(data.into, 10);
+    const info2 = [
+      'Number',
+      'Number',
+      'Number',
+      'Text',
+      'Text',
+      'Text',
+      'Text',
+      'Text',
+      'Number',
+      'Number',
+      'Money',
+      'Money',
+      'Money ',
+      'Text',
+      'Text',
+      'Text',
+    ];
+    if (type !== varType) return;
+    return [data.varName2, info2[prse2]];
+  },
+
+  fields: ['into', 'vAria', 'storage', 'varName2'],
+
+  html(isEvent, data) {
+    return `
     <div style="width: 550px; height: 350px;">
         <div style="width: 60%;">
             <div style="width: 150%;">
@@ -93,144 +123,144 @@ module.exports = {
         .efeitoala ~ label{position: absolute; left: 0%; width: 100%; top: -21px; color: #aaa; transition: 0.3s; z-index: -1; letter-spacing: 0.5px;}
         .efeitoala:focus ~ label, .has-content.efeitoala ~ label{font-size: 12px; color: #4caf50; transition: 0.3s;}
         
-    </style>`
-    },
-    
-    init: function() {},
-    
-    action: function(cache) {
-        const data = cache.actions[cache.index],
-            theVar = this.evalMessage(data.vAria, cache),
-            INTO = parseInt(data.into);
-        let result;
-    
-        switch (INTO) {
-                case 0:
-                    result = Math.round(theVar.toString().replace(',','.'));
-                    break;
-                case 1:
-                    result = Math.ceil(theVar.toString().replace(',','.'));
-                    break;
-                case 2:
-                    result = parseInt(theVar);
-                    break;
-                case 3:
-                    result = theVar.toString();
-                    break;
-                case 4:
-                    result = theVar.toString().toUpperCase();
-                    break;
-                case 5:
-                    result = theVar.toString().toLowerCase();
-                    break;
-                case 6:
-                    result = theVar.toString().split(' ').join('');
-                    break;
-                case 7:
-                    result = theVar.toString().trim();
-                    break;
-                    case 8:
-                    if(isNaN(parseFloat(theVar))) {
-                        result = theVar;
-                    } else {
-                        result = parseFloat(theVar).toLocaleString("pt-BR");
-                    }
-                    break;
-                    case 9:
-                    var number = parseInt(this.evalMessage(theVar, cache));
-    
-                    if(number >= 1000 && number <= 999999) {
-                        number = number.toString().slice(0, -3) + "k";
-                    }
-                    
-                    if(number >= 1e+6 && number <= 1e+8) {
-                        number = number.toString().slice(0, -6) + "m";
-                    }
-                    
-                    if(number >= 1e+9 && number <= 1e+11) {
-                        number = number.toString().slice(0, -9) + "b";
-                    }
-                    
-                    if(number >= 1e+12 && number <= 1e+14) {
-                        number = number.toString().slice(0, -12) + "t";
-                    }
-                    if(number >= 1e+15 && number <= 1e+17) {
-                        number = number.toString().slice(0, -15) + "q";
-                    }
-                    if(number >= 1e+18 && number <= 1e+20) {
-                        number = number.toString().slice(0, -18) + "sx";
-                    }
-                    if(number >= 1e+21 && number <= 1e+23) {
-                        number = number.toString().slice(0, -4) + "sp";
-                    }
-                    if(number >= 1e+24 && number <= 1e+26) {
-                        number = number.toString().slice(0, -4) + "o";
-                    }
-                    if(number >= 1e+27 && number <= 1e+29) {
-                        number = number.toString().slice(0, -4) + "n";
-                    }
-                    if(number >= 1e+30 && number <= 1e+32) {
-                        number = number.toString().slice(0, -4) + "d";
-                    }
-                    if(number >= 1e+33 && number <= 1e+35) {
-                        number = number.toString().slice(0, -4) + "u";
-                    }
-                    if(number >= 1e+36 && number <= 1e+38) {
-                        number = number.toString().slice(0, -4) + "du";
-                    }
-                    if(number >= 1e+39) {
-                        number = number.toString().slice(0, -4) + "tr";
-                    }
-                    result = number;
-                    break;
-                    case 10:
-                        let money = Intl.NumberFormat("pt-BR", {
-                            style: "currency",
-                            currency: "BRL",
-                        });
-                        result = money.format(theVar.toString().replace(',','.'))
-                    break;
-                    case 11:
-                        let money2 = Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                            });
-                            result = money2.format(theVar.toString().replace(',','.'))
-                            break;
-                    case 12:
-                        let money3 = Intl.NumberFormat("de-DE", {
-                            style: "currency",
-                            currency: "EUR",
-                            });
-                            result = money3.format(theVar.toString().replace(',','.'))
-                            break;
-                    case 13:
-                        const comAcentos = "ÄÅÁÂÀÃĀĂĄāăąäáâàãÉÊËÈĖĘĚĔĒėęěĕēéêëèÍÎÏÌİĮĪıįīíîïìÖÓÔÒÕŐŌőōöóôòõÜÚÛŲŰŮŪųűůūüúûùÇĆČçćčÑŇŅŃñňņńŸÝÿýŹŻŽźżžŁĽĻĹłľļĺĶķĢĞģğĎďŚŠŞśšşŤȚŢťțţŔŘŕř";
-                        const semAcentos = "AAAAAAAAAaaaaaaaaEEEEEEEEEeeeeeeeeeIIIIIIIiiiiiiiOOOOOOOoooooooUUUUUUUuuuuuuuuCCCcccNNNNnnnnYYyyZZZzzzLLLLllllKkGGggDdSSSsssTTTtttRRrr";                           
-    
-                        result = theVar.toString();
-    
-                        for(var i = 0; i <= comAcentos.length; i++) {
-                            result = result.replaceAll(comAcentos[i], semAcentos[i]);
-                        }
-                        break;
-                    case 14:
-                        const convertor = theVar[0].toUpperCase() + theVar.substring(1);
-                        result = convertor;
-                        break;
-                    case 15:
-                        result = theVar.toString().replaceAll("", " ");
-                        break;
+    </style>`;
+  },
+
+  init() {},
+
+  action(cache) {
+    const data = cache.actions[cache.index];
+    const theVar = this.evalMessage(data.vAria, cache);
+    const INTO = parseInt(data.into, 10);
+    let result;
+
+    switch (INTO) {
+      case 0:
+        result = Math.round(theVar.toString().replace(',', '.'));
+        break;
+      case 1:
+        result = Math.ceil(theVar.toString().replace(',', '.'));
+        break;
+      case 2:
+        result = parseInt(theVar, 10);
+        break;
+      case 3:
+        result = theVar.toString();
+        break;
+      case 4:
+        result = theVar.toString().toUpperCase();
+        break;
+      case 5:
+        result = theVar.toString().toLowerCase();
+        break;
+      case 6:
+        result = theVar.toString().split(' ').join('');
+        break;
+      case 7:
+        result = theVar.toString().trim();
+        break;
+      case 8:
+        if (isNaN(parseFloat(theVar))) {
+          result = theVar;
+        } else {
+          result = parseFloat(theVar).toLocaleString('pt-BR');
         }
-        if(result !== undefined) {
-            const storage = parseInt(data.storage);
-            const varName2 = this.evalMessage(data.varName2, cache);
-            this.storeValue(result, storage, varName2, cache);
+        break;
+      case 9:
+        var number = parseInt(this.evalMessage(theVar, cache), 10);
+
+        if (number >= 1000 && number <= 999999) {
+          number = `${number.toString().slice(0, -3)}k`;
         }
-        this.callNextAction(cache);
-    },
-    
-    mod: function(DBM) {
+
+        if (number >= 1e6 && number <= 1e8) {
+          number = `${number.toString().slice(0, -6)}m`;
+        }
+
+        if (number >= 1e9 && number <= 1e11) {
+          number = `${number.toString().slice(0, -9)}b`;
+        }
+
+        if (number >= 1e12 && number <= 1e14) {
+          number = `${number.toString().slice(0, -12)}t`;
+        }
+        if (number >= 1e15 && number <= 1e17) {
+          number = `${number.toString().slice(0, -15)}q`;
+        }
+        if (number >= 1e18 && number <= 1e20) {
+          number = `${number.toString().slice(0, -18)}sx`;
+        }
+        if (number >= 1e21 && number <= 1e23) {
+          number = `${number.toString().slice(0, -4)}sp`;
+        }
+        if (number >= 1e24 && number <= 1e26) {
+          number = `${number.toString().slice(0, -4)}o`;
+        }
+        if (number >= 1e27 && number <= 1e29) {
+          number = `${number.toString().slice(0, -4)}n`;
+        }
+        if (number >= 1e30 && number <= 1e32) {
+          number = `${number.toString().slice(0, -4)}d`;
+        }
+        if (number >= 1e33 && number <= 1e35) {
+          number = `${number.toString().slice(0, -4)}u`;
+        }
+        if (number >= 1e36 && number <= 1e38) {
+          number = `${number.toString().slice(0, -4)}du`;
+        }
+        if (number >= 1e39) {
+          number = `${number.toString().slice(0, -4)}tr`;
+        }
+        result = number;
+        break;
+      case 10:
+        const money = Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+        result = money.format(theVar.toString().replace(',', '.'));
+        break;
+      case 11:
+        const money2 = Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        });
+        result = money2.format(theVar.toString().replace(',', '.'));
+        break;
+      case 12:
+        const money3 = Intl.NumberFormat('de-DE', {
+          style: 'currency',
+          currency: 'EUR',
+        });
+        result = money3.format(theVar.toString().replace(',', '.'));
+        break;
+      case 13:
+        const comAcentos =
+          'ÄÅÁÂÀÃĀĂĄāăąäáâàãÉÊËÈĖĘĚĔĒėęěĕēéêëèÍÎÏÌİĮĪıįīíîïìÖÓÔÒÕŐŌőōöóôòõÜÚÛŲŰŮŪųűůūüúûùÇĆČçćčÑŇŅŃñňņńŸÝÿýŹŻŽźżžŁĽĻĹłľļĺĶķĢĞģğĎďŚŠŞśšşŤȚŢťțţŔŘŕř';
+        const semAcentos =
+          'AAAAAAAAAaaaaaaaaEEEEEEEEEeeeeeeeeeIIIIIIIiiiiiiiOOOOOOOoooooooUUUUUUUuuuuuuuuCCCcccNNNNnnnnYYyyZZZzzzLLLLllllKkGGggDdSSSsssTTTtttRRrr';
+
+        result = theVar.toString();
+
+        for (let i = 0; i <= comAcentos.length; i++) {
+          result = result.replaceAll(comAcentos[i], semAcentos[i]);
+        }
+        break;
+      case 14:
+        const convertor = theVar[0].toUpperCase() + theVar.substring(1);
+        result = convertor;
+        break;
+      case 15:
+        result = theVar.toString().replaceAll('', ' ');
+        break;
     }
-    
-    };
+    if (result !== undefined) {
+      const storage = parseInt(data.storage, 10);
+      const varName2 = this.evalMessage(data.varName2, cache);
+      this.storeValue(result, storage, varName2, cache);
+    }
+    this.callNextAction(cache);
+  },
+
+  mod(DBM) {},
+};

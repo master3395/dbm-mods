@@ -1,37 +1,37 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
   //
   // This is the name of the action displayed in the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  name: "Send Message",
+  name: 'Send Message',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
   //
   // This is the section the action will fall into.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  section: "Messaging",
+  section: 'Messaging',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
   //
   // This function generates the subtitle displayed next to the name.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
-    let text = "";
+    let text = '';
     if (data.message) {
-      text = `"${data.message.replace(/[\n\r]+/, " ↲ ")}"`;
+      text = `"${data.message.replace(/[\n\r]+/, ' ↲ ')}"`;
     } else if (data.embeds?.length > 0) {
       text = `${data.embeds.length} Embeds`;
     } else if (data.attachments?.length > 0) {
       text = `${data.attachments.length} Attachments`;
     } else if (data.buttons?.length > 0 || data.selectMenus?.length > 0) {
       text = `${data.buttons.length} Buttons and ${data.selectMenus.length} Select Menus`;
-    } else if (data.editMessage && data.editMessage !== "0") {
+    } else if (data.editMessage && data.editMessage !== '0') {
       text = `Message Options - ${presets.getVariableText(data.editMessage, data.editMessageVarName)}`;
     } else {
       text = `Nothing (might cause error)`;
@@ -42,19 +42,19 @@ module.exports = {
     return `${presets.getSendReplyTargetText(data.channel, data.varName)}: ${text}`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
   //
   // Stores the relevant variable info for the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
-    return [data.varName2, data.dontSend ? "Message Options" : "Message"];
+    return [data.varName2, data.dontSend ? 'Message Options' : 'Message'];
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
   //
   // Helps check for updates and provides info if a custom mod.
@@ -62,38 +62,38 @@ module.exports = {
   //
   // It's highly recommended "preciseCheck" is set to false for third-party mods.
   // This will make it so the patch version (0.0.X) is not checked.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
   //
   // These are the fields for the action. These fields are customized
   // by creating elements with corresponding IDs in the HTML. These
   // are also the names of the fields stored in the action's JSON data.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   fields: [
-    "channel",
-    "varName",
-    "message",
-    "buttons",
-    "selectMenus",
-    "attachments",
-    "embeds",
-    "reply",
-    "ephemeral",
-    "tts",
-    "overwrite",
-    "dontSend",
-    "editMessage",
-    "editMessageVarName",
-    "storage",
-    "varName2",
+    'channel',
+    'varName',
+    'message',
+    'buttons',
+    'selectMenus',
+    'attachments',
+    'embeds',
+    'reply',
+    'ephemeral',
+    'tts',
+    'overwrite',
+    'dontSend',
+    'editMessage',
+    'editMessageVarName',
+    'storage',
+    'varName2',
   ],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
   //
   // This function returns a string containing the HTML used for
@@ -102,7 +102,7 @@ module.exports = {
   // The "isEvent" parameter will be true if this action is being used
   // for an event. Due to their nature, events lack certain information,
   // so edit the HTML to reflect this.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -480,17 +480,17 @@ module.exports = {
 </tab-system>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {},
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor On Save
   //
   // When the data for the action is saved, this function is called.
@@ -500,28 +500,28 @@ module.exports = {
   // data and fill required entries the user did not.
   //
   // Its inclusion within action mods is optional.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   onSave(data, helpers) {
     // generate unique ids if not provided by user since they are important
     if (Array.isArray(data?.buttons)) {
       for (let i = 0; i < data.buttons.length; i++) {
         if (!data.buttons[i].id) {
-          data.buttons[i].id = "msg-button-" + helpers.generateUUID().substring(0, 7);
+          data.buttons[i].id = `msg-button-${helpers.generateUUID().substring(0, 7)}`;
         }
       }
     }
     if (Array.isArray(data?.selectMenus)) {
       for (let i = 0; i < data.selectMenus.length; i++) {
         if (!data.selectMenus[i].id) {
-          data.selectMenus[i].id = "msg-select-" + helpers.generateUUID().substring(0, 7);
+          data.selectMenus[i].id = `msg-select-${helpers.generateUUID().substring(0, 7)}`;
         }
       }
     }
     return data;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor On Paste
   //
   // When the data for the action is pasted, this function is called.
@@ -530,35 +530,35 @@ module.exports = {
   // version through the return value.
   //
   // Its inclusion within action mods is optional.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   onPaste(data, helpers) {
     if (Array.isArray(data?.buttons)) {
       for (let i = 0; i < data.buttons.length; i++) {
         const id = data.buttons[i].id;
-        if (!id || id.startsWith("msg-button-")) {
-          data.buttons[i].id = "msg-button-" + helpers.generateUUID().substring(0, 7);
+        if (!id || id.startsWith('msg-button-')) {
+          data.buttons[i].id = `msg-button-${helpers.generateUUID().substring(0, 7)}`;
         }
       }
     }
     if (Array.isArray(data?.selectMenus)) {
       for (let i = 0; i < data.selectMenus.length; i++) {
         const id = data.selectMenus[i].id;
-        if (!id || id.startsWith("msg-select-")) {
-          data.selectMenus[i].id = "msg-select-" + helpers.generateUUID().substring(0, 7);
+        if (!id || id.startsWith('msg-select-')) {
+          data.selectMenus[i].id = `msg-select-${helpers.generateUUID().substring(0, 7)}`;
         }
       }
     }
     return data;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existence.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -576,11 +576,11 @@ module.exports = {
     const overwrite = data.overwrite;
 
     let isEdit = 0;
-    if(data.editMessage === "intUpdate") {
+    if (data.editMessage === 'intUpdate') {
       isEdit = 2;
     } else {
       const editMessage = parseInt(data.editMessage, 10);
-      if (typeof editMessage === "number" && editMessage >= 0) {
+      if (typeof editMessage === 'number' && editMessage >= 0) {
         const editVarName = this.evalMessage(data.editMessageVarName, cache);
         const editObject = this.getVariable(editMessage, editVarName, cache);
         const { Message } = this.getDBM().DiscordJS;
@@ -594,7 +594,6 @@ module.exports = {
         }
       }
     }
-
 
     const content = this.evalMessage(message, cache);
     if (content) {
@@ -622,18 +621,18 @@ module.exports = {
         if (embedData.color) {
           let color = this.evalMessage(embedData.color, cache);
           // v14 compatibility: Convert "RANDOM" to random color number
-          if (color === "RANDOM" || color === "random") {
-            color = Math.floor(Math.random() * 0xFFFFFF);
+          if (color === 'RANDOM' || color === 'random') {
+            color = Math.floor(Math.random() * 0xffffff);
           }
           try {
             embed.setColor(color);
           } catch (e) {
             // If color conversion fails, try as number or default to random
-            const colorNum = parseInt(color, 16) || parseInt(color, 10) || Math.floor(Math.random() * 0xFFFFFF);
+            const colorNum = parseInt(color, 16) || parseInt(color, 10) || Math.floor(Math.random() * 0xffffff);
             embed.setColor(colorNum);
           }
         }
-        if (embedData.timestamp === "true") embed.setTimestamp();
+        if (embedData.timestamp === 'true') embed.setTimestamp();
         if (embedData.imageUrl) embed.setImage(this.evalMessage(embedData.imageUrl, cache));
         if (embedData.thumbUrl) embed.setThumbnail(this.evalMessage(embedData.thumbUrl, cache));
 
@@ -643,7 +642,7 @@ module.exports = {
           const fields = embedData.fields;
           for (let i = 0; i < fields.length; i++) {
             const f = fields[i];
-            embed.addField(this.evalMessage(f.name, cache), this.evalMessage(f.value, cache), f.inline === "true");
+            embed.addField(this.evalMessage(f.name, cache), this.evalMessage(f.value, cache), f.inline === 'true');
           }
         }
 
@@ -683,13 +682,13 @@ module.exports = {
         const buttonData = this.generateButton(button, cache);
         this.addButtonToActionRowArray(componentsArr, this.evalMessage(button.row, cache), buttonData, cache);
 
-        if (button.mode !== "PERSISTENT") {
+        if (button.mode !== 'PERSISTENT') {
           awaitResponses.push({
-            type: "BUTTON",
-            time: button.time ? parseInt(this.evalMessage(button.time, cache)) || defaultTime : defaultTime,
+            type: 'BUTTON',
+            time: button.time ? parseInt(this.evalMessage(button.time, cache), 10) || defaultTime : defaultTime,
             id: this.evalMessage(button.id, cache),
-            user: button.mode.endsWith("PERSONAL") ? cache.getUser()?.id : null,
-            multi: button.mode.startsWith("MULTI"),
+            user: button.mode.endsWith('PERSONAL') ? cache.getUser()?.id : null,
+            multi: button.mode.startsWith('MULTI'),
             data: button,
           });
         }
@@ -702,13 +701,13 @@ module.exports = {
         const selectData = this.generateSelectMenu(select, cache);
         this.addSelectToActionRowArray(componentsArr, this.evalMessage(select.row, cache), selectData, cache);
 
-        if (select.mode !== "PERSISTENT") {
+        if (select.mode !== 'PERSISTENT') {
           awaitResponses.push({
-            type: "SELECT",
-            time: select.time ? parseInt(this.evalMessage(select.time, cache)) || defaultTime : defaultTime,
+            type: 'SELECT',
+            time: select.time ? parseInt(this.evalMessage(select.time, cache), 10) || defaultTime : defaultTime,
             id: this.evalMessage(select.id, cache),
-            user: select.mode.endsWith("PERSONAL") ? cache.getUser()?.id : null,
-            multi: select.mode.startsWith("MULTI"),
+            user: select.mode.endsWith('PERSONAL') ? cache.getUser()?.id : null,
+            multi: select.mode.startsWith('MULTI'),
             data: select,
           });
         }
@@ -728,7 +727,7 @@ module.exports = {
         .filter((comps) => comps.length > 0)
         .map(function (comps) {
           return {
-            type: "ACTION_ROW",
+            type: 'ACTION_ROW',
             components: comps,
           };
         });
@@ -749,7 +748,7 @@ module.exports = {
         const attachment = data.attachments[i];
         const url = this.evalMessage(attachment?.url, cache);
         if (url) {
-          const spoiler = !!attachment?.spoiler;
+          const spoiler = Boolean(attachment?.spoiler);
           const name = attachment?.name || (spoiler ? Util.basename(url) : undefined);
           const msgAttachment = new MessageAttachment(url, name);
           if (spoiler) {
@@ -776,16 +775,23 @@ module.exports = {
           const response = awaitResponses[i];
           const originalInteraction = cache.interaction?.__originalInteraction ?? cache.interaction;
           const tempVariables = cache.temp || {};
-          this.registerTemporaryInteraction(resultMsg.id, response.time, response.id, response.user, response.multi, (interaction) => {
-            if (response.data) {
-              interaction.__originalInteraction = originalInteraction;
-              if (response.type === "BUTTON") {
-                this.preformActionsFromInteraction(interaction, response.data, cache.meta, tempVariables);
-              } else {
-                this.preformActionsFromSelectInteraction(interaction, response.data, cache.meta, tempVariables);
+          this.registerTemporaryInteraction(
+            resultMsg.id,
+            response.time,
+            response.id,
+            response.user,
+            response.multi,
+            (interaction) => {
+              if (response.data) {
+                interaction.__originalInteraction = originalInteraction;
+                if (response.type === 'BUTTON') {
+                  this.preformActionsFromInteraction(interaction, response.data, cache.meta, tempVariables);
+                } else {
+                  this.preformActionsFromSelectInteraction(interaction, response.data, cache.meta, tempVariables);
+                }
               }
-            }
-          });
+            },
+          );
         }
       } else {
         this.callNextAction(cache);
@@ -794,7 +800,7 @@ module.exports = {
 
     const isMessageTarget = target instanceof this.getDBM().DiscordJS.Message;
 
-    const sameId = target?.id?.length > 0 && (target?.id ?? "") === cache?.interaction?.channel?.id;
+    const sameId = target?.id?.length > 0 && (target?.id ?? '') === cache?.interaction?.channel?.id;
     const sameChannel = channel === 0 || sameId;
     const canReply = !isMessageTarget && cache?.interaction?.replied === false && sameChannel;
 
@@ -804,47 +810,39 @@ module.exports = {
       messageOptions._awaitResponses = awaitResponses;
       this.storeValue(messageOptions, storage, varName2, cache);
       this.callNextAction(cache);
-    }
-
-    else if (Array.isArray(target)) {
-      this.callListFunc(target, "send", [messageOptions]).then(onComplete);
-    }
-
-    else if (isEdit === 2) {
+    } else if (Array.isArray(target)) {
+      this.callListFunc(target, 'send', [messageOptions]).then(onComplete);
+    } else if (isEdit === 2) {
       let promise = null;
 
       defaultResultMsg = cache.interaction?.message;
 
       if (cache.interaction?.replied && cache.interaction?.editReply) {
         promise = cache.interaction.editReply(messageOptions);
-      } else if(cache?.interaction?.update) {
+      } else if (cache?.interaction?.update) {
         promise = cache.interaction.update(messageOptions);
       } else {
-        this.displayError(data, cache, "Send Message -> Message/Options to Edit -> Interaction Update / Could not find interaction to edit");
+        this.displayError(
+          data,
+          cache,
+          'Send Message -> Message/Options to Edit -> Interaction Update / Could not find interaction to edit',
+        );
       }
-      
-      if (promise) {
-        promise
-          .then(onComplete)
-          .catch((err) => this.displayError(data, cache, err));
-      }
-    }
 
-    else if (isEdit === 1 && target?.edit) {
+      if (promise) {
+        promise.then(onComplete).catch((err) => this.displayError(data, cache, err));
+      }
+    } else if (isEdit === 1 && target?.edit) {
       target
         .edit(messageOptions)
         .then(onComplete)
         .catch((err) => this.displayError(data, cache, err));
-    }
-
-    else if (isMessageTarget && target?.reply) {
+    } else if (isMessageTarget && target?.reply) {
       target
         .reply(messageOptions)
         .then(onComplete)
         .catch((err) => this.displayError(data, cache, err));
-    }
-
-    else if (data.reply === true && canReply) {
+    } else if (data.reply === true && canReply) {
       messageOptions.fetchReply = true;
       if (data.ephemeral === true) {
         messageOptions.ephemeral = true;
@@ -856,21 +854,17 @@ module.exports = {
         promise = cache.interaction.reply(messageOptions);
       }
       promise.then(onComplete).catch((err) => this.displayError(data, cache, err));
-    }
-
-    else if (target?.send) {
+    } else if (target?.send) {
       target
         .send(messageOptions)
         .then(onComplete)
         .catch((err) => this.displayError(data, cache, err));
-    }
-
-    else {
+    } else {
       this.callNextAction(cache);
     }
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod Init
   //
   // An optional function for action mods. Upon the bot's initialization,
@@ -881,13 +875,13 @@ module.exports = {
   // If an action provides inputs for more actions within, be sure
   // to call the `this.prepareActions` function to ensure all actions are
   // recursively iterated through.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   modInit(data) {
     if (Array.isArray(data?.buttons)) {
       for (let i = 0; i < data.buttons.length; i++) {
         const button = data.buttons[i];
-        if (button.mode === "PERSISTENT") {
+        if (button.mode === 'PERSISTENT') {
           this.registerButtonInteraction(button.id, button);
         }
         this.prepareActions(button.actions);
@@ -896,7 +890,7 @@ module.exports = {
     if (Array.isArray(data?.selectMenus)) {
       for (let i = 0; i < data.selectMenus.length; i++) {
         const select = data.selectMenus[i];
-        if (select.mode === "PERSISTENT") {
+        if (select.mode === 'PERSISTENT') {
           this.registerSelectMenuInteraction(select.id, select);
         }
         this.prepareActions(select.actions);
@@ -904,14 +898,14 @@ module.exports = {
     }
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflicts between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

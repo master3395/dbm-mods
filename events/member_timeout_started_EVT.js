@@ -11,20 +11,17 @@ module.exports = {
   mod(DBM) {
     DBM.Events = DBM.Events || {};
     const { Actions, Bot } = DBM;
-    const DiscordJS = DBM.DiscordJS;
-    const isV14 = DBM.isDiscordJSv14 ? DBM.isDiscordJSv14() : parseInt(DiscordJS.version.split('.')[0], 10) >= 14;
 
     DBM.Events.memberTimeoutStarted = function memberTimeoutStarted(oldMember, newMember) {
       if (!Bot.$evts['Member Timeout Started']) return;
-      
+
       // Check if member was timed out (communicationDisabledUntil changed from null to a future date)
       const oldTimeout = oldMember.communicationDisabledUntil;
       const newTimeout = newMember.communicationDisabledUntil;
-      
+
       // Timeout started if old was null/expired and new is in the future
-      const wasTimedOut = (!oldTimeout || oldTimeout.getTime() <= Date.now()) && 
-                          newTimeout && 
-                          newTimeout.getTime() > Date.now();
+      const wasTimedOut =
+        (!oldTimeout || oldTimeout.getTime() <= Date.now()) && newTimeout && newTimeout.getTime() > Date.now();
 
       if (!wasTimedOut) return;
 
@@ -50,4 +47,3 @@ module.exports = {
     };
   },
 };
-

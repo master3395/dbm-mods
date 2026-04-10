@@ -1,9 +1,8 @@
-
-//---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 // custommethods - for Discord Bot Maker
 // Contains functions for actions using custommethods
 // Stolen from Wrex :troll: ~ Lasse
-//---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 // Changelog:
 // 2.1.6 - Lasse
 //   - Use WrexMods instead
@@ -13,94 +12,85 @@
 // 1.0.0 - Lasse
 //   - Added getWebhook()
 //
-//---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 
-const custommethods= {};
+const custommethods = {};
 
 custommethods.API = {};
 
 custommethods.DBM = null;
 
-custommethods.Version = "2.1.6";
+custommethods.Version = '2.1.6';
 
 // Methods:
 
-custommethods.getWebhook = function(type, varName, cache) {
-    const server = cache.server;
-    console.log('Please update WrexMods, Store Reaction Info and the webhook actions! Go to #support for more help :D');
-    switch(type) {
-        case 1:
-            return cache.temp[varName];
-            break;
-        case 2:
-            if(server && this.server[server.id]) {
-                return this.server[server.id][varName];
-            }
-            break;
-        case 3:
-            return this.global[varName];
-            break;
-        default:
-            break;
-    }
-    return false;
+custommethods.getWebhook = function (type, varName, cache) {
+  const server = cache.server;
+  console.log('Please update WrexMods, Store Reaction Info and the webhook actions! Go to #support for more help :D');
+  switch (type) {
+    case 1:
+      return cache.temp[varName];
+    case 2:
+      if (server && this.server[server.id]) {
+        return this.server[server.id][varName];
+      }
+      break;
+    case 3:
+      return this.global[varName];
+    default:
+      break;
+  }
+  return false;
 };
 
-custommethods.getReaction = function(type, varName, cache) {
-    const server = cache.server;
-    console.log('Please update WrexMods, Store Reaction Info and the webhook actions! Go to #support for more help :D');
-    switch(type) {
-        case 1:
-            return cache.temp[varName];
-            break;
-        case 2:
-            if(server && this.server[server.id]) {
-                return this.server[server.id][varName];
-            }
-            break;
-        case 3:
-            return this.global[varName];
-            break;
-        default:
-            break;
-    }
-    return false;
+custommethods.getReaction = function (type, varName, cache) {
+  const server = cache.server;
+  console.log('Please update WrexMods, Store Reaction Info and the webhook actions! Go to #support for more help :D');
+  switch (type) {
+    case 1:
+      return cache.temp[varName];
+    case 2:
+      if (server && this.server[server.id]) {
+        return this.server[server.id][varName];
+      }
+      break;
+    case 3:
+      return this.global[varName];
+    default:
+      break;
+  }
+  return false;
 };
 
-
-//---------------------------------------------------------------------
-
-
+// ---------------------------------------------------------------------
 
 // This function is called by DBM when the bot is started
-var customaction = {};
-customaction.name = "custommethods";
-customaction.section = "Deprecated";
-customaction.author = "DBM Mods"; //Init.: Lasse
-customaction.version = "2.1.6"; //Added in 1.8.7 - Changelog at the top!
-customaction.short_description = "Required for some mods. Does nothing";
+const customaction = {};
+customaction.name = 'custommethods';
+customaction.section = 'Deprecated';
+customaction.author = 'DBM Mods'; // Init.: Lasse
+customaction.version = '2.1.6'; // Added in 1.8.7 - Changelog at the top!
+customaction.short_description = 'Required for some mods. Does nothing';
 
-customaction.html = function() {
-	return `
+customaction.html = function () {
+  return `
 <div id ="wrexdiv" style="width: 550px; height: 350px; overflow-y: scroll;">
      <p>
 		<u>Custom Methods:</u><br><br>
 		Please delete this file from your actions folder. We merged this with WrexMods!
 	</p>
-</div>`
+</div>`;
 };
 
-customaction.getcustommethods = function(){
-	return custommethods;
-}
+customaction.getcustommethods = function () {
+  return custommethods;
+};
 
+customaction.mod = function (DBM) {
+  custommethods.DBM = DBM;
 
-customaction.mod = function(DBM) {
-
-	custommethods.DBM = DBM
-
-	DBM.Actions.getcustommethods = function(){
-		return custommethods;
-	}
+  DBM.Actions.getcustommethods = function () {
+    return custommethods;
+  };
 };
 module.exports = customaction;

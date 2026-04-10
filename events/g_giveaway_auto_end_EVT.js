@@ -20,7 +20,7 @@ module.exports = {
 
         const giveawayChecker = GiveawayAutoEnd({
           storage: './data/giveaways.json',
-          loopTime: loopTime,
+          loopTime,
         });
 
         giveawayChecker.on('ended', (giveawayId) => {

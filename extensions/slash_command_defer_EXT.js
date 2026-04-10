@@ -35,9 +35,7 @@ module.exports = {
         if (interaction && typeof interaction.deferReply === 'function') {
           if (!interaction.replied && !interaction.deferred) {
             const ephemeral =
-              opts && Object.prototype.hasOwnProperty.call(opts, 'ephemeral')
-                ? Boolean(opts.ephemeral)
-                : true;
+              opts && Object.prototype.hasOwnProperty.call(opts, 'ephemeral') ? Boolean(opts.ephemeral) : true;
             return interaction.deferReply({ ephemeral });
           }
         }

@@ -5,197 +5,195 @@
 
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 
 class ConfigProtection {
-    constructor() {
-        this.configPath = path.join(__dirname, '../../../config.php');
-        this.backupPath = path.join(__dirname, '../../../config.php.backup');
-        this.protectedPaths = [
-            'config.php',
-            'config/config.php',
-            '*.secret.php',
-            'secrets',
-            'secure-config',
-            'private-config'
-        ];
-    }
+  constructor() {
+    this.configPath = path.join(__dirname, '../../../config.php');
+    this.backupPath = path.join(__dirname, '../../../config.php.backup');
+    this.protectedPaths = [
+      'config.php',
+      'config/config.php',
+      '*.secret.php',
+      'secrets',
+      'secure-config',
+      'private-config',
+    ];
+  }
 
-    // Block all secure config access
-    blockConfigAccess() {
-        return (req, res, next) => {
-            const requestedPath = req.path.toLowerCase();
-            
-            // Check if request is for any secure configuration path
-            const isConfigRequest = this.protectedPaths.some(pattern => {
-                if (pattern.includes('*')) {
-                    const regex = new RegExp(pattern.replace(/\*/g, '.*'));
-                    return regex.test(requestedPath);
-                }
-                return requestedPath.includes(pattern);
-            });
+  // Block all secure config access
+  blockConfigAccess() {
+    return (req, res, next) => {
+      const requestedPath = req.path.toLowerCase();
 
-            if (isConfigRequest) {
-                // Log potential security breach
-                console.warn(`🚨 BLOCKED secure config access attempt from ${req.ip} to ${req.path}`);
-                
-                // Return 404 to hide the file existence
-                return res.status(404).json({
-                    error: 'Not Found',
-                    message: 'The requested resource was not found'
-                });
-            }
-
-            next();
-        };
-    }
-
-    // Create secure configuration backup
-    createSecureBackup() {
-        try {
-            if (!fs.existsSync(this.configPath)) {
-                console.info('ℹ️ config.php file not present; backup skipped.');
-                return true;
-            }
-
-            // Read original config file
-            const configContent = fs.readFileSync(this.configPath, 'utf8');
-            
-            // Create encrypted backup
-            const encryptedContent = this.encryptContent(configContent);
-            
-            // Write backup with restricted permissions
-            fs.writeFileSync(this.backupPath, encryptedContent, { mode: 0o600 });
-            
-            console.log('✅ Secure configuration backup created');
-            return true;
-        } catch (error) {
-            console.error('❌ Failed to create configuration backup:', error.message);
-            return false;
+      // Check if request is for any secure configuration path
+      const isConfigRequest = this.protectedPaths.some((pattern) => {
+        if (pattern.includes('*')) {
+          const regex = new RegExp(pattern.replace(/\*/g, '.*'));
+          return regex.test(requestedPath);
         }
+        return requestedPath.includes(pattern);
+      });
+
+      if (isConfigRequest) {
+        // Log potential security breach
+        console.warn(`🚨 BLOCKED secure config access attempt from ${req.ip} to ${req.path}`);
+
+        // Return 404 to hide the file existence
+        return res.status(404).json({
+          error: 'Not Found',
+          message: 'The requested resource was not found',
+        });
+      }
+
+      next();
+    };
+  }
+
+  // Create secure configuration backup
+  createSecureBackup() {
+    try {
+      if (!fs.existsSync(this.configPath)) {
+        console.info('ℹ️ config.php file not present; backup skipped.');
+        return true;
+      }
+
+      // Read original config file
+      const configContent = fs.readFileSync(this.configPath, 'utf8');
+
+      // Create encrypted backup
+      const encryptedContent = this.encryptContent(configContent);
+
+      // Write backup with restricted permissions
+      fs.writeFileSync(this.backupPath, encryptedContent, { mode: 0o600 });
+
+      console.log('✅ Secure configuration backup created');
+      return true;
+    } catch (error) {
+      console.error('❌ Failed to create configuration backup:', error.message);
+      return false;
     }
+  }
 
-    // Restore from backup
-    restoreFromBackup() {
-        try {
-            if (!fs.existsSync(this.backupPath)) {
-                console.info('ℹ️ config.php.backup file not found; no restore required.');
-                return false;
-            }
+  // Restore from backup
+  restoreFromBackup() {
+    try {
+      if (!fs.existsSync(this.backupPath)) {
+        console.info('ℹ️ config.php.backup file not found; no restore required.');
+        return false;
+      }
 
-            // Read encrypted backup
-            const encryptedContent = fs.readFileSync(this.backupPath, 'utf8');
-            
-            // Decrypt content
-            const decryptedContent = this.decryptContent(encryptedContent);
-            
-            // Write to config.php file
-            fs.writeFileSync(this.configPath, decryptedContent, { mode: 0o600 });
-            
-            console.log('✅ config.php restored from backup');
-            return true;
-        } catch (error) {
-            console.error('❌ Failed to restore configuration from backup:', error.message);
-            return false;
-        }
+      // Read encrypted backup
+      const encryptedContent = fs.readFileSync(this.backupPath, 'utf8');
+
+      // Decrypt content
+      const decryptedContent = this.decryptContent(encryptedContent);
+
+      // Write to config.php file
+      fs.writeFileSync(this.configPath, decryptedContent, { mode: 0o600 });
+
+      console.log('✅ config.php restored from backup');
+      return true;
+    } catch (error) {
+      console.error('❌ Failed to restore configuration from backup:', error.message);
+      return false;
     }
+  }
 
-    // Encrypt content
-    encryptContent(content) {
-        try {
-            // Use simple base64 encoding for compatibility
-            const encrypted = Buffer.from(content).toString('base64');
-            return JSON.stringify({
-                encrypted,
-                method: 'base64',
-                timestamp: Date.now()
-            });
-        } catch (error) {
-            console.warn('⚠️ Encryption failed:', error.message);
-            return JSON.stringify({
-                encrypted: content,
-                method: 'plain',
-                timestamp: Date.now()
-            });
-        }
+  // Encrypt content
+  encryptContent(content) {
+    try {
+      // Use simple base64 encoding for compatibility
+      const encrypted = Buffer.from(content).toString('base64');
+      return JSON.stringify({
+        encrypted,
+        method: 'base64',
+        timestamp: Date.now(),
+      });
+    } catch (error) {
+      console.warn('⚠️ Encryption failed:', error.message);
+      return JSON.stringify({
+        encrypted: content,
+        method: 'plain',
+        timestamp: Date.now(),
+      });
     }
+  }
 
-    // Decrypt content
-    decryptContent(encryptedData) {
-        try {
-            const data = JSON.parse(encryptedData);
-            
-            // Handle different encryption methods
-            if (data.method === 'base64') {
-                return Buffer.from(data.encrypted, 'base64').toString('utf8');
-            } else if (data.method === 'plain') {
-                return data.encrypted;
-            } else {
-                // Legacy support - try base64 first
-                try {
-                    return Buffer.from(data.encrypted, 'base64').toString('utf8');
-                } catch (e) {
-                    return data.encrypted;
-                }
-            }
-        } catch (error) {
-            console.warn('⚠️ Decryption failed, returning raw data:', error.message);
-            return encryptedData;
-        }
+  // Decrypt content
+  decryptContent(encryptedData) {
+    try {
+      const data = JSON.parse(encryptedData);
+
+      // Handle different encryption methods
+      if (data.method === 'base64') {
+        return Buffer.from(data.encrypted, 'base64').toString('utf8');
+      } else if (data.method === 'plain') {
+        return data.encrypted;
+      }
+      // Legacy support - try base64 first
+      try {
+        return Buffer.from(data.encrypted, 'base64').toString('utf8');
+      } catch (e) {
+        return data.encrypted;
+      }
+    } catch (error) {
+      console.warn('⚠️ Decryption failed, returning raw data:', error.message);
+      return encryptedData;
     }
+  }
 
-    // Secure configuration file permissions
-    secureConfigPermissions() {
-        try {
-            if (fs.existsSync(this.configPath)) {
-                // Set restrictive permissions (owner read/write only)
-                fs.chmodSync(this.configPath, 0o600);
-                console.log('✅ config.php permissions secured');
-            } else {
-                console.info('ℹ️ config.php not detected; permissions hardening skipped.');
-            }
+  // Secure configuration file permissions
+  secureConfigPermissions() {
+    try {
+      if (fs.existsSync(this.configPath)) {
+        // Set restrictive permissions (owner read/write only)
+        fs.chmodSync(this.configPath, 0o600);
+        console.log('✅ config.php permissions secured');
+      } else {
+        console.info('ℹ️ config.php not detected; permissions hardening skipped.');
+      }
 
-            if (fs.existsSync(this.backupPath)) {
-                // Set restrictive permissions for backup
-                fs.chmodSync(this.backupPath, 0o600);
-                console.log('✅ config.php.backup permissions secured');
-            } else {
-                console.info('ℹ️ config.php.backup not detected; no permissions update necessary.');
-            }
-        } catch (error) {
-            console.error('❌ Failed to secure file permissions:', error.message);
-        }
+      if (fs.existsSync(this.backupPath)) {
+        // Set restrictive permissions for backup
+        fs.chmodSync(this.backupPath, 0o600);
+        console.log('✅ config.php.backup permissions secured');
+      } else {
+        console.info('ℹ️ config.php.backup not detected; no permissions update necessary.');
+      }
+    } catch (error) {
+      console.error('❌ Failed to secure file permissions:', error.message);
     }
+  }
 
-    // Add secure config protection headers
-    addProtectionHeaders() {
-        return (req, res, next) => {
-            // Add headers to prevent config file caching
-            res.setHeader('X-Content-Type-Options', 'nosniff');
-            res.setHeader('X-Frame-Options', 'DENY');
-            res.setHeader('X-XSS-Protection', '1; mode=block');
-            res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-            
-            // Block config files in robots.txt
-            if (req.path === '/robots.txt') {
-                res.setHeader('Content-Type', 'text/plain');
-                res.send(`User-agent: *
+  // Add secure config protection headers
+  addProtectionHeaders() {
+    return (req, res, next) => {
+      // Add headers to prevent config file caching
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'DENY');
+      res.setHeader('X-XSS-Protection', '1; mode=block');
+      res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+      // Block config files in robots.txt
+      if (req.path === '/robots.txt') {
+        res.setHeader('Content-Type', 'text/plain');
+        res.send(`User-agent: *
 Disallow: /config.php
 Disallow: /config/config.php
 Disallow: /config/
 Disallow: /logs/
 Disallow: /uploads/
 Disallow: /node_modules/`);
-                return;
-            }
-            
-            next();
-        };
-    }
+        return;
+      }
 
-    // Create .htaccess for Apache servers
-    createHtaccess() {
-        const htaccessContent = `# ========================================
+      next();
+    };
+  }
+
+  // Create .htaccess for Apache servers
+  createHtaccess() {
+    const htaccessContent = `# ========================================
 # Secure Config Protection for Apache
 # ========================================
 
@@ -257,14 +255,14 @@ IndexIgnore *.backup
 IndexIgnore *.log
 IndexIgnore config.json`;
 
-        const htaccessPath = path.join(__dirname, '../../../.htaccess');
-        fs.writeFileSync(htaccessPath, htaccessContent);
-        console.log('✅ .htaccess file created for Apache protection');
-    }
+    const htaccessPath = path.join(__dirname, '../../../.htaccess');
+    fs.writeFileSync(htaccessPath, htaccessContent);
+    console.log('✅ .htaccess file created for Apache protection');
+  }
 
-    // Create web.config for IIS servers
-    createWebConfig() {
-        const webConfigContent = `<?xml version="1.0" encoding="UTF-8"?>
+  // Create web.config for IIS servers
+  createWebConfig() {
+    const webConfigContent = `<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <system.webServer>
         <security>
@@ -294,14 +292,14 @@ IndexIgnore config.json`;
     </system.webServer>
 </configuration>`;
 
-        const webConfigPath = path.join(__dirname, '../../../web.config');
-        fs.writeFileSync(webConfigPath, webConfigContent);
-        console.log('✅ web.config file created for IIS protection');
-    }
+    const webConfigPath = path.join(__dirname, '../../../web.config');
+    fs.writeFileSync(webConfigPath, webConfigContent);
+    console.log('✅ web.config file created for IIS protection');
+  }
 
-    // Create nginx configuration snippet
-    createNginxConfig() {
-        const nginxConfigContent = `# ========================================
+  // Create nginx configuration snippet
+  createNginxConfig() {
+    const nginxConfigContent = `# ========================================
 # Secure Config Protection for Nginx
 # ========================================
 
@@ -347,78 +345,73 @@ add_header X-XSS-Protection "1; mode=block";
 add_header Referrer-Policy "strict-origin-when-cross-origin";
 add_header Content-Security-Policy "default-src 'self'";`;
 
-        const nginxConfigPath = path.join(__dirname, '../../../nginx-config-protection.conf');
-        fs.writeFileSync(nginxConfigPath, nginxConfigContent);
-        console.log('✅ nginx-config-protection.conf file created');
-    }
+    const nginxConfigPath = path.join(__dirname, '../../../nginx-config-protection.conf');
+    fs.writeFileSync(nginxConfigPath, nginxConfigContent);
+    console.log('✅ nginx-config-protection.conf file created');
+  }
 
-    // Monitor for secure configuration access attempts
-    monitorConfigAccess() {
-        return (req, res, next) => {
-            const requestedPath = req.path.toLowerCase();
-            
-            if (requestedPath.includes('config.php') || requestedPath.includes('config.json')) {
-                // Log security event
-                const securityEvent = {
-                    timestamp: new Date().toISOString(),
-                    type: 'CONFIG_ACCESS_ATTEMPT',
-                    ip: req.ip,
-                    userAgent: req.get('User-Agent'),
-                    path: req.path,
-                    method: req.method,
-                    headers: req.headers
-                };
-                
-                console.warn('🚨 SECURITY ALERT - Secure configuration access attempt:', JSON.stringify(securityEvent, null, 2));
-                
-                // In production, you might want to send this to a security monitoring service
-                this.sendSecurityAlert(securityEvent);
-            }
-            
-            next();
+  // Monitor for secure configuration access attempts
+  monitorConfigAccess() {
+    return (req, res, next) => {
+      const requestedPath = req.path.toLowerCase();
+
+      if (requestedPath.includes('config.php') || requestedPath.includes('config.json')) {
+        // Log security event
+        const securityEvent = {
+          timestamp: new Date().toISOString(),
+          type: 'CONFIG_ACCESS_ATTEMPT',
+          ip: req.ip,
+          userAgent: req.get('User-Agent'),
+          path: req.path,
+          method: req.method,
+          headers: req.headers,
         };
-    }
 
-    // Send security alert (implement based on your monitoring system)
-    sendSecurityAlert(event) {
-        // This could send alerts to:
-        // - Security monitoring service (Sentry, DataDog, etc.)
-        // - Email notifications
-        // - Discord webhook
-        // - Slack webhook
-        console.log('🔔 Security alert would be sent here:', event.type);
-    }
+        console.warn(
+          '🚨 SECURITY ALERT - Secure configuration access attempt:',
+          JSON.stringify(securityEvent, null, 2),
+        );
 
-    // Initialize all protection measures
-    initializeProtection() {
-        console.log('🔒 Initializing secure configuration protection...');
-        
-        // Create secure backup
-        this.createSecureBackup();
-        
-        // Secure file permissions
-        this.secureConfigPermissions();
-        
-        // Create server configuration files
-        this.createHtaccess();
-        this.createWebConfig();
-        this.createNginxConfig();
-        
-        return [
-            this.blockConfigAccess(),
-            this.addProtectionHeaders(),
-            this.monitorConfigAccess()
-        ];
-    }
+        // In production, you might want to send this to a security monitoring service
+        this.sendSecurityAlert(securityEvent);
+      }
 
-    // Get all protection middleware
-    getAllProtectionMiddleware() {
-        return [
-            this.blockConfigAccess(),
-            this.addProtectionHeaders(),
-            this.monitorConfigAccess()
-        ];
-    }
+      next();
+    };
+  }
+
+  // Send security alert (implement based on your monitoring system)
+  sendSecurityAlert(event) {
+    // This could send alerts to:
+    // - Security monitoring service (Sentry, DataDog, etc.)
+    // - Email notifications
+    // - Discord webhook
+    // - Slack webhook
+    console.log('🔔 Security alert would be sent here:', event.type);
+  }
+
+  // Initialize all protection measures
+  initializeProtection() {
+    console.log('🔒 Initializing secure configuration protection...');
+
+    // Create secure backup
+    this.createSecureBackup();
+
+    // Secure file permissions
+    this.secureConfigPermissions();
+
+    // Create server configuration files
+    this.createHtaccess();
+    this.createWebConfig();
+    this.createNginxConfig();
+
+    return [this.blockConfigAccess(), this.addProtectionHeaders(), this.monitorConfigAccess()];
+  }
+
+  // Get all protection middleware
+  getAllProtectionMiddleware() {
+    return [this.blockConfigAccess(), this.addProtectionHeaders(), this.monitorConfigAccess()];
+  }
 }
 
 module.exports = new ConfigProtection();

@@ -1,27 +1,27 @@
 module.exports = {
   name: 'Create Server Template MOD',
   section: 'Server Control',
-    meta: {
-      version: '2.1.6',
-      preciseCheck: true,
-      author: 'DBM Extended',
-      authorUrl: 'https://github.com/DBM-Extended/mods',
-      downloadURL: 'https://github.com/DBM-Extended/mods',
-    },
-
-  subtitle (data) {
-    return `${data.templatename}`
+  meta: {
+    version: '2.1.6',
+    preciseCheck: true,
+    author: 'DBM Extended',
+    authorUrl: 'https://github.com/DBM-Extended/mods',
+    downloadURL: 'https://github.com/DBM-Extended/mods',
   },
 
-  variableStorage (data, varType) {
-    const type = parseInt(data.storage)
-    if (type !== varType) return
-    return ([data.varName2, 'URL'])
+  subtitle(data) {
+    return `${data.templatename}`;
   },
 
-  fields: ['server',"varName",'templatename', 'templatedescricao', 'storage', 'varName2'],
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
+    if (type !== varType) return;
+    return [data.varName2, 'URL'];
+  },
 
-  html (isEvent, data) {
+  fields: ['server', 'varName', 'templatename', 'templatedescricao', 'storage', 'varName2'],
+
+  html(isEvent, data) {
     return `
     <div style="position:absolute;bottom:0px;border: 1px solid #222;background:#000;color:#999;padding:3px;right:0px;z-index:999999">Version 0.2</div>
     <div style="position:absolute;bottom:0px;border: 1px solid #222;background:#000;color:#999;padding:3px;left:0px;z-index:999999">DBM-Extended</div>
@@ -50,32 +50,31 @@ module.exports = {
   <span class="dbminputlabel">Variable Name</span><br>
     <input id="varName2" class="round" type="text">
   </div>
-</div>`
+</div>`;
   },
 
-    init () {},
+  init() {},
 
   async action(cache) {
-    const data = cache.actions[cache.index]
+    const data = cache.actions[cache.index];
     const targetServer = await this.getServerFromData(data.server, data.varName, cache);
     if (!targetServer) {
       return this.callNextAction(cache);
     }
-    const templatename = this.evalMessage(data.templatename, cache)
-    const templatedescricao = this.evalMessage(data.templatedescricao, cache)
-    result = targetServer.createTemplate(templatename, templatedescricao).catch((err) => {
-      console.log('A template already exists on the server')
-      console.error(err)
-    })
+    const templatename = this.evalMessage(data.templatename, cache);
+    const templatedescricao = this.evalMessage(data.templatedescricao, cache);
+    let result = targetServer.createTemplate(templatename, templatedescricao).catch((err) => {
+      console.log('A template already exists on the server');
+      console.error(err);
+    });
 
-    if (result = `https://discord.new/${(await targetServer.fetchTemplates()).map(v => v.code)}`) {
-      const storage = parseInt(data.storage)
-      const varName2 = this.evalMessage(data.varName2, cache)
-      this.storeValue(result, storage, varName2, cache)
-      this.callNextAction(cache)
+    if ((result = `https://discord.new/${(await targetServer.fetchTemplates()).map((v) => v.code)}`)) {
+      const storage = parseInt(data.storage, 10);
+      const varName2 = this.evalMessage(data.varName2, cache);
+      this.storeValue(result, storage, varName2, cache);
+      this.callNextAction(cache);
     }
   },
 
-
-  mod () {}
-}
+  mod() {},
+};

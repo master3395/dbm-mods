@@ -1,105 +1,110 @@
 module.exports = {
+  // ---------------------------------------------------------------------
+  // Action Name
+  //
+  // This is the name of the action displayed in the editor.
+  // ---------------------------------------------------------------------
 
-	//---------------------------------------------------------------------
-	// Action Name
-	//
-	// This is the name of the action displayed in the editor.
-	//---------------------------------------------------------------------
-	
-	name: "Translation of Info",
-	
-	//---------------------------------------------------------------------
-	// Action Section
-	//
-	// This is the section the action will fall into.
-	//---------------------------------------------------------------------
-	
-	section: "#Info Translation",
-	
-	//---------------------------------------------------------------------
-	// Action Subtitle
-	//
-	// This function generates the subtitle displayed next to the name.
-	//---------------------------------------------------------------------
-	
-	subtitle: function(data) {
-		const info = ['DBMEX Mod Pack', 'DBMEX Mod Pack', 'DBMEX Mod Pack', 'DBMEX Mod Pack', 'DBMEX Mod Pack', 'DBMEX Mod Pack'];
-		return `${info[parseInt(data.info)]}`;
-	},
-	
-	//---------------------------------------------------------------------
-		 // DBM Mods Manager Variables (Optional but nice to have!)
-		 //
-		 // These are variables that DBM Mods Manager uses to show information
-		 // about the mods for people to see in the list.
-		 //---------------------------------------------------------------------
-	
-		 // Who made the mod (If not set, defaults to "DBM Mods")
-		 author: "Giingu",
-	
-		 // The version of the mod (Defaults to 1.0.0)
-		 version: "2.1.6", //Added in 2.1.6
-	
-		 // A short description to show on the mod line for this mod (Must be on a single line)
-		 short_description: "DBMEX Mod Pack Information.",
+  name: 'Translation of Info',
 
-		 long_description: "2D > 3D",
-	
-		 // If it depends on any other mods by name, ex: WrexMODS if the mod uses something from WrexMods
-	
-	
-		 //---------------------------------------------------------------------
-	
-	//---------------------------------------------------------------------
-	// Action Storage Function
-	//
-	// Stores the relevant variable info for the editor.
-	//---------------------------------------------------------------------
-	
-	variableStorage: function(data, varType) {
-		const type = parseInt(data.storage);
-		if(type !== varType) return;
-		const info = parseInt(data.info);
-		let dataType = 'Unknown Type';
-		switch(info) {
-			case 0:
-				dataType = "Credits";
-				break;
-			case 1:
-				dataType = "DBMEX";
-				break;
-		}
-		return ([data.varName, dataType]);
-	},
-	
-	//---------------------------------------------------------------------
-	// Action Fields
-	//
-	// These are the fields for the action. These fields are customized
-	// by creating elements with corresponding IDs in the HTML. These
-	// are also the names of the fields stored in the action's JSON data.
-	//---------------------------------------------------------------------
-	
-	fields: ["serverip", "gametype", "info", "storage", "varName"],
-	
-	//---------------------------------------------------------------------
-	// Command HTML
-	//
-	// This function returns a string containing the HTML used for
-	// editting actions.
-	//
-	// The "isEvent" parameter will be true if this action is being used
-	// for an event. Due to their nature, events lack certain information,
-	// so edit the HTML to reflect this.
-	//
-	// The "data" parameter stores constants for select elements to use.
-	// Each is an array: index 0 for commands, index 1 for events.
-	// The names are: sendTargets, members, roles, channels,
-	//                messages, servers, variables
-	//---------------------------------------------------------------------
-	
-	html: function(isEvent, data) {
-		return `
+  // ---------------------------------------------------------------------
+  // Action Section
+  //
+  // This is the section the action will fall into.
+  // ---------------------------------------------------------------------
+
+  section: '#Info Translation',
+
+  // ---------------------------------------------------------------------
+  // Action Subtitle
+  //
+  // This function generates the subtitle displayed next to the name.
+  // ---------------------------------------------------------------------
+
+  subtitle(data) {
+    const info = [
+      'DBMEX Mod Pack',
+      'DBMEX Mod Pack',
+      'DBMEX Mod Pack',
+      'DBMEX Mod Pack',
+      'DBMEX Mod Pack',
+      'DBMEX Mod Pack',
+    ];
+    return `${info[parseInt(data.info, 10)]}`;
+  },
+
+  // ---------------------------------------------------------------------
+  // DBM Mods Manager Variables (Optional but nice to have!)
+  //
+  // These are variables that DBM Mods Manager uses to show information
+  // about the mods for people to see in the list.
+  // ---------------------------------------------------------------------
+
+  // Who made the mod (If not set, defaults to "DBM Mods")
+  author: 'Giingu',
+
+  // The version of the mod (Defaults to 1.0.0)
+  version: '2.1.6', // Added in 2.1.6
+
+  // A short description to show on the mod line for this mod (Must be on a single line)
+  short_description: 'DBMEX Mod Pack Information.',
+
+  long_description: '2D > 3D',
+
+  // If it depends on any other mods by name, ex: WrexMODS if the mod uses something from WrexMods
+
+  // ---------------------------------------------------------------------
+
+  // ---------------------------------------------------------------------
+  // Action Storage Function
+  //
+  // Stores the relevant variable info for the editor.
+  // ---------------------------------------------------------------------
+
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
+    if (type !== varType) return;
+    const info = parseInt(data.info, 10);
+    let dataType = 'Unknown Type';
+    switch (info) {
+      case 0:
+        dataType = 'Credits';
+        break;
+      case 1:
+        dataType = 'DBMEX';
+        break;
+    }
+    return [data.varName, dataType];
+  },
+
+  // ---------------------------------------------------------------------
+  // Action Fields
+  //
+  // These are the fields for the action. These fields are customized
+  // by creating elements with corresponding IDs in the HTML. These
+  // are also the names of the fields stored in the action's JSON data.
+  // ---------------------------------------------------------------------
+
+  fields: ['serverip', 'gametype', 'info', 'storage', 'varName'],
+
+  // ---------------------------------------------------------------------
+  // Command HTML
+  //
+  // This function returns a string containing the HTML used for
+  // editting actions.
+  //
+  // The "isEvent" parameter will be true if this action is being used
+  // for an event. Due to their nature, events lack certain information,
+  // so edit the HTML to reflect this.
+  //
+  // The "data" parameter stores constants for select elements to use.
+  // Each is an array: index 0 for commands, index 1 for events.
+  // The names are: sendTargets, members, roles, channels,
+  //                messages, servers, variables
+  // ---------------------------------------------------------------------
+
+  html(isEvent, data) {
+    return `
 		<div style="width: 550px; height: 350px; overflow-y: scroll;">
         <div>
 		<div class="embed">
@@ -181,97 +186,96 @@ module.exports = {
                 span { /* Only making the text look, nice! */
                     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 }
-                </style>`
-	},
-	
-	//---------------------------------------------------------------------
-	// Action Editor Init Code
-	//
-	// When the HTML is first applied to the action editor, this code
-	// is also run. This helps add modifications or setup reactionary
-	// functions for the DOM elements.
-	//---------------------------------------------------------------------
-	
-	init: function() {
-		const {glob, document} = this;
-	
-		glob.variableChange(document.getElementById('storage'), 'varNameContainer');
-	},
-	
-	//---------------------------------------------------------------------
-	// Action Bot Function
-	//
-	// This is the function for the action within the Bot's Action class.
-	// Keep in mind event calls won't have access to the "msg" parameter,
-	// so be sure to provide checks for variable existance.
-	//---------------------------------------------------------------------
-	
-	action: function(cache) {
-		const _this = this // To fix error
-        const data = cache.actions[cache.index];
-		const info = parseInt(data.info);
-		const gametype = _this.evalMessage(data.gametype, cache);
-		const host = _this.evalMessage(data.serverip, cache)
+                </style>`;
+  },
 
-        // Main code:
-		const WrexMODS = _this.getWrexMods(); // as always.
-		WrexMODS.CheckAndInstallNodeModule('game-server-query');
-		const query = WrexMODS.require('game-server-query');
+  // ---------------------------------------------------------------------
+  // Action Editor Init Code
+  //
+  // When the HTML is first applied to the action editor, this code
+  // is also run. This helps add modifications or setup reactionary
+  // functions for the DOM elements.
+  // ---------------------------------------------------------------------
 
-		query (
-            {
-            type: `${gametype}`,
-            host: `${host}`
-            },
-            function(state) {
-                if(state.error){
-              console.log("[Store Game Server Info Mod] Server is offline.");
-            }
-                else {
-                    switch (info) {
-                        case 0:
-                            result = state.name;
-                            break;
-                        case 1:
-                            result = state.map;
-                            break;
-                        case 2:
-                            result = state.raw.numplayers;
-                            break;
-                        case 3:
-                            result = state.maxplayers;
-                            break;
-                        case 4:
-                            result = state.raw.tags;
-                            break;
-                        case 5:
-                            result = state.password
-                            break;     
-                        default:
-                            break;   
-                    }
-            
-            if (result !== undefined) {
-				const storage = parseInt(data.storage);
-				const varName2 = _this.evalMessage(data.varName, cache);
-				_this.storeValue(result, storage, varName2, cache);
-				_this.callNextAction(cache);
-			} else {
-				_this.callNextAction(cache);
-			}
-		}
-		}
-        )
-	},
-	//---------------------------------------------------------------------
-	// Action Bot Mod
-	//
-	// Upon initialization of the bot, this code is run. Using the bot's
-	// DBM namespace, one can add/modify existing functions if necessary.
-	// In order to reduce conflictions between mods, be sure to alias
-	// functions you wish to overwrite.
-	//---------------------------------------------------------------------
-	
-	mod: function(DBM) {}
-	
-	}; // End of module	
+  init() {
+    const { glob, document } = this;
+
+    glob.variableChange(document.getElementById('storage'), 'varNameContainer');
+  },
+
+  // ---------------------------------------------------------------------
+  // Action Bot Function
+  //
+  // This is the function for the action within the Bot's Action class.
+  // Keep in mind event calls won't have access to the "msg" parameter,
+  // so be sure to provide checks for variable existance.
+  // ---------------------------------------------------------------------
+
+  action(cache) {
+    const _this = this; // To fix error
+    const data = cache.actions[cache.index];
+    const info = parseInt(data.info, 10);
+    const gametype = _this.evalMessage(data.gametype, cache);
+    const host = _this.evalMessage(data.serverip, cache);
+
+    // Main code:
+    const WrexMODS = _this.getWrexMods(); // as always.
+    WrexMODS.CheckAndInstallNodeModule('game-server-query');
+    const query = WrexMODS.require('game-server-query');
+
+    query(
+      {
+        type: `${gametype}`,
+        host: `${host}`,
+      },
+      function (state) {
+        if (state.error) {
+          console.log('[Store Game Server Info Mod] Server is offline.');
+        } else {
+          let result;
+          switch (info) {
+            case 0:
+              result = state.name;
+              break;
+            case 1:
+              result = state.map;
+              break;
+            case 2:
+              result = state.raw.numplayers;
+              break;
+            case 3:
+              result = state.maxplayers;
+              break;
+            case 4:
+              result = state.raw.tags;
+              break;
+            case 5:
+              result = state.password;
+              break;
+            default:
+              break;
+          }
+
+          if (result !== undefined) {
+            const storage = parseInt(data.storage, 10);
+            const varName2 = _this.evalMessage(data.varName, cache);
+            _this.storeValue(result, storage, varName2, cache);
+            _this.callNextAction(cache);
+          } else {
+            _this.callNextAction(cache);
+          }
+        }
+      },
+    );
+  },
+  // ---------------------------------------------------------------------
+  // Action Bot Mod
+  //
+  // Upon initialization of the bot, this code is run. Using the bot's
+  // DBM namespace, one can add/modify existing functions if necessary.
+  // In order to reduce conflictions between mods, be sure to alias
+  // functions you wish to overwrite.
+  // ---------------------------------------------------------------------
+
+  mod(DBM) {},
+}; // End of module

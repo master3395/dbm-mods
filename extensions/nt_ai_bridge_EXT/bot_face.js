@@ -7,7 +7,9 @@ const { URL } = require('url');
  * @returns {string}
  */
 function sanitizeThumbnailUrl(url) {
-  const s = String(url || '').trim().substring(0, 2048);
+  const s = String(url || '')
+    .trim()
+    .substring(0, 2048);
   if (!s) {
     return '';
   }
@@ -181,8 +183,8 @@ function stripFirstImageFromText(text, imageUrl) {
   }
   let out = String(text);
   const esc = imageUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  out = out.replace(new RegExp('!\\[[^\\]]*\\]\\(' + esc + '\\)', 'gi'), '');
-  out = out.replace(new RegExp('^\\s*' + esc + '\\s*$', 'gm'), '');
+  out = out.replace(new RegExp(`!\\[[^\\]]*\\]\\(${esc}\\)`, 'gi'), '');
+  out = out.replace(new RegExp(`^\\s*${esc}\\s*$`, 'gm'), '');
   out = out.replace(/\n{3,}/g, '\n\n').trim();
   return out.length ? out : '\u200b';
 }

@@ -9,20 +9,20 @@
   "scripts": {
     "lint": "eslint --cache actions events extensions sharder",
     "lint:fix": "eslint --fix --cache actions events extensions sharder",
-    "lint:ts": "eslint --cache bot.ts types.ts",
-    "lint:ts:fix": "eslint --fix --cache bot.ts types.ts",
+    "lint:ts": "eslint --cache bot.ts types.ts \"actions/**/*.ts\" \"extensions/**/*.ts\"",
+    "lint:ts:fix": "eslint --fix --cache bot.ts types.ts \"actions/**/*.ts\" \"extensions/**/*.ts\"",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "verify:bot": "npm run typecheck && npm run lint:ts",
     "lint:all": "npm run lint && npm run lint:ts",
-    "prettier:check": "prettier --check **/*.{js,json,yml}",
-    "prettier:fix": "prettier --write **/*.{js,json,yml}"
+    "prettier:check": "prettier --check **/*.{js,json,yml,ts}",
+    "prettier:fix": "prettier --write **/*.{js,json,yml,ts}"
   },
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=7.0.0"
+    "node": ">=22.0.0 <27.0.0",
+    "npm": ">=10.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.19.39",
+    "@types/node": "^22.15.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "discord.js": "^14.26.2",

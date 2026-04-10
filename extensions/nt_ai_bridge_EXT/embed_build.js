@@ -24,8 +24,8 @@ function brandHostForFooter() {
 
 function embedFooterElapsed(askT0) {
   const sec = Math.max(0, (Date.now() - askT0) / 1000);
-  const shown = sec >= 100 ? sec.toFixed(0) + 's' : sec.toFixed(1) + 's';
-  return '\u23f1 ' + shown + ' \u00b7 ' + brandHostForFooter();
+  const shown = sec >= 100 ? `${sec.toFixed(0)}s` : `${sec.toFixed(1)}s`;
+  return `\u23f1 ${shown} \u00b7 ${brandHostForFooter()}`;
 }
 
 function makeAskEmbeds(answerText, askT0, face) {
@@ -33,8 +33,7 @@ function makeAskEmbeds(answerText, askT0, face) {
   const iconUrl = face.iconUrl || '';
   const authorName = (face.authorName || 'NT AI').substring(0, 256);
   const footerText = embedFooterElapsed(askT0).substring(0, 2048);
-  const thumb =
-    sanitizeThumbnailUrl(face.thumbnailUrl) || sanitizeThumbnailUrl(iconUrl) || '';
+  const thumb = sanitizeThumbnailUrl(face.thumbnailUrl) || sanitizeThumbnailUrl(iconUrl) || '';
   const imageUrl = sanitizeThumbnailUrl(face.imageUrl) || '';
   const t = String(answerText);
   const out = [];
@@ -52,11 +51,11 @@ function makeAskEmbeds(answerText, askT0, face) {
     const e = {
       color: NT_ASK_COLOR,
       description: desc.length ? desc : '\u200b',
-      footer: footer,
+      footer,
     };
     if (iconUrl) {
       e.author = {
-        name: (idx === 0 ? authorName : authorName + ' (continued)').substring(0, 256),
+        name: (idx === 0 ? authorName : `${authorName} (continued)`).substring(0, 256),
         icon_url: iconUrl,
         url: BRAND_URL_FOR_EMBED,
       };
@@ -78,8 +77,7 @@ function makeErrorEmbed(description, askT0, face) {
   face = face || {};
   const iconUrl = face.iconUrl || '';
   const authorName = (face.authorName || 'NT AI').substring(0, 256);
-  const thumb =
-    sanitizeThumbnailUrl(face.thumbnailUrl) || sanitizeThumbnailUrl(iconUrl) || '';
+  const thumb = sanitizeThumbnailUrl(face.thumbnailUrl) || sanitizeThumbnailUrl(iconUrl) || '';
   const footer = { text: embedFooterElapsed(askT0).substring(0, 2048) };
   if (iconUrl) {
     footer.icon_url = iconUrl;
@@ -88,7 +86,7 @@ function makeErrorEmbed(description, askT0, face) {
     color: NT_ASK_ERR_COLOR,
     title: 'Ask error',
     description: String(description).substring(0, 4096),
-    footer: footer,
+    footer,
   };
   if (iconUrl) {
     e.author = { name: authorName, icon_url: iconUrl, url: BRAND_URL_FOR_EMBED };
@@ -103,8 +101,7 @@ function makeWarnEmbed(description, askT0, face) {
   face = face || {};
   const iconUrl = face.iconUrl || '';
   const authorName = (face.authorName || 'NT AI').substring(0, 256);
-  const thumb =
-    sanitizeThumbnailUrl(face.thumbnailUrl) || sanitizeThumbnailUrl(iconUrl) || '';
+  const thumb = sanitizeThumbnailUrl(face.thumbnailUrl) || sanitizeThumbnailUrl(iconUrl) || '';
   const footer = { text: embedFooterElapsed(askT0).substring(0, 2048) };
   if (iconUrl) {
     footer.icon_url = iconUrl;
@@ -113,7 +110,7 @@ function makeWarnEmbed(description, askT0, face) {
     color: NT_ASK_WARN_COLOR,
     title: 'Notice',
     description: String(description).substring(0, 4096),
-    footer: footer,
+    footer,
   };
   if (iconUrl) {
     e.author = { name: authorName, icon_url: iconUrl, url: BRAND_URL_FOR_EMBED };

@@ -176,9 +176,10 @@ module.exports = {
           case 3:
             return !isServer;
           case 4:
-            return user && (
-              (botOwners.length > 0 && botOwners.includes(user.id)) ||
-              (Files.data.settings.ownerId && user.id === Files.data.settings.ownerId)
+            return (
+              user &&
+              ((botOwners.length > 0 && botOwners.includes(user.id)) ||
+                (Files.data.settings.ownerId && user.id === Files.data.settings.ownerId))
             );
           default:
             return true;

@@ -1,159 +1,156 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
   //
   // This is the name of the action displayed in the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  name: "Store Member Info",
+  name: 'Store Member Info',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
   //
   // This is the section the action will fall into.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  section: "Member Control",
+  section: 'Member Control',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
   //
   // This function generates the subtitle displayed next to the name.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
     const info = [
-      "Member Object",
-      "Member ID",
-      "Member Username",
-      "Member Display Name",
-      "Member Color",
-      "Member Server",
-      "Member Last Message (Removed)",
-      "Member Highest Role",
-      "Member Hoist Role",
-      "Member Color Role",
-      "Member Is Owner?",
-      "Member Is Muted?",
-      "Member Is Deafened?",
-      "Member Is Bannable?",
-      "Member Playing Status Name",
-      "Member Status",
-      "Member Avatar URL",
-      "Member Roles List",
-      "Member Roles Amount",
-      "Member Voice Channel",
-      "Member Discriminator",
-      "Member Tag",
-      "Member Created At",
-      "Member Created Timestamp",
-      "Member Joined At",
-      "Member Joined Timestamp",
-      "Last Message Id (Removed)",
-      "Member Permission List",
-      "Member Flags List",
-      "Member Client Status",
-      "Member Custom Status",
-      "Member Server Avatar URL",
-      "Member Timed Out At",
-      "Member Timed Out Timestamp",
+      'Member Object',
+      'Member ID',
+      'Member Username',
+      'Member Display Name',
+      'Member Color',
+      'Member Server',
+      'Member Last Message (Removed)',
+      'Member Highest Role',
+      'Member Hoist Role',
+      'Member Color Role',
+      'Member Is Owner?',
+      'Member Is Muted?',
+      'Member Is Deafened?',
+      'Member Is Bannable?',
+      'Member Playing Status Name',
+      'Member Status',
+      'Member Avatar URL',
+      'Member Roles List',
+      'Member Roles Amount',
+      'Member Voice Channel',
+      'Member Discriminator',
+      'Member Tag',
+      'Member Created At',
+      'Member Created Timestamp',
+      'Member Joined At',
+      'Member Joined Timestamp',
+      'Last Message Id (Removed)',
+      'Member Permission List',
+      'Member Flags List',
+      'Member Client Status',
+      'Member Custom Status',
+      'Member Server Avatar URL',
+      'Member Timed Out At',
+      'Member Timed Out Timestamp',
     ];
     return `${presets.getMemberText(data.member, data.varName)} - ${info[parseInt(data.info, 10)]}`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
   //
   // Stores the relevant variable info for the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
     const info = parseInt(data.info, 10);
-    let dataType = "Unknown Type";
+    let dataType = 'Unknown Type';
     switch (info) {
       case 0:
-        dataType = "Server Member";
+        dataType = 'Server Member';
         break;
       case 1:
-        dataType = "Member ID";
+        dataType = 'Member ID';
         break;
       case 2:
       case 3:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 4:
-        dataType = "Color";
+        dataType = 'Color';
         break;
       case 5:
-        dataType = "Server";
+        dataType = 'Server';
         break;
       case 7:
       case 8:
       case 9:
-        dataType = "Role";
+        dataType = 'Role';
         break;
       case 10:
       case 11:
       case 12:
       case 13:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 14:
       case 15:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 16:
       case 31:
-        dataType = "Image URL";
+        dataType = 'Image URL';
         break;
       case 17:
-        dataType = "List of Roles";
+        dataType = 'List of Roles';
         break;
       case 18:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 19:
-        dataType = "Voice Channel";
+        dataType = 'Voice Channel';
         break;
       case 20:
-        dataType = "Member Discriminator";
+        dataType = 'Member Discriminator';
         break;
       case 21:
-        dataType = "Member Tag";
+        dataType = 'Member Tag';
         break;
       case 22:
-        dataType = "Date";
+        dataType = 'Date';
         break;
       case 23:
-        dataType = "Timestamp";
+        dataType = 'Timestamp';
         break;
       case 24:
-        dataType = "Date";
+        dataType = 'Date';
         break;
       case 25:
-        dataType = "Timestamp";
+        dataType = 'Timestamp';
         break;
       case 27:
       case 28:
       case 29:
-        dataType = "List";
+        dataType = 'List';
         break;
       case 30:
-        dataType = "Text";
-        break;
-      case 31:
-        dataType = "Date";
+        dataType = 'Text';
         break;
       case 32:
-        dataType = "Timestamp";
+        dataType = 'Timestamp';
         break;
     }
     return [data.varName2, dataType];
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
   //
   // Helps check for updates and provides info if a custom mod.
@@ -161,21 +158,21 @@ module.exports = {
   //
   // It's highly recommended "preciseCheck" is set to false for third-party mods.
   // This will make it so the patch version (0.0.X) is not checked.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
   //
   // These are the fields for the action. These fields are customized
   // by creating elements with corresponding IDs in the HTML. These
   // are also the names of the fields stored in the action's JSON data.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  fields: ["member", "varName", "info", "storage", "varName2"],
+  fields: ['member', 'varName', 'info', 'storage', 'varName2'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
   //
   // This function returns a string containing the HTML used for
@@ -184,7 +181,7 @@ module.exports = {
   // The "isEvent" parameter will be true if this action is being used
   // for an event. Due to their nature, events lack certain information,
   // so edit the HTML to reflect this.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -238,23 +235,23 @@ module.exports = {
 <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {},
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existence.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -310,24 +307,36 @@ module.exports = {
         break;
       case 14:
         if (member.presence?.activities.length) {
-          const status = member.presence.activities.filter((s) => s.type !== "CUSTOM");
+          const status = member.presence.activities.filter((s) => s.type !== 'CUSTOM');
           result = status[0]?.name;
         }
         break;
       case 15:
         if (member.presence?.status) {
           const status = member.presence.status;
-          switch(status) {
-            case "online": { result = "Online"; break; }
-            case "offline": { result = "Offline"; break; }
-            case "idle": { result = "Idle"; break; }
-            case "dnd": { result = "Do Not Disturb"; break; }
+          switch (status) {
+            case 'online': {
+              result = 'Online';
+              break;
+            }
+            case 'offline': {
+              result = 'Offline';
+              break;
+            }
+            case 'idle': {
+              result = 'Idle';
+              break;
+            }
+            case 'dnd': {
+              result = 'Do Not Disturb';
+              break;
+            }
           }
         }
         break;
       case 16:
         if (member.user) {
-          result = member.user.displayAvatarURL({ dynamic: true, format: "png", size: 4096 });
+          result = member.user.displayAvatarURL({ dynamic: true, format: 'png', size: 4096 });
         }
         break;
       case 17:
@@ -368,10 +377,10 @@ module.exports = {
         result = status && Object.keys(status);
         break;
       case 30:
-        result = member.presence?.activities.find((s) => s.type === "CUSTOM")?.state;
+        result = member.presence?.activities.find((s) => s.type === 'CUSTOM')?.state;
         break;
       case 31:
-        result = member.displayAvatarURL({ dynamic: true, format: "png", size: 4096 });
+        result = member.displayAvatarURL({ dynamic: true, format: 'png', size: 4096 });
         break;
       case 32:
         result = member.communicationDisabledUntil;
@@ -392,14 +401,14 @@ module.exports = {
     this.callNextAction(cache);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflicts between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

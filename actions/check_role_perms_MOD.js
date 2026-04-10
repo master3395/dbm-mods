@@ -84,9 +84,9 @@ module.exports = {
 <conditional-input id="branch"></conditional-input>`;
   },
 
-  //////////////////////////////
+  // ////////////////////////////
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Pre-Init Code
   //
   // Before the fields from existing data in this action are applied
@@ -97,29 +97,29 @@ module.exports = {
   //
   // The "formatters" argument contains built-in functions for formatting
   // the data required for official DBM action compatibility.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   preInit(data, formatters) {
     return formatters.compatibility_2_0_0_iftruefalse_to_branch(data);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {},
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existence.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -131,7 +131,7 @@ module.exports = {
     this.executeResults(result, data?.branch ?? data, cache);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod Init
   //
   // An optional function for action mods. Upon the bot's initialization,
@@ -142,23 +142,23 @@ module.exports = {
   // If an action provides inputs for more actions within, be sure
   // to call the `this.prepareActions` function to ensure all actions are
   // recursively iterated through.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   modInit(data) {
     this.prepareActions(data.branch?.iftrueActions);
     this.prepareActions(data.branch?.iffalseActions);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflicts between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  //////////////////////////////
+  // ////////////////////////////
 
   mod() {},
 };

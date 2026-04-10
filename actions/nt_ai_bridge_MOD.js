@@ -59,8 +59,12 @@ module.exports = {
 
   <span class="dbminputlabel">Slash reply visibility (ephemeral)</span><br>
   <select id="ephemeralSlash" class="round">
-    <option value="false" ${ephemeralSlash === 'false' ? 'selected' : ''}>Public (everyone sees the reply in channel)</option>
-    <option value="true" ${ephemeralSlash === 'true' ? 'selected' : ''}>Ephemeral (only the user who ran the command)</option>
+    <option value="false" ${
+      ephemeralSlash === 'false' ? 'selected' : ''
+    }>Public (everyone sees the reply in channel)</option>
+    <option value="true" ${
+      ephemeralSlash === 'true' ? 'selected' : ''
+    }>Ephemeral (only the user who ran the command)</option>
   </select><br><br>
 
   <span class="dbminputlabel">Slash: defer first (needs Slash Command Defer extension)</span><br>
@@ -142,7 +146,7 @@ module.exports = {
       })
       .then(function () {
         return bridge(cache.msg, cache, tempVars, {
-          invokeFrom: invokeFrom,
+          invokeFrom,
           ephemeral: ephemeralSlash,
         });
       });

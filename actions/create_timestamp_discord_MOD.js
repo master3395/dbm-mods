@@ -1,31 +1,37 @@
 module.exports = {
-
-    name: 'Create Timestamp Discord',
-    section: 'Other Stuff',
-    meta: {
-      version: '2.1.6',
-      preciseCheck: true,
-      author: 'DBM Extended',
-      authorUrl: 'https://github.com/DBM-Extended/mods',
-      downloadURL: 'https://github.com/DBM-Extended/mods',
-    },
-
-
-    subtitle: function(data) {
-      const info = ['Short time','Very long','Short date','Long date','Long date with short time','Long date with day of week and short time','Relative'];
-      const prse = parseInt(data.saida);
-      return `${info[prse]}`;
+  name: 'Create Timestamp Discord',
+  section: 'Other Stuff',
+  meta: {
+    version: '2.1.6',
+    preciseCheck: true,
+    author: 'DBM Extended',
+    authorUrl: 'https://github.com/DBM-Extended/mods',
+    downloadURL: 'https://github.com/DBM-Extended/mods',
   },
-  
-    variableStorage(data, varType) {
-      if (parseInt(data.storage, 10) !== varType) return;
-      return [data.varName, 'Date'];
-    },
-  
-    fields: ['date', 'saida', 'storage', 'varName'],
-  
-    html(_isEvent, data) {
-      return `
+
+  subtitle(data) {
+    const info = [
+      'Short time',
+      'Very long',
+      'Short date',
+      'Long date',
+      'Long date with short time',
+      'Long date with day of week and short time',
+      'Relative',
+    ];
+    const prse = parseInt(data.saida, 10);
+    return `${info[prse]}`;
+  },
+
+  variableStorage(data, varType) {
+    if (parseInt(data.storage, 10) !== varType) return;
+    return [data.varName, 'Date'];
+  },
+
+  fields: ['date', 'saida', 'storage', 'varName'],
+
+  html(_isEvent, data) {
+    return `
     <div>
     <span class="dbminputlabel" style="padding-top: 8px;">Data</span><br>
     <input id="date" class="round"; style="width: 100%;" type="text" placeholder="Example: \${new Date}">
@@ -54,60 +60,60 @@ module.exports = {
   <span class="dbminputlabel">Variable name</span><br>
     <input id="varName" class="round" type="text">
   </div>`;
-    },
-  
-    init() {
-      const { glob, document } = this;
-      glob.variableChange(document.getElementById('storage'), 'varNameContainer');
-    },
-  
-    async action(cache) {
-        const data = cache.actions[cache.index];
-        const moment = require('moment');
-        const saida = parseInt(data.saida, 10);
-        
-        var date = moment(Date.parse(this.evalMessage(data.date, cache)));
+  },
 
-        if(isNaN(date)) {
-            console.error("Action Create Discord Timestamp: Invalid date format!");
-            result = "Invalid date format!";
-        } else {
-            date = date + "-";
-            date = date.replace("000-", "");
-            date = date.toString();
+  init() {
+    const { glob, document } = this;
+    glob.variableChange(document.getElementById('storage'), 'varNameContainer');
+  },
 
-            switch (saida) {
-                    case 0:
-                        result = "<t:" + date + ":t>";
-                        break;
-                    case 1:
-                        result = "<t:" + date + ":T>";
-                        break;
-                    case 2:
-                        result = "<t:" + date + ":d>";
-                        break;
-                    case 3:
-                        result = "<t:" + date + ":D>";
-                        break;
-                    case 4:
-                        result = "<t:" + date + ":f>";
-                        break;
-                    case 5:
-                        result = "<t:" + date + ":F>";
-                        break;
-                    case 6:
-                        result = "<t:" + date + ":R>";
-                        break;
-            }
-        }
+  async action(cache) {
+    const data = cache.actions[cache.index];
+    const moment = require('moment');
+    const saida = parseInt(data.saida, 10);
+    let result;
 
-        const storage = parseInt(data.storage, 10);
-        const varName = this.evalMessage(data.varName, cache);
-        this.storeValue(result, storage, varName, cache);
+    let date = moment(Date.parse(this.evalMessage(data.date, cache)));
 
-      this.callNextAction(cache);
-    },
-  
-    mod() {},
-  };
-  
+    if (isNaN(date)) {
+      console.error('Action Create Discord Timestamp: Invalid date format!');
+      result = 'Invalid date format!';
+    } else {
+      date += '-';
+      date = date.replace('000-', '');
+      date = date.toString();
+
+      switch (saida) {
+        case 0:
+          result = `<t:${date}:t>`;
+          break;
+        case 1:
+          result = `<t:${date}:T>`;
+          break;
+        case 2:
+          result = `<t:${date}:d>`;
+          break;
+        case 3:
+          result = `<t:${date}:D>`;
+          break;
+        case 4:
+          result = `<t:${date}:f>`;
+          break;
+        case 5:
+          result = `<t:${date}:F>`;
+          break;
+        case 6:
+          result = `<t:${date}:R>`;
+          break;
+      }
+    }
+
+    const storage = parseInt(data.storage, 10);
+    const varName = this.evalMessage(data.varName, cache);
+    this.storeValue(result, storage, varName, cache);
+
+    this.callNextAction(cache);
+  },
+
+  mod() {},
+};

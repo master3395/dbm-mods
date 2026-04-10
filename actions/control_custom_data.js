@@ -1,59 +1,55 @@
 module.exports = {
   name: 'Control Custom Data',
   section: 'Data',
-  fields: [
-    'filePath',
-    'task',
-    'type',
-    'valueName',
-    'value',
-    'jsonPath',
-    'varName',
-    'storage',
-  ],
+  fields: ['filePath', 'task', 'type', 'valueName', 'value', 'jsonPath', 'varName', 'storage'],
 
-  meta: { version: "2.1.2", preciseCheck: true, author: "DBM Extended", authorUrl: "https://github.com/DBM-Extended/mods", downloadURL: "https://github.com/DBM-Extended/mods/tree/main/actions/control_custom_data.js" },
-
+  meta: {
+    version: '2.1.2',
+    preciseCheck: true,
+    author: 'DBM Extended',
+    authorUrl: 'https://github.com/DBM-Extended/mods',
+    downloadURL: 'https://github.com/DBM-Extended/mods/tree/main/actions/control_custom_data.js',
+  },
 
   subtitle(data) {
-    let task = ''
-    let type2 = ''
-    let filename = data.filePath !== '' ? data.filePath.split('/')[data.filePath.match(/[\/]/g).length] : '';
-    let valuename = data.valueName
-    let nam = data.jsonPath ? data.jsonPath.split('/')[data.jsonPath.split('/').length - 1] : '';
-    let val = data.type === "value" ? ` to <b>${data.value}</b>` : '';
-    let valName = data.task !== "add" ? valuename : nam;
+    let task = '';
+    let type2 = '';
+    const filename = data.filePath !== '' ? data.filePath.split('/')[data.filePath.match(/[\/]/g).length] : '';
+    const valuename = data.valueName;
+    const nam = data.jsonPath ? data.jsonPath.split('/')[data.jsonPath.split('/').length - 1] : '';
+    const val = data.type === 'value' ? ` to <b>${data.value}</b>` : '';
+    const valName = data.task !== 'add' ? valuename : nam;
 
     if (data.type === 'array') {
-      type2 = 'n array'
+      type2 = 'n array';
     } else if (data.type === 'object') {
-      type2 = 'n object'
-    } else type2 = ' value'
+      type2 = 'n object';
+    } else type2 = ' value';
 
     if (data.task === 'create') {
-      task = "Create / Edit a"
+      task = 'Create / Edit a';
     } else if (data.task === 'delete') {
-      task = "Delete a"
+      task = 'Delete a';
     } else task = `Add <b>${data.valueName}</b> to a`;
 
     if (filename === '') {
-      return `The file path is empty <b>(Error!)</b>`
+      return `The file path is empty <b>(Error!)</b>`;
     }
 
     if (data.valueName === '') {
-      return `The value name is empty <b>(Error!)</b>`
+      return `The value name is empty <b>(Error!)</b>`;
     }
 
     if (filename !== '' && data.valueName !== '') {
-      return `${task}${type2} <b>${valName}</b>${val} in <b>${filename}</b>`
+      return `${task}${type2} <b>${valName}</b>${val} in <b>${filename}</b>`;
     }
 
-    return `Ignore this message :3`
+    return `Ignore this message :3`;
   },
 
   variableStorage(data, varType) {
-      if (parseInt(data.storage, 10) !== varType) return;
-      return [data.varName, 'Custom Data JSON'];
+    if (parseInt(data.storage, 10) !== varType) return;
+    return [data.varName, 'Custom Data JSON'];
   },
 
   html() {
@@ -147,70 +143,70 @@ module.exports = {
     const task = data.task;
     const type = data.type;
     const value = this.evalMessage(data.value, cache) ? this.evalMessage(data.value, cache) : false;
-    let jsonPath = this.evalMessage(data.jsonPath, cache)
+    let jsonPath = this.evalMessage(data.jsonPath, cache);
     // Other
-    let fileformat = path.extname(fpath)
-    let split = jsonPath.split('/')
-    let file = '' //
-    let json = '' //
+    const fileformat = path.extname(fpath);
+    const split = jsonPath.split('/');
+    let file = ''; //
+    let json = ''; //
 
     for (let tt = 1; tt <= split.length - 1; tt++) {
-      jsonPath = jsonPath.replace('/', '"]["')
+      jsonPath = jsonPath.replace('/', '"]["');
     }
 
-    jsonPath = jsonPath != '' ? `json["${jsonPath}"]` : 'json';
-    
-
+    jsonPath = jsonPath !== '' ? `json["${jsonPath}"]` : 'json';
 
     // Script
-    if (fileformat == '.json') { // Checking for file format
+    if (fileformat === '.json') {
+      // Checking for file format
 
-      try { // Executing the script safely
+      try {
+        // Executing the script safely
 
         // Reading the file
-        file = fs.readFileSync(fpath, 'utf8')
-        json = JSON.parse(file)
+        file = fs.readFileSync(fpath, 'utf8');
+        json = JSON.parse(file);
 
         // Create Value
-        if (task == 'create' && type == 'value') {
-          eval(`${jsonPath}["${valueName}"] = ${value}`)
-          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4))
+        if (task === 'create' && type === 'value') {
+          eval(`${jsonPath}["${valueName}"] = ${value}`);
+          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4));
         }
 
         // Create Object
-        if (task == 'create' && type == 'object') {
-          eval(`${jsonPath}["${valueName}"] = {}`)
-          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4))
+        if (task === 'create' && type === 'object') {
+          eval(`${jsonPath}["${valueName}"] = {}`);
+          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4));
         }
 
         // Create Array
-        if (task == 'create' && type == 'array') {
-          eval(`${jsonPath}["${valueName}"] = []`)
-          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4))
+        if (task === 'create' && type === 'array') {
+          eval(`${jsonPath}["${valueName}"] = []`);
+          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4));
         }
 
         // Add Array
-        if (task == 'add' && type == 'array') {
-          eval(`${jsonPath}.push("${valueName}")`)
-          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4))
+        if (task === 'add' && type === 'array') {
+          eval(`${jsonPath}.push("${valueName}")`);
+          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4));
         }
 
         // Delete All
-        if (task == 'delete') {
-          eval(`delete ${jsonPath}["${valueName}"]`)
-          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4))
+        if (task === 'delete') {
+          eval(`delete ${jsonPath}["${valueName}"]`);
+          fs.writeFileSync(fpath, JSON.stringify(json, undefined, 4));
         }
-
-      } catch (err) { // Error!
+      } catch (err) {
+        // Error!
         if (err.message.includes('no such file or directory')) {
-          console.log(`Error: no such file or directory, open '${fpath}'`)
+          console.log(`Error: no such file or directory, open '${fpath}'`);
         } else {
-          console.log(err)
+          console.log(err);
         }
       }
-
-    } else { // If the format is different, output an error
-      console.log(`The file format should be JSON Not ${fileformat !== '' ? `'${fileformat}'` : 'empty'}!!!`)
+    } else {
+      // If the format is different, output an error
+      console.log(`The file format should be JSON Not ${fileformat !== '' ? `'${fileformat}'` : 'empty'}!!!`);
     }
 
     const varName = this.evalMessage(data.varName, cache);

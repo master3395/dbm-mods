@@ -1,28 +1,28 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   name: 'Show Modal MOD',
   displayName: 'Show Modal MOD',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   section: 'Messaging',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data) {
     return `[${data.modalTitle || 'My Modal'}] - with ${data.modalComponents.length} components`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     if (!Array.isArray(data.modalComponents)) return;
@@ -42,9 +42,9 @@ module.exports = {
     return result.length ? result : undefined;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   meta: {
     version: '2.2.0',
@@ -54,15 +54,15 @@ module.exports = {
     downloadUrl: 'https://github.com/dbm-network/mods',
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   fields: ['modalTitle', 'modalComponents'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(data) {
     return `
@@ -198,9 +198,9 @@ module.exports = {
 `;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {
     const { glob } = this;
@@ -223,9 +223,9 @@ module.exports = {
     };
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -242,7 +242,7 @@ module.exports = {
     const modalTitle = this.evalMessage(data.modalTitle, cache) || 'My Modal';
 
     const finalLabelComponents = [];
-    for (component of data.modalComponents) {
+    for (const component of data.modalComponents) {
       const modalLabel = this.evalMessage(component.modalLabel, cache);
       const modalDescription = this.evalMessage(component.modalDescription, cache);
       const modalPlaceholder = this.evalMessage(component.modalPlaceholder, cache);
@@ -275,12 +275,9 @@ module.exports = {
         const selectsMaxSelectNumber = parseInt(this.evalMessage(component.selectsMaxSelectNumber, cache), 10) || 1;
         const selectsRequired = component.selectsRequired === 'true';
         let selectMenuComponent;
-        if (modalPlaceholder) {
-          selectMenuComponent.setPlaceholder(modalPlaceholder);
-        }
         switch (component.selectsSelectMenuType) {
           case 'stringSelectMenu':
-            let options = [];
+            const options = [];
             for (const option of component.options) {
               const payload = {
                 label: option.label || '',
@@ -340,14 +337,14 @@ module.exports = {
       finalLabelComponents.push(labelComponent);
     }
 
-    //////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////
 
     const modal = new ModalBuilder()
       .setCustomId(cache.interaction.id)
       .setTitle(modalTitle)
       .setLabelComponents(finalLabelComponents);
 
-    //////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////
 
     this.registerModalSubmitResponses(cache.interaction.id, async (newInteraction) => {
       newInteraction.__originalInteraction = cache.interaction;

@@ -1,17 +1,15 @@
 module.exports = {
   name: 'Check Custom Data',
   section: 'Data',
-  fields: [
-    'filePath',
-    'value',
-    'branch',
-    'jsonPath',
-    'comparison',
-    'varName',
-    'storage',
-  ],
+  fields: ['filePath', 'value', 'branch', 'jsonPath', 'comparison', 'varName', 'storage'],
 
-  meta: { version: "2.1.2", preciseCheck: true, author: "DBM Extended", authorUrl: "https://github.com/DBM-Extended/mods", downloadURL: "https://github.com/DBM-Extended/mods/tree/main/actions/check_custom_data.js" },
+  meta: {
+    version: '2.1.2',
+    preciseCheck: true,
+    author: 'DBM Extended',
+    authorUrl: 'https://github.com/DBM-Extended/mods',
+    downloadURL: 'https://github.com/DBM-Extended/mods/tree/main/actions/check_custom_data.js',
+  },
 
   subtitle(data, presets) {
     return `${presets.getConditionsText(data)}`;
@@ -68,48 +66,39 @@ module.exports = {
     const data = cache.actions[cache.index];
     const Mods = this.getMods();
     const fs = Mods.require('fs-extra');
-    const path = Mods.require('path')
+    const path = Mods.require('path');
     const filepath = data.filePath;
     const fpath = this.evalMessage(filepath, cache);
     const compare = parseInt(data.comparison, 10);
-    let fileformat = path.extname(filepath)
+    const fileformat = path.extname(filepath);
     let file = '';
-    let json = ''
     let val1 = '';
-    let val2 = this.evalMessage(data.value, cache);
+    const val2 = this.evalMessage(data.value, cache);
 
     let result = '';
 
-    if (fileformat == '.json') {
+    if (fileformat === '.json') {
       try {
+        let jsonPath = this.evalMessage(data.jsonPath, cache);
+        const split = jsonPath.split('/');
 
-        file = fs.readFileSync(fpath, 'utf8')
-        json = JSON.parse(file)
-
-        let jsonPath = this.evalMessage(data.jsonPath, cache)
-        let split = jsonPath.split('/')
-    
         for (let tt = 1; tt <= split.length - 1; tt++) {
-          jsonPath = jsonPath.replace('/', '"]["')
+          jsonPath = jsonPath.replace('/', '"]["');
         }
-    
-        jsonPath = jsonPath != '' ? `json["${jsonPath}"]` : 'json';
+
+        jsonPath = jsonPath !== '' ? `json["${jsonPath}"]` : 'json';
 
         try {
-
           if (fileformat === '.json') {
-            file = fs.readFileSync(fpath, 'utf8')
-            let json = JSON.parse(file)
-            eval(`val1 = ${jsonPath}`)
-    
+            file = fs.readFileSync(fpath, 'utf8');
+            const _json = JSON.parse(file);
+            eval(`val1 = ${jsonPath}`);
           } else {
-            console.error(`the file format should be .json!`)
+            console.error(`the file format should be .json!`);
           }
-    
         } catch (e) {
-          console.error(e)
+          console.error(e);
         }
-
       } catch (err) {
         val1 = undefined;
       }
@@ -120,7 +109,7 @@ module.exports = {
         result = val1 !== undefined;
         break;
       case 1:
-        result = val1 == val2;
+        result = val1 === val2;
         break;
       case 2:
         result = val1 === val2;
@@ -132,14 +121,14 @@ module.exports = {
         result = val1 > val2;
         break;
       case 5:
-        if (typeof val1.includes === "function") {
+        if (typeof val1.includes === 'function') {
           result = val1.includes(val2);
         }
         break;
       case 6:
-        result = Boolean(val1.match(new RegExp(`^${val2}$`, "i")));
+        result = Boolean(val1.match(new RegExp(`^${val2}$`, 'i')));
         break;
-      }
+    }
     this.executeResults(result, data?.branch ?? data, cache);
   },
 

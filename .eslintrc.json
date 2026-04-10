@@ -2,12 +2,19 @@
   "$schema": "https://json.schemastore.org/eslintrc",
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "es2022": true
   },
   "parserOptions": {
-    "ecmaVersion": 2021
+    "ecmaVersion": 2022
   },
   "extends": "aqua/prettier/node",
+  "globals": {
+    "DBM": "readonly",
+    "DatabaseAuth": "readonly",
+    "Files": "readonly",
+    "Mods": "readonly"
+  },
   "ignorePatterns": ["node_modules/*"],
   "overrides": [
     {
@@ -70,10 +77,30 @@
     "no-useless-constructor": 0,
     "prefer-destructuring": 0,
     "prefer-rest-params": 0,
+    "block-scoped-var": "off",
+    "no-redeclare": "off",
+    "no-var": "off",
+    "no-case-declarations": "off",
+    "consistent-this": "off",
+    "no-template-curly-in-string": "off",
+    "no-return-await": "off",
+    "no-eq-null": "off",
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false,
+        "classes": true,
+        "variables": true
+      }
+    ],
+    "strict": "off",
+    "valid-jsdoc": "off",
     "no-unused-vars": [
       "error",
       {
-        "args": "none"
+        "args": "none",
+        "caughtErrors": "none",
+        "varsIgnorePattern": "^_"
       }
     ]
   }

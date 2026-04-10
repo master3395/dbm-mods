@@ -25,15 +25,13 @@ function ntAiReplySlash(interaction, embeds, opts) {
   }
   if (interaction.deferred && !interaction.replied) {
     const editPayload = { embeds: batch, allowedMentions: NT_ASK_MENTIONS, content: null };
-    return interaction
-      .editReply(editPayload)
-      .catch(function () {
-        const fu = { embeds: batch, allowedMentions: NT_ASK_MENTIONS };
-        if (ephemeral) {
-          fu.ephemeral = true;
-        }
-        return interaction.followUp(fu).catch(function () {});
-      });
+    return interaction.editReply(editPayload).catch(function () {
+      const fu = { embeds: batch, allowedMentions: NT_ASK_MENTIONS };
+      if (ephemeral) {
+        fu.ephemeral = true;
+      }
+      return interaction.followUp(fu).catch(function () {});
+    });
   }
   const fu2 = { embeds: batch, allowedMentions: NT_ASK_MENTIONS };
   if (ephemeral) {

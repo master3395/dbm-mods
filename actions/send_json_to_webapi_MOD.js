@@ -1,6 +1,9 @@
 const _getFetch = () => {
-  if (typeof globalThis.fetch === "function") return globalThis.fetch;
-  try { const nf = require("node-fetch"); return nf.default || nf; } catch (_) {}
+  if (typeof globalThis.fetch === 'function') return globalThis.fetch;
+  try {
+    const nf = require('node-fetch');
+    return nf.default || nf;
+  } catch (_) {}
   return null;
 };
 module.exports = {
@@ -233,11 +236,12 @@ module.exports = {
         }
 
         const fetchFn = _getFetch();
-        if (!fetchFn) throw new Error("Send Json to WebAPI: fetch is not available. Use Node 18+ or install node-fetch.");
+        if (!fetchFn)
+          throw new Error('Send Json to WebAPI: fetch is not available. Use Node 18+ or install node-fetch.');
         let jsonData;
         try {
           const res = await fetchFn(url, { method, body: postJson, headers: setHeaders });
-          const text = typeof res.text === "function" ? await res.text() : "";
+          const text = typeof res.text === 'function' ? await res.text() : '';
           if (!text || !String(text).trim()) {
             jsonData = null;
           } else {
@@ -250,7 +254,7 @@ module.exports = {
                 success: false,
                 rawPreview: String(text).slice(0, 200),
               });
-              if (debugMode) console.error("WebAPI: Response was not valid JSON:", parseErr.message || parseErr);
+              if (debugMode) console.error('WebAPI: Response was not valid JSON:', parseErr.message || parseErr);
               return this.storeValue(errJson, storage, varName, cache);
             }
           }

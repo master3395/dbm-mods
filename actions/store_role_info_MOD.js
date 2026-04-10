@@ -1,37 +1,35 @@
 module.exports = {
-
-
-  name: "Store Role Info",
-  section: "Role Control",
+  name: 'Store Role Info',
+  section: 'Role Control',
   meta: {
     version: '2.1.6',
     preciseCheck: true,
     author: 'DBM Extended',
     authorUrl: 'https://github.com/DBM-Extended/mods',
     downloadURL: 'https://github.com/DBM-Extended/mods',
-   },
+  },
 
   subtitle(data, presets) {
     const info = [
-      "Role Object",
-      "Role ID",
-      "Position Name",
-      "Position Color",
-      "Position of Position",
-      "Timestamp of Job creation",
-      "Is the Position mentionable?",
-      "Is the job separate from the others?",
-      "Is the Role manageable",
+      'Role Object',
+      'Role ID',
+      'Position Name',
+      'Position Color',
+      'Position of Position',
+      'Timestamp of Job creation',
+      'Is the Position mentionable?',
+      'Is the job separate from the others?',
+      'Is the Role manageable',
       "The Role's member list",
-      "Role creation date",
+      'Role creation date',
       "Role's permission list",
-      "Number of members of the Role",
-      "Role Icon",
-      "Position Tag",
-      "Position Server",
+      'Number of members of the Role',
+      'Role Icon',
+      'Position Tag',
+      'Position Server',
       "Position's Server ID",
-      "Is the Position editable?",
-      "List of member IDs of the Position",
+      'Is the Position editable?',
+      'List of member IDs of the Position',
     ];
     return `${presets.getRoleText(data.role, data.varName)} - ${info[parseInt(data.info, 10)]} to (${data.varName2})`;
   },
@@ -40,68 +38,66 @@ module.exports = {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
     const info = parseInt(data.info, 10);
-    let dataType = "Unknown Type";
+    let dataType = 'Unknown Type';
     switch (info) {
       case 0:
-        dataType = "Role";
+        dataType = 'Role';
         break;
       case 1:
-        dataType = "Role ID";
+        dataType = 'Role ID';
         break;
       case 2:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 3:
-        dataType = "Color";
+        dataType = 'Color';
         break;
       case 4:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 5:
-        dataType = "Timestamp";
+        dataType = 'Timestamp';
         break;
       case 6:
       case 7:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 8:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 9:
-        dataType = "Member List";
+        dataType = 'Member List';
         break;
       case 10:
-        dataType = "Date";
+        dataType = 'Date';
         break;
       case 11:
       case 12:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 13:
-        dataType = "Image URL";
+        dataType = 'Image URL';
         break;
       case 14:
-        dataType = "Object";
+        dataType = 'Object';
         break;
       case 15:
-        dataType = "Server";
+        dataType = 'Server';
         break;
       case 16:
-        dataType = "Server ID";
+        dataType = 'Server ID';
         break;
       case 17:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 18:
-        dataType = "List";
+        dataType = 'List';
         break;
     }
     return [data.varName2, dataType];
   },
 
-
-  fields: ["role", "varName", "info", "storage", "varName2"],
-
+  fields: ['role', 'varName', 'info', 'storage', 'varName2'],
 
   html(isEvent, data) {
     return `
@@ -149,10 +145,7 @@ module.exports = {
 <store-in-variable dropdownLabel="Store in" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>`;
   },
 
-
-
   init() {},
-
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -204,7 +197,7 @@ module.exports = {
         result = targetRole.members.size;
         break;
       case 13:
-        result = targetRole.iconURL({ dynamic: true, format: "png", size: 4096 });
+        result = targetRole.iconURL({ dynamic: true, format: 'png', size: 4096 });
         break;
       case 14:
         result = targetRole.tags;
@@ -231,8 +224,6 @@ module.exports = {
     }
     this.callNextAction(cache);
   },
-
- 
 
   mod() {},
 };

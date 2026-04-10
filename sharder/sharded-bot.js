@@ -144,7 +144,6 @@ const { join } = require('path');
 
 const settingsPaths = [join(process.cwd(), 'data', 'settings.json'), join(process.cwd(), 'settings.json')];
 
-let token;
 let settingsLoadedFrom;
 
 const loadSettings = () => {
@@ -200,7 +199,7 @@ const resolveToken = () => {
   return null;
 };
 
-token = resolveToken();
+const token = resolveToken();
 
 if (!token) {
   console.error(

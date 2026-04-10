@@ -1,7 +1,6 @@
 module.exports = {
-
-  name: "Mover membro",
-  section: "Other Stuff",
+  name: 'Mover membro',
+  section: 'Other Stuff',
   meta: {
     version: '2.1.6',
     preciseCheck: true,
@@ -14,9 +13,7 @@ module.exports = {
     return `${presets.getMemberText(data.member, data.varName)}`;
   },
 
-    fields: ["member", "varName", "channel", "varName2",],
-
-
+  fields: ['member', 'varName', 'channel', 'varName2'],
 
   html(isEvent, data) {
     return `
@@ -31,7 +28,6 @@ module.exports = {
 
   init() {},
 
-
   async action(cache) {
     const data = cache.actions[cache.index];
     const member = await this.getMemberFromData(data.member, data.varName, cache);
@@ -40,19 +36,17 @@ module.exports = {
       return;
     }
     const targetChannel = await this.getVoiceChannelFromData(data.channel, data.varName2, cache);
-        if (!targetChannel) {
+    if (!targetChannel) {
       this.callNextAction(cache);
       return;
     }
 
     member.voice.setChannel(targetChannel.id).catch((err) => {
-      console.log('ERROR')
-      console.ERROR(err)
+      console.log('ERROR');
+      console.ERROR(err);
     });
-    this.callNextAction(cache)
-
+    this.callNextAction(cache);
   },
-
 
   mod() {},
 };

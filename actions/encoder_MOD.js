@@ -180,7 +180,7 @@ module.exports = {
               .join(' ')
           : text
               .split(' ')
-              .map((num) => String.fromCharCode(parseInt(num) + 96))
+              .map((num) => String.fromCharCode(parseInt(num, 10) + 96))
               .join('');
         break;
       case 6: // Morse Code

@@ -1,48 +1,47 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
   //
   // This is the name of the action displayed in the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  name: "Show Modal Window",
+  name: 'Show Modal Window',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
   //
   // This is the section the action will fall into.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  section: "Messaging",
+  section: 'Messaging',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
   //
   // This function generates the subtitle displayed next to the name.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
-    if(!data.uniq || data.inputs.length == 0 || !data.title) {
-      return "You have not filled in the required fields!"
-    } else {
-      let title = data.title
-      let inputs = data.inputs.length
-      return `Open a modal window "${title}" with ${inputs} fields`
+    if (!data.uniq || data.inputs.length === 0 || !data.title) {
+      return 'You have not filled in the required fields!';
     }
+    const title = data.title;
+    const inputs = data.inputs.length;
+    return `Open a modal window "${title}" with ${inputs} fields`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
   //
   // Stores the relevant variable info for the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType, cache) {
-    if(varType !== 1) return  
-    return [data.uniq.replace("msg-", "modal-"), "Input Text"];
+    if (varType !== 1) return;
+    return [data.uniq.replace('msg-', 'modal-'), 'Input Text'];
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
   //
   // Helps check for updates and provides info if a custom mod.
@@ -50,25 +49,27 @@ module.exports = {
   //
   // It's highly recommended "preciseCheck" is set to false for third-party mods.
   // This will make it so the patch version (0.0.X) is not checked.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  meta: { version: "2.1.6", preciseCheck: true, author: "DBM Extended", authorUrl: "https://github.com/DBM-Extended/mods", downloadURL: "https://github.com/DBM-Extended/mods/tree/main/actions/show_modal.js" },
+  meta: {
+    version: '2.1.6',
+    preciseCheck: true,
+    author: 'DBM Extended',
+    authorUrl: 'https://github.com/DBM-Extended/mods',
+    downloadURL: 'https://github.com/DBM-Extended/mods/tree/main/actions/show_modal.js',
+  },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
   //
   // These are the fields for the action. These fields are customized
   // by creating elements with corresponding IDs in the HTML. These
   // are also the names of the fields stored in the action's JSON data.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  fields: [
-    "inputs",
-    "title",
-    "uniq",
-  ],
+  fields: ['inputs', 'title', 'uniq'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
   //
   // This function returns a string containing the HTML used for
@@ -77,7 +78,7 @@ module.exports = {
   // The "isEvent" parameter will be true if this action is being used
   // for an event. Due to their nature, events lack certain information,
   // so edit the HTML to reflect this.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -204,17 +205,17 @@ module.exports = {
     `;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {},
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor On Save
   //
   // When the data for the action is saved, this function is called.
@@ -224,19 +225,19 @@ module.exports = {
   // data and fill required entries the user did not.
   //
   // Its inclusion within action mods is optional.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   onSave(data, helpers, cache) {
-    for(let i = 0; i < data.inputs.length; i++) {
-      data.inputs[i].ssd = `\$\{tempVars("${data.uniq.replace("msg-", "modal-")}")[${i}]}`
-      if(data.inputs[i].uniqID == '') {
-        data.inputs[i].uniqID = `msg-modal-${helpers.generateUUID().substring(0, 7)}`
+    for (let i = 0; i < data.inputs.length; i++) {
+      data.inputs[i].ssd = `\$\{tempVars("${data.uniq.replace('msg-', 'modal-')}")[${i}]}`;
+      if (data.inputs[i].uniqID === '') {
+        data.inputs[i].uniqID = `msg-modal-${helpers.generateUUID().substring(0, 7)}`;
       }
     }
     return data;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor On Paste
   //
   // When the data for the action is pasted, this function is called.
@@ -245,93 +246,89 @@ module.exports = {
   // version through the return value.
   //
   // Its inclusion within action mods is optional.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   onPaste(data, helpers) {
-    if(data.uniq == '') {
-      data.uniq = `msg-${helpers.generateUUID().substring(0, 7)}`
+    if (data.uniq === '') {
+      data.uniq = `msg-${helpers.generateUUID().substring(0, 7)}`;
     }
 
-    for(let i = 0; i < data.inputs.length; i++) {
-      data.inputs[i].ssd = `\$\{tempVars("${data.uniq.replace("msg-", "modal-")}")[${i}]}`
-      if(data.inputs[i].uniqID == '') {
-        data.inputs[i].uniqID = `msg-modal-${helpers.generateUUID().substring(0, 7)}`
+    for (let i = 0; i < data.inputs.length; i++) {
+      data.inputs[i].ssd = `\$\{tempVars("${data.uniq.replace('msg-', 'modal-')}")[${i}]}`;
+      if (data.inputs[i].uniqID === '') {
+        data.inputs[i].uniqID = `msg-modal-${helpers.generateUUID().substring(0, 7)}`;
       }
     }
     return data;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existence.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
-    const { Modal, TextInputComponent, showModal } = require('discord-modals') // Now we extract the showModal method
-    const discordModals = require('discord-modals')
-    const title = this.evalMessage(data.title, cache)
-    const CustomId = this.evalMessage(data.uniq, cache)
-    let components = []
+    const { Modal, TextInputComponent, showModal } = require('discord-modals'); // Now we extract the showModal method
+    const discordModals = require('discord-modals');
+    const title = this.evalMessage(data.title, cache);
+    const CustomId = this.evalMessage(data.uniq, cache);
+    const components = [];
 
-    const Bot = this.getDBM().Bot
-    const client = Bot.bot
+    const Bot = this.getDBM().Bot;
+    const client = Bot.bot;
     discordModals(client);
 
-    for(let i = 0; i < data.inputs.length; i++) {
-      const uniqueId = this.evalMessage(data.inputs[i].uniqID, cache)
-      const label = this.evalMessage(data.inputs[i].label, cache)
-      const min = this.evalMessage(data.inputs[i].min, cache)
-      const max = this.evalMessage(data.inputs[i].max, cache)
-      const placeholder = this.evalMessage(data.inputs[i].plholder, cache)
+    for (let i = 0; i < data.inputs.length; i++) {
+      const uniqueId = this.evalMessage(data.inputs[i].uniqID, cache);
+      const label = this.evalMessage(data.inputs[i].label, cache);
+      const min = this.evalMessage(data.inputs[i].min, cache);
+      const max = this.evalMessage(data.inputs[i].max, cache);
+      const placeholder = this.evalMessage(data.inputs[i].plholder, cache);
 
       components.push(
         new TextInputComponent() // We create a Text Input Component
           .setCustomId(uniqueId)
           .setLabel(label)
-          .setStyle(data.inputs[i].type) //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
+          .setStyle(data.inputs[i].type) // IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
           .setMinLength(min)
           .setMaxLength(max)
           .setPlaceholder(placeholder)
-          .setRequired(data.inputs[i].req) // If it's required or not
-        )
+          .setRequired(data.inputs[i].req), // If it's required or not
+      );
     }
 
-    let resultd = []
-    const modal = new Modal()
-      .setTitle(title)
-      .setCustomId(CustomId)
-      .addComponents(components)
-      showModal(modal, {
-        client: client, // Client to show the Modal through the Discord API.
-        interaction: cache.interaction // Show the modal with interaction data.
-      })  
+    const resultd = [];
+    const modal = new Modal().setTitle(title).setCustomId(CustomId).addComponents(components);
+    showModal(modal, {
+      client, // Client to show the Modal through the Discord API.
+      interaction: cache.interaction, // Show the modal with interaction data.
+    });
 
-      Bot.bot.on('modalSubmit', async (modal) => {
-          if(modal.customId === CustomId){
-            for(let i = 0; i < data.inputs.length; i++) {
-              resultd.push(modal.getTextInputValue(data.inputs[i].uniqID))
-            }
-            await modal.reply({ ephemeral: true }).catch(e => console.log(""))
-            await modal.deleteReply().catch(e => console.log(""))
-            await this.storeValue(resultd, 1, CustomId.replace("msg-", "modal-"), cache);
-            await this.callNextAction(cache)
-          }  
-        });
-
+    Bot.bot.on('modalSubmit', async (modal) => {
+      if (modal.customId === CustomId) {
+        for (let i = 0; i < data.inputs.length; i++) {
+          resultd.push(modal.getTextInputValue(data.inputs[i].uniqID));
+        }
+        await modal.reply({ ephemeral: true }).catch((e) => console.log(''));
+        await modal.deleteReply().catch((e) => console.log(''));
+        await this.storeValue(resultd, 1, CustomId.replace('msg-', 'modal-'), cache);
+        await this.callNextAction(cache);
+      }
+    });
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflicts between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

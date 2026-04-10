@@ -2,14 +2,14 @@ module.exports = {
   name: 'Add Blank Embed Field',
   section: 'Embed Message',
 
-  subtitle (data) {
-    const info = ['.', 'Temp Variable', 'Server Variable', 'Global Variable']
-    return `${info[parseInt(data.storage)]}: ${data.varName}`
+  subtitle(data) {
+    const info = ['.', 'Temp Variable', 'Server Variable', 'Global Variable'];
+    return `${info[parseInt(data.storage, 10)]}: ${data.varName}`;
   },
 
   fields: ['storage', 'varName'],
 
-  html (isEvent, data) {
+  html(isEvent, data) {
     return `
 <div>
   <div style="float: left; width: 35%;">
@@ -22,21 +22,21 @@ module.exports = {
     Variable Name:<br>
     <input id="varName" class="round varSearcher" type="text" list="variableList"><br>
   </div>
-</div>`
+</div>`;
   },
 
-  init () {},
+  init() {},
 
-  action (cache) {
-    const data = cache.actions[cache.index]
-    const storage = parseInt(data.storage)
-    const varName = this.evalMessage(data.varName, cache)
-    const embed = this.getVariable(storage, varName, cache)
+  action(cache) {
+    const data = cache.actions[cache.index];
+    const storage = parseInt(data.storage, 10);
+    const varName = this.evalMessage(data.varName, cache);
+    const embed = this.getVariable(storage, varName, cache);
     if (embed && embed.addField) {
-      embed.addField('\u200B', '\u200B')
+      embed.addField('\u200B', '\u200B');
     }
-    this.callNextAction(cache)
+    this.callNextAction(cache);
   },
 
-  mod () {}
-}
+  mod() {},
+};

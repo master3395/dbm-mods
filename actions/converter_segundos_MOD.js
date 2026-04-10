@@ -1,30 +1,29 @@
 module.exports = {
-name: "Convert seconds to Y/D/H/M/S",
-section: "Other Stuff",
-meta: {
+  name: 'Convert seconds to Y/D/H/M/S',
+  section: 'Other Stuff',
+  meta: {
     version: '2.1.6',
     preciseCheck: true,
     author: 'DBM Extended',
-	short_description: "Convert seconds to years, months, days, hours, minutes and seconds.",
+    short_description: 'Convert seconds to years, months, days, hours, minutes and seconds.',
     authorUrl: 'https://github.com/DBM-Extended/mods',
     downloadURL: 'https://github.com/DBM-Extended/mods',
   },
 
-subtitle: function(data) {
-return `Convert ${data.time}`;
-},
+  subtitle(data) {
+    return `Convert ${data.time}`;
+  },
 
-variableStorage: function(data, varType) {
-		const type = parseInt(data.storage);
-		if(type !== varType) return;
-		return ([data.varName, 'Date']);
-	},
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
+    if (type !== varType) return;
+    return [data.varName, 'Date'];
+  },
 
+  fields: ['time', 'storage', 'varName'],
 
-fields: ["time", "storage", "varName"],
-
-html: function(isEvent, data) {
-	return `
+  html(isEvent, data) {
+    return `
 	<div style="float: left; width: 95%; padding-top: 9px;">
 		<p>Convert seconds into years, days, hours, minutes and seconds.</p>
 	</div>
@@ -46,57 +45,65 @@ html: function(isEvent, data) {
 	<div style=" float: left; width: 88%; padding-top: 8px;">
 		<br>
 	</div>`;
-},
+  },
 
-init: function() {
-	const {glob, document} = this;
+  init() {
+    const { glob, document } = this;
 
-	glob.variableChange(document.getElementById('storage'), 'varNameContainer');
-},
+    glob.variableChange(document.getElementById('storage'), 'varNameContainer');
+  },
 
-action: function(cache) {
+  action(cache) {
+    const data = cache.actions[cache.index];
+    const time = this.evalMessage(data.time, cache);
+    var _this = this;
 
-	const data = cache.actions[cache.index];
-	const time = this.evalMessage(data.time, cache);
-	var   _this = this;
-	
-	let d, h, m, s;
-	let result;
+    let d;
+    let h;
+    let m;
+    let s;
+    let a;
+    let mes;
+    let result;
 
-	if (isNaN(time)) {
-		result.toString() = "Invalid date";
-		console.log('Please enter a number');
-	}
-	else {
+    if (isNaN(time)) {
+      result = 'Invalid date';
+      console.log('Please enter a number');
+    } else {
+      s = Number(time);
 
-	   s = time;
+      m = Math.floor(s / 60);
+      s %= 60;
+      h = Math.floor(m / 60);
+      m %= 60;
+      a = Math.floor(time / 60 / 60 / 24 / 365.242214);
+      mes = Math.floor(time / 60 / 60 / 24 / 30.43685116666667 - a * 12);
+      d = Math.floor(h / 24 - a * 365.242214 - 30.43685116666667 * mes);
+      h %= 24;
 
-		m = Math.floor(s / 60);
-		s = s % 60;
-		h = Math.floor(m / 60);
-		m = m % 60;
-		a = Math.floor(time / 60 / 60 / 24 / 365.242214);
-		mes = Math.floor(time / 60 / 60 / 24 / 30.43685116666667 - (a * 12));
-		d = Math.floor(h / 24 - (a * 365.242214) - (30.43685116666667 * mes));
-		h = h % 24;
+      result =
+        (a > 1 ? `${String(a)} years ` : '') +
+        (a === 1 ? `${String(a)} year ` : '') +
+        (mes > 1 ? `${String(mes)} months ` : '') +
+        (mes === 1 ? `${String(mes)} month ` : '') +
+        (d > 1 ? `${d} days ` : '') +
+        (d === 1 ? `${String(d)} day ` : '') +
+        (h > 1 ? `${h} hours ` : '') +
+        (h === 1 ? `${String(h)} hour ` : '') +
+        (m > 0 ? `${m} min ` : '') +
+        (s > 0 ? `${s} sec ` : '');
+    }
 
-
-		result = (a > 1 ? ''+ a + ' years ' : '') + (a == 1 ? ''+ a + ' year ' : '') + (mes > 1 ? ''+ mes + ' months ' : '') + (mes == 1 ? ''+ mes + ' month ' : '') + (d > 1 ? d + ' days ' : '') + (d == 1 ? ''+ d + ' day ' : '') + (h > 1 ? h + ' hours ' : '') + (h == 1 ? ''+ h + ' hour ' : '') + (m > 0 ? m + ' min ' : '') + (s > 0 ? s + ' sec ' : '');
-
-	}
-	
-	if (result.toString() === "Invalid date") result = undefined;
+    if (result === 'Invalid date') result = undefined;
 
     // Storage.
-	if(result !== undefined) {
-		const storage = parseInt(data.storage);
-		const varName = this.evalMessage(data.varName, cache);
-		this.storeValue(result, storage, varName, cache);
-	}
+    if (result !== undefined) {
+      const storage = parseInt(data.storage, 10);
+      const varName = this.evalMessage(data.varName, cache);
+      this.storeValue(result, storage, varName, cache);
+    }
     this.callNextAction(cache);
-},
+  },
 
-mod: function(DBM) {
-}
-
+  mod(DBM) {},
 };

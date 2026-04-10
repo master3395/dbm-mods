@@ -20,9 +20,9 @@ module.exports = {
       // Check if thread is from a forum channel
       const ChannelType = DBM.getChannelType ? DBM.getChannelType() : DiscordJS.ChannelType || {};
       const parentChannel = thread.parent;
-      
+
       if (!parentChannel) return;
-      
+
       const isForum = isV14
         ? parentChannel.type === ChannelType.GuildForum || parentChannel.type === 15
         : parentChannel.type === 'GUILD_FORUM' || parentChannel.type === 15;
@@ -50,4 +50,3 @@ module.exports = {
     };
   },
 };
-

@@ -12,13 +12,13 @@ module.exports = {
   subtitle(data) {
     let source;
     if (parseInt(data.sourcetype, 10) === 2) {
-      source = 'Nome do comando: ' + data.source3.toString();
+      source = `Nome do comando: ${data.source3.toString()}`;
     }
     if (parseInt(data.sourcetype, 10) === 1) {
-      source = 'ID do comando: ' +data.source2.toString();
-    } 
+      source = `ID do comando: ${data.source2.toString()}`;
+    }
     if (parseInt(data.sourcetype, 10) === 0) {
-      source = 'Lista > comando: ' +data.source.toString();
+      source = `Lista > comando: ${data.source.toString()}`;
     }
     return `${source}`;
   },
@@ -130,7 +130,6 @@ module.exports = {
     }
     if (!name) return console.log('Enter a Command/Event name!');
 
-
     let actions;
     const allData = Files.data.commands.concat(Files.data.events);
     for (let i = 0; i < allData.length; i++) {
@@ -158,7 +157,7 @@ module.exports = {
       return;
     }
 
-    const waitForCompletion = data.type === "true";
+    const waitForCompletion = data.type === 'true';
     let callback = null;
     if (waitForCompletion) {
       callback = () => this.callNextAction(cache);
@@ -168,7 +167,6 @@ module.exports = {
       this.callNextAction(cache);
     }
   },
-
 
   mod() {},
 };

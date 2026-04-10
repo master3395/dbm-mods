@@ -64,11 +64,11 @@ module.exports = {
           return onReady.apply(this, ...params);
         }
 
-      const webhook = new Topgg.Webhook(data.token);
-      app.post('/dblwebhook', webhook.middleware(), (req) => {
-        Events.onTopggVote(req.vote.user, req.vote);
-      });
-      app.listen(data.port);
+        const webhook = new Topgg.Webhook(data.token);
+        app.post('/dblwebhook', webhook.middleware(), (req) => {
+          Events.onTopggVote(req.vote.user, req.vote);
+        });
+        app.listen(data.port);
         if (app) console.log(`[Top.gg Extension] Watching for votes at port ${data.port}`);
       } catch (error) {
         console.error('[Top.gg Extension] Error initializing Top.gg webhook:', error.message);

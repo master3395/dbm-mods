@@ -10,24 +10,25 @@ module.exports = {
   },
 
   subtitle(data) {
-    const list = [
-      'Server Members',
-      'Server Channels',
-      'Server Roles',
-      'Server Emojis',
-      'All Bot Servers',
-      'Mentioned User Roles',
-      'Command Author Roles',
-      'Temp Variable',
-      'Server Variable',
-      'Global Variable',
+    const info = [
+      'exactly equal to',
+      'include',
+      'matches regex',
+      'less than',
+      'less than or equal to',
+      'greater than',
+      'greater than or equal to',
+      'length greater than',
+      'length less than',
+      'length equal to',
+      'begins with',
+      'ends with',
     ];
-    const info = ['exactly equal to', 'include', 'matches regex', 'less than', 'less than or equal to', 'greater than', 'greater than or equal to', 'length greater than', 'length less than', 'length equal to', 'begins with', 'ends with'];
-	return `Search ${info[parseInt(data.fetchedxin)]} "${data.item}" in "${data.varName}"`;
+    return `Search ${info[parseInt(data.fetchedxin, 10)]} "${data.item}" in "${data.varName}"`;
   },
 
   variableStorage(data, varType) {
-    const prse2 = parseInt(data.fetchedxin);
+    const prse2 = parseInt(data.fetchedxin, 10);
     if (parseInt(data.storage, 10) !== varType) return;
     return [data.varName2, 'Number'[prse2]];
   },
@@ -101,25 +102,25 @@ If not found, it will always return -1</p></div>`;
   },
 
   async action(cache) {
-        const data = cache.actions[cache.index];
+    const data = cache.actions[cache.index];
     const storage = parseInt(data.list, 10);
     const varName = this.evalMessage(data.varName, cache);
     const list = await this.getList(storage, varName, cache);
-    const fetchedxin = parseInt(data.fetchedxin);
+    const fetchedxin = parseInt(data.fetchedxin, 10);
     const item = this.evalMessage(data.item, cache);
 
     let result;
-    
-		switch (fetchedxin) {
-			case 0:
-				result = list.findIndex((i) => i === item);
-				break;
-			case 1:
-				result = list.findIndex((i) => i.includes(item));
-				break;
-			case 2:
-				result = list.findIndex((i) => Boolean(i.match(new RegExp('^' + item + '$', 'i'))));
-				break;
+
+    switch (fetchedxin) {
+      case 0:
+        result = list.findIndex((i) => i === item);
+        break;
+      case 1:
+        result = list.findIndex((i) => i.includes(item));
+        break;
+      case 2:
+        result = list.findIndex((i) => Boolean(i.match(new RegExp(`^${item}$`, 'i'))));
+        break;
       case 3:
         result = list.findIndex((i) => i < item);
         break;
@@ -139,7 +140,7 @@ If not found, it will always return -1</p></div>`;
         result = list.findIndex((i) => Boolean(i.length < item));
         break;
       case 9:
-        result = list.findIndex((i) => Boolean(i.length == item));
+        result = list.findIndex((i) => Boolean(i.length === item));
         break;
       case 10:
         result = list.findIndex((i) => i.startsWith(item));
@@ -147,8 +148,7 @@ If not found, it will always return -1</p></div>`;
       case 11:
         result = list.findIndex((i) => i.endsWith(item));
         break;
-		}
-    
+    }
 
     if (result !== undefined) {
       const varName2 = this.evalMessage(data.varName2, cache);

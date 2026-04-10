@@ -1,7 +1,6 @@
 module.exports = {
-
-  name: "Control Variable",
-  section: "Other Stuff",
+  name: 'Control Variable',
+  section: 'Other Stuff',
   meta: {
     version: '2.1.7',
     preciseCheck: true,
@@ -12,21 +11,18 @@ module.exports = {
 
   subtitle(data, presets) {
     const storage = presets.variables;
-    return `${storage[parseInt(data.storage, 10)]} (${data.varName}) ${data.changeType === "1" ? "+=" : "="} ${
+    return `${storage[parseInt(data.storage, 10)]} (${data.varName}) ${data.changeType === '1' ? '+=' : '='} ${
       data.value
     }`;
   },
 
-
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
-    return [data.varName, "Unknown Type"];
+    return [data.varName, 'Unknown Type'];
   },
 
-
-  fields: ["storage", "varName", "changeType", "value"],
-
+  fields: ['storage', 'varName', 'changeType', 'value'],
 
   html(isEvent, data) {
     return `
@@ -52,17 +48,14 @@ module.exports = {
 `;
   },
 
-
-
   init() {},
-
 
   action(cache) {
     const data = cache.actions[cache.index];
     const type = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
     const storage = this.getVariable(type, varName, cache);
-    const isAdd = data.changeType === "1";
+    const isAdd = data.changeType === '1';
     let val = this.evalMessage(data.value, cache);
     try {
       val = this.eval(val, cache);
@@ -84,7 +77,6 @@ module.exports = {
     }
     this.callNextAction(cache);
   },
-
 
   mod() {},
 };

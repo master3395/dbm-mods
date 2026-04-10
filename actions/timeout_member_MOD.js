@@ -1,8 +1,7 @@
 module.exports = {
+  name: 'Timeout Member',
 
-  name: "Timeout Member",
-
-  section: "Member Management",
+  section: 'Member Management',
 
   subtitle(data, presets) {
     return `${presets.getMemberText(data.member, data.varName)}`;
@@ -14,9 +13,9 @@ module.exports = {
     author: 'DBM Extended',
     authorUrl: 'https://github.com/DBM-Extended/mods',
     downloadURL: 'https://github.com/DBM-Extended/mods',
-   },
-   
-  fields: ["member", "varName", "czas", "ilosc", "reason"],
+  },
+
+  fields: ['member', 'varName', 'czas', 'ilosc', 'reason'],
 
   html(isEvent, data) {
     return `
@@ -49,34 +48,35 @@ module.exports = {
   async action(cache) {
     const data = cache.actions[cache.index];
     const member = await this.getMemberFromData(data.member, data.varName, cache);
-    const czas = parseInt(data.czas, 10)
+    const czas = parseInt(data.czas, 10);
 
     let time = this.evalMessage(data.ilosc, cache);
 
     switch (czas) {
-      case 1: 
-      time = time ? Date.now() + time * 1000 : null;
-      break;
-      case 2: 
-      time = time ? Date.now() + time * 60000 : null;
-      break;
+      case 1:
+        time = time ? Date.now() + time * 1000 : null;
+        break;
+      case 2:
+        time = time ? Date.now() + time * 60000 : null;
+        break;
       case 3:
-      time = time ? Date.now() + time * 3600000 : null;
-      break;
+        time = time ? Date.now() + time * 3600000 : null;
+        break;
       case 4:
-      time = time ? Date.now() + time * 86400000 : null;
-      break;
+        time = time ? Date.now() + time * 86400000 : null;
+        break;
       default:
-      break;
+        break;
     }
     const reason = this.evalMessage(data.reason, cache);
 
     if (Array.isArray(member)) {
-      this.callListFunc(member, "disableCommunicationUntil", [time, reason])
+      this.callListFunc(member, 'disableCommunicationUntil', [time, reason])
         .then(() => this.callNextAction(cache))
         .catch((err) => this.displayError(data, cache, err));
     } else if (member?.disableCommunicationUntil) {
-      member.disableCommunicationUntil(time, reason)
+      member
+        .disableCommunicationUntil(time, reason)
         .then(() => this.callNextAction(cache))
         .catch((err) => this.displayError(data, cache, err));
     } else {

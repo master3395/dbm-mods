@@ -1,5 +1,5 @@
 module.exports = {
-  name: "Store interaction Info",
+  name: 'Store interaction Info',
   section: 'Other Stuff',
   meta: {
     version: '2.1.6',
@@ -11,29 +11,28 @@ module.exports = {
 
   subtitle(data, presets) {
     const info = [
-      "Object of the interaction",
-      "Interaction ID",
-      "Author language",
-      "Interaction type",
-      "Interaction token", "Interaction token",
-      "Interaction channel",
-      "Interaction channel ID",
-      "Object > Interaction Options",
+      'Object of the interaction',
+      'Interaction ID',
+      'Author language',
+      'Interaction type',
+      'Interaction token',
+      'Interaction token',
+      'Interaction channel',
+      'Interaction channel ID',
+      'Object > Interaction Options',
     ];
     return `${info[parseInt(data.info, 10)]}`;
   },
 
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
+    const prse2 = parseInt(data.info, 10);
+    const info2 = ['Object', 'ID', 'Language', 'Type', 'Token', 'Channel', 'Channel ID', 'Object > Options'];
+    if (type !== varType) return;
+    return [data.varName2, info2[prse2]];
+  },
 
-  variableStorage: function(data, varType) {
-    const type = parseInt(data.storage);
-    const prse2 = parseInt(data.info);
-    const info2 = ['Object','ID', 'Language','Type','Token','Channel','Channel ID','Object > Options'];
-    if(type !== varType) return;
-    return ([data.varName2, info2[prse2]]);
-},
-
-
-  fields: ["info", "storage", "varName2"],
+  fields: ['info', 'storage', 'varName2'],
 
   html(isEvent, data) {
     return `
@@ -66,12 +65,11 @@ module.exports = {
 	</div>`;
   },
 
-  init: function() {
-    const {glob, document} = this;
-  
+  init() {
+    const { glob, document } = this;
+
     glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
-
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -92,16 +90,16 @@ module.exports = {
       case 3:
         result = interaction.type;
         break;
-        case 4:
+      case 4:
         result = interaction.token;
         break;
-        case 5:
+      case 5:
         result = interaction.channel;
         break;
-        case 6:
-          result = interaction.channel.id;
-          break;
-        case 7:
+      case 6:
+        result = interaction.channel.id;
+        break;
+      case 7:
         result = interaction.options._hoistedOptions;
         break;
       default:

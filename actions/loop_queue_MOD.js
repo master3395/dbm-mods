@@ -11,7 +11,7 @@ module.exports = {
   },
 
   subtitle(data) {
-    const actions = ['Loop Whole Queue', 'Loop Current Item']
+    const actions = ['Loop Whole Queue', 'Loop Current Item'];
     return `${actions[parseInt(data.loop, 10)]}`;
   },
 
@@ -49,7 +49,10 @@ module.exports = {
   async action(cache) {
     const data = cache.actions[cache.index];
     const { Audio } = this.getDBM();
-    const server = cache;
+    const targetServer = await this.getServerFromData(data.server, data.varName, cache);
+    if (!targetServer) {
+      return this.callNextAction(cache);
+    }
 
     const status = parseInt(data.status, 10);
     const loop = parseInt(data.loop, 10);
@@ -61,7 +64,7 @@ module.exports = {
             Audio.loopQueue[targetServer.id] = true;
             break;
           case 1: // Loop Item
-            Audio.loopItem[server.id] = true;
+            Audio.loopItem[targetServer.id] = true;
             break;
           default:
             break;
@@ -86,6 +89,5 @@ module.exports = {
     this.callNextAction(cache);
   },
 
-  mod() {
-  },
+  mod() {},
 };

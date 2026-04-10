@@ -19,6 +19,7 @@
 
 ## Compatibility
 
+- **Node.js:** 22.x through 26.x (`package.json` engines: `>=22 <27`; CI runs on 22, 24, and 26)
 - **DBM Versions:** 1.7, 2.2.0
 - **Discord.js Version:** 14.26.2
 - **Total Actions:** 515

@@ -1,36 +1,34 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
   //
   // This is the name of the action displayed in the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  name: "Edit Any Channel",
+  name: 'Edit Any Channel',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
   //
   // This is the section the action will fall into.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  section: "Channel Control",
+  section: 'Channel Control',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
   //
   // This function generates the subtitle displayed next to the name.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
-    const channelTypes = [
-      "Text Channel",
-      "Voice Channel",
-      "Thread Channel",
-    ];
-    return `Edit ${presets.getChannelText(data.channel, data.channelVarName)} as a ${channelTypes[data.channelEdits._index ?? 0]}`;
+    const channelTypes = ['Text Channel', 'Voice Channel', 'Thread Channel'];
+    return `Edit ${presets.getChannelText(data.channel, data.channelVarName)} as a ${
+      channelTypes[data.channelEdits._index ?? 0]
+    }`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
   //
   // Helps check for updates and provides info if a custom mod.
@@ -38,21 +36,21 @@ module.exports = {
   //
   // It's highly recommended "preciseCheck" is set to false for third-party mods.
   // This will make it so the patch version (0.0.X) is not checked.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
   //
   // These are the fields for the action. These fields are customized
   // by creating elements with corresponding IDs in the HTML. These
   // are also the names of the fields stored in the action's JSON data.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  fields: ["channel", "channelVarName", "channelName", "reason", "channelEdits"],
+  fields: ['channel', 'channelVarName', 'channelName', 'reason', 'channelEdits'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
   //
   // This function returns a string containing the HTML used for
@@ -61,7 +59,7 @@ module.exports = {
   // The "isEvent" parameter will be true if this action is being used
   // for an event. Due to their nature, events lack certain information,
   // so edit the HTML to reflect this.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -193,23 +191,23 @@ module.exports = {
 </tab-system>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {},
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existence.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -242,8 +240,8 @@ module.exports = {
 
       // voice
       case 1: {
-        if (channelEditData.regionOverride !== "none") {
-          channelData.rtcRegion = channelEditData.regionOverride === "auto" ? null : channelEditData.regionOverride;
+        if (channelEditData.regionOverride !== 'none') {
+          channelData.rtcRegion = channelEditData.regionOverride === 'auto' ? null : channelEditData.regionOverride;
         }
         if (channelEditData.categoryID) {
           channelData.parent = this.evalMessage(channelEditData.categoryID, cache);
@@ -259,17 +257,18 @@ module.exports = {
 
       // thread
       case 2: {
-        if (channelEditData.autoArchiveDuration !== "none") {
-          channelData.autoArchiveDuration = channelEditData.autoArchiveDuration === "max" ? "max" : parseInt(channelEditData.autoArchiveDuration, 10);
+        if (channelEditData.autoArchiveDuration !== 'none') {
+          channelData.autoArchiveDuration =
+            channelEditData.autoArchiveDuration === 'max' ? 'max' : parseInt(channelEditData.autoArchiveDuration, 10);
         }
-        if (channelEditData.invitable !== "none") {
-          channelData.invitable = channelEditData.invitable === "true";
+        if (channelEditData.invitable !== 'none') {
+          channelData.invitable = channelEditData.invitable === 'true';
         }
         if (channelEditData.slowmode) {
           channelData.rateLimitPerUser = parseInt(this.evalMessage(channelEditData.slowmode, cache), 10);
         }
-        if (channelEditData.locked !== "none") {
-          channelData.locked = channelEditData.locked === "true";
+        if (channelEditData.locked !== 'none') {
+          channelData.locked = channelEditData.locked === 'true';
         }
         break;
       }
@@ -280,7 +279,7 @@ module.exports = {
     const channel = await this.getAnyChannel(channelStorage, channelVarName, cache);
 
     if (Array.isArray(channel)) {
-      this.callListFunc(channel, "edit", [channelData, reason]).then(() => this.callNextAction(cache));
+      this.callListFunc(channel, 'edit', [channelData, reason]).then(() => this.callNextAction(cache));
     } else if (channel?.edit) {
       channel
         .edit(channelData, reason)
@@ -291,14 +290,14 @@ module.exports = {
     }
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflicts between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

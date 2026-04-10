@@ -1,35 +1,35 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
   //
   // This is the name of the action displayed in the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  name: "Show Modal",
+  name: 'Show Modal',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
   //
   // This is the section the action will fall into.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  section: "Messaging",
+  section: 'Messaging',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
   //
   // This function generates the subtitle displayed next to the name.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
     return `"${data.title}" with ${data.textInputs.length} Text Inputs`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
   //
   // Stores the relevant variable info for the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     if (varType !== 1) return;
@@ -38,13 +38,13 @@ module.exports = {
     for (let i = 0; i < data.textInputs.length; i++) {
       if (data.textInputs[i].id) {
         result.push(data.textInputs[i].id);
-        result.push("Text from Input");
+        result.push('Text from Input');
       }
     }
     return result;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
   //
   // Helps check for updates and provides info if a custom mod.
@@ -52,21 +52,21 @@ module.exports = {
   //
   // It's highly recommended "preciseCheck" is set to false for third-party mods.
   // This will make it so the patch version (0.0.X) is not checked.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
   //
   // These are the fields for the action. These fields are customized
   // by creating elements with corresponding IDs in the HTML. These
   // are also the names of the fields stored in the action's JSON data.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  fields: ["title", "textInputs"],
+  fields: ['title', 'textInputs'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
   //
   // This function returns a string containing the HTML used for
@@ -75,7 +75,7 @@ module.exports = {
   // The "isEvent" parameter will be true if this action is being used
   // for an event. Due to their nature, events lack certain information,
   // so edit the HTML to reflect this.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -137,23 +137,23 @@ module.exports = {
 </dialog-list>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {},
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existence.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -166,17 +166,17 @@ module.exports = {
       for (let i = 0; i < data.textInputs.length; i++) {
         const textInput = data.textInputs[i];
 
-        const unusedNameTemplate = "unusedTempVarName";
+        const unusedNameTemplate = 'unusedTempVarName';
         let j = 0;
-        let unusedName = unusedNameTemplate + "0";
-        while(existingTempVars.includes(unusedName)) {
-          unusedName = unusedNameTemplate + (++j);
+        let unusedName = `${unusedNameTemplate}0`;
+        while (existingTempVars.includes(unusedName)) {
+          unusedName = unusedNameTemplate + ++j;
         }
 
         const textInputData = this.generateTextInput(textInput, unusedName, cache);
         this.addTextInputToActionRowArray(componentsArr, this.evalMessage(textInput.row, cache), textInputData, cache);
         existingTempVars.push(textInputData.customId);
-        if(textInput.id) {
+        if (textInput.id) {
           tempVariableNames.push(textInputData.customId);
         }
       }
@@ -200,20 +200,18 @@ module.exports = {
         .filter((comps) => comps.length > 0)
         .map(function (comps) {
           return {
-            type: "ACTION_ROW",
+            type: 'ACTION_ROW',
             components: comps,
           };
         });
     }
 
     if (cache.interaction) {
-
       if (cache.interaction.showModal) {
-
         const modalData = {
           customId: cache.interaction.id,
           title: this.evalMessage(data.title, cache),
-          components: componentsArr
+          components: componentsArr,
         };
 
         this.registerModalSubmitResponses(cache.interaction.id, (newInteraction) => {
@@ -223,7 +221,7 @@ module.exports = {
           for (let i = 0; i < tempVariableNames.length; i++) {
             const name = tempVariableNames[i];
             const val = newInteraction.fields.getTextInputValue(name);
-            if(typeof val === "string") {
+            if (typeof val === 'string') {
               this.storeValue(val, 1, name, cache);
             }
           }
@@ -232,26 +230,27 @@ module.exports = {
         });
 
         cache.interaction.showModal(modalData);
-
       } else {
-
-        this.displayError(data, cache, "Cannot show modal from current interaction, perhaps attempting to show modal multiple times?");
+        this.displayError(
+          data,
+          cache,
+          'Cannot show modal from current interaction, perhaps attempting to show modal multiple times?',
+        );
         this.callNextAction(cache);
-
       }
     } else {
       this.callNextAction(cache);
     }
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflicts between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

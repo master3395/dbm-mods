@@ -8,8 +8,8 @@ module.exports = {
     author: 'DBM Extended',
     authorUrl: 'https://github.com/DBM-Extended/mods',
     downloadURL: 'https://github.com/DBM-Extended/mods',
-   },
-   
+  },
+
   subtitle(data) {
     const results = [
       'Continue Actions',

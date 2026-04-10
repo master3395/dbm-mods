@@ -1,6 +1,6 @@
 module.exports = {
-  name: "Create Emoji URL",
-  section: "Emoji/Sticker Control",
+  name: 'Create Emoji URL',
+  section: 'Emoji/Sticker Control',
   meta: {
     version: '2.1.6',
     preciseCheck: true,
@@ -16,12 +16,10 @@ module.exports = {
   variableStorage(data, varType) {
     const type = parseInt(data.storage2, 10);
     if (type !== varType) return;
-    return [data.varName2, "Emoji"];
+    return [data.varName2, 'Emoji'];
   },
 
-
- fields: ["emojiName", "storage", "varName", "storage2", "varName2"],
-
+  fields: ['emojiName', 'storage', 'varName', 'storage2', 'varName2'],
 
   html(isEvent, data) {
     return `
@@ -67,21 +65,19 @@ module.exports = {
 `;
   },
 
-
   init() {
     const { glob, document } = this;
 
     glob.onComparisonChanged = function (event) {
-      if (event.value === "0") {
-        document.getElementById("varNameContainer2").style.display = "none";
+      if (event.value === '0') {
+        document.getElementById('varNameContainer2').style.display = 'none';
       } else {
-        document.getElementById("varNameContainer2").style.display = null;
+        document.getElementById('varNameContainer2').style.display = null;
       }
     };
 
-    glob.onComparisonChanged(document.getElementById("storage2"));
-
-    },
+    glob.onComparisonChanged(document.getElementById('storage2'));
+  },
 
   async action(cache) {
     const data = cache.actions[cache.index];

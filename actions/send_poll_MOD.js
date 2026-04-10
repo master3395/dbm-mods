@@ -5,7 +5,7 @@ module.exports = {
 
   subtitle(data) {
     const question = data.pollQuestion || 'No question set';
-    return `Send poll: "${question.length > 50 ? question.slice(0, 47) + '...' : question}"`;
+    return `Send poll: "${question.length > 50 ? `${question.slice(0, 47)}...` : question}"`;
   },
 
   meta: {

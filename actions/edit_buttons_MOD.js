@@ -1,7 +1,6 @@
 module.exports = {
-
-  name: "Edit Buttons",
-  section: "Messaging",
+  name: 'Edit Buttons',
+  section: 'Messaging',
   meta: {
     version: '2.1.6',
     preciseCheck: true,
@@ -10,31 +9,29 @@ module.exports = {
     downloadURL: 'https://github.com/DBM-Extended/mods',
   },
 
-  subtitle: function(data, presets) {
-
-type = `${data.type}`;
-switch (type) {
-      case "all": {
+  subtitle(data, presets) {
+    const type = `${data.type}`;
+    let selects;
+    switch (type) {
+      case 'all': {
         selects = 'All buttons';
         break;
-        }
-        case "sourceButton": {
+      }
+      case 'sourceButton': {
         selects = 'Current button';
         break;
-        }
-          case "findButton": {
+      }
+      case 'findButton': {
         selects = 'Specific button';
         break;
-        }
       }
-    const info = ['All buttons', 'Current button', 'Specific button'];
-     return `Edit "${selects}" in "${presets.getMessageText(data.storage, data.varName)}"`;
-},
+    }
+    return `Edit "${selects}" in "${presets.getMessageText(data.storage, data.varName)}"`;
+  },
 
-  fields: ["storage", "varName", "type", "alterartype", "alterarnome", "alteraremoji", "searchValue"],
+  fields: ['storage', 'varName', 'type', 'alterartype', 'alterarnome', 'alteraremoji', 'searchValue'],
 
-
-  html: function(isEvent, data) {
+  html(isEvent, data) {
     return `
     <div id="wrexdiv" style="height: 370px; overflow-y: scroll;padding:5px 10px">
 <message-input dropdownLabel="Source message" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></message-input>
@@ -85,26 +82,22 @@ Or use a variable, example \${tempVars("color")}</div>
     return formatters.compatibility_2_0_0_iftruefalse_to_branch(data);
   },
 
-
   init() {
     const { glob, document } = this;
-    
 
     glob.onButtonSelectTypeChange = function (event) {
-      const input = document.getElementById("nameContainer");
-      input.style.display = event.value === "findButton" || event.value === "findSelect" ? null : "none";
+      const input = document.getElementById('nameContainer');
+      input.style.display = event.value === 'findButton' || event.value === 'findSelect' ? null : 'none';
     };
 
-    glob.onButtonSelectTypeChange(document.getElementById("type"));
-},
-
+    glob.onButtonSelectTypeChange(document.getElementById('type'));
+  },
 
   async action(cache) {
-
-    const data = cache.actions[cache.index],
-    alterartype = this.evalMessage(data.alterartype, cache),
-    alteraremoji = this.evalMessage(data.alteraremoji, cache),
-    alterarnome = this.evalMessage(data.alterarnome, cache);
+    const data = cache.actions[cache.index];
+    const alterartype = this.evalMessage(data.alterartype, cache);
+    const alteraremoji = this.evalMessage(data.alteraremoji, cache);
+    const alterarnome = this.evalMessage(data.alterarnome, cache);
     const message = await this.getMessageFromData(data.storage, data.varName, cache);
 
     const type = data.type;
@@ -114,44 +107,40 @@ Or use a variable, example \${tempVars("color")}</div>
       sourceButton = cache.interaction.customId;
     }
 
-    let sourceSelect = null;
     if (cache.interaction.isSelectMenu()) {
-      sourceSelect = cache.interaction.customId;
+      const _sourceSelect = cache.interaction.customId;
     }
 
     let components = null;
     let searchValue = null;
 
     if (message?.components) {
-
       const { MessageActionRow } = this.getDBM().DiscolordJS;
       const oldComponents = message.components;
       const newComponents = [];
 
       for (let i = 0; i < oldComponents.length; i++) {
-
         const compData = oldComponents[i];
-        const comps = (compData instanceof MessageActionRow) ? compData.toJSON() : compData;
+        const comps = compData instanceof MessageActionRow ? compData.toJSON() : compData;
 
         for (let j = 0; j < comps.components.length; j++) {
-
           const comp = comps.components[j];
           const id = comp.custom_id ?? comp.customId;
 
           switch (type) {
-            case "all": {
+            case 'all': {
               comp.style = alterartype;
               comp.label = alterarnome;
               comp.emoji = alteraremoji;
               break;
             }
-            case "sourceButton": {
+            case 'sourceButton': {
               if (id === sourceButton) comp.style = alterartype;
               if (id === sourceButton) comp.label = alterarnome;
               if (id === sourceButton) comp.emoji = alteraremoji;
               break;
             }
-            case "findButton": {
+            case 'findButton': {
               if (searchValue === null) searchValue = this.evalMessage(data.searchValue, cache);
               if (id === searchValue || comp.style === searchValue) comp.style = alterartype;
               if (id === searchValue || comp.label === searchValue) comp.label = alterarnome;
@@ -162,17 +151,19 @@ Or use a variable, example \${tempVars("color")}</div>
         }
 
         newComponents.push(comps);
-
       }
 
       components = newComponents;
-
     }
 
     if (components) {
       if (Array.isArray(message)) {
-        this.callListFunc(message, "edit", [{ components }]).then(() => this.callNextAction(cache));
-      } else if (cache.interaction?.message?.id === message?.id && cache.interaction?.update && !cache.interaction?.replied) {
+        this.callListFunc(message, 'edit', [{ components }]).then(() => this.callNextAction(cache));
+      } else if (
+        cache.interaction?.message?.id === message?.id &&
+        cache.interaction?.update &&
+        !cache.interaction?.replied
+      ) {
         cache.interaction
           .update({ components })
           .then(() => this.callNextAction(cache))
@@ -192,8 +183,6 @@ Or use a variable, example \${tempVars("color")}</div>
       this.callNextAction(cache);
     }
   },
-
-
 
   mod() {},
 };

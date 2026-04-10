@@ -1,35 +1,28 @@
 module.exports = {
-
-
-name: "Get String Length",
-section: "Other Stuff",
-meta: {
-	version: '2.1.6',
-	preciseCheck: true,
-	author: 'DBM Extended',
-	authorUrl: 'https://github.com/DBM-Extended/mods',
-	downloadURL: 'https://github.com/DBM-Extended/mods',
+  name: 'Get String Length',
+  section: 'Other Stuff',
+  meta: {
+    version: '2.1.6',
+    preciseCheck: true,
+    author: 'DBM Extended',
+    authorUrl: 'https://github.com/DBM-Extended/mods',
+    downloadURL: 'https://github.com/DBM-Extended/mods',
   },
 
+  subtitle(data) {
+    return `${data.girdi || 'None'}`;
+  },
 
-subtitle: function(data) {
-	return `${data.girdi || "None"}`;
-},
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
+    if (type !== varType) return;
+    return [data.varName, 'Number'];
+  },
 
+  fields: ['storage', 'varName', 'girdi'],
 
-variableStorage: function(data, varType) {
-	const type = parseInt(data.storage);
-	if(type !== varType) return;
-	return ([data.varName, 'Number']);
-},
-
-
-
-fields: ["storage", "varName", "girdi"],
-
-
-html: function(isEvent, data) {
-	return `
+  html(isEvent, data) {
+    return `
 <div>
 
     <br>
@@ -54,25 +47,20 @@ html: function(isEvent, data) {
 		</div>
 	 </div>
 
-	</div>`
-},
+	</div>`;
+  },
 
-init: function() {
-},
+  init() {},
 
+  action(cache) {
+    const data = cache.actions[cache.index];
+    const type = parseInt(data.storage, 10);
+    const varName = this.evalMessage(data.varName, cache);
+    const girdi = this.evalMessage(data.girdi, cache);
 
-action: function(cache) {
-	const data = cache.actions[cache.index];
-	const type = parseInt(data.storage);
-	const varName = this.evalMessage(data.varName, cache);
-	const girdi = this.evalMessage(data.girdi, cache);
-	const storage = this.getVariable(type, varName, cache);
+    this.storeValue(girdi.length, type, varName, cache);
+    this.callNextAction(cache);
+  },
 
-	this.storeValue(girdi.length, type, varName, cache);
-	this.callNextAction(cache);
-},
-
-mod: function(DBM) {
-}
-
+  mod(DBM) {},
 };

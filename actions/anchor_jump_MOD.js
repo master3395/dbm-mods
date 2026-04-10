@@ -64,7 +64,7 @@ module.exports = {
     DBM.Actions.anchorJump = function anchorJump(id, cache) {
       const anchorIndex = resolveAnchorIndex(cache.actions, id);
       if (anchorIndex === -1) {
-        console.warn('[Jump to Anchor] No anchor found for ID: "' + id + '". Continuing to next action.');
+        console.warn(`[Jump to Anchor] No anchor found for ID: "${id}". Continuing to next action.`);
         this.callNextAction(cache);
         return;
       }

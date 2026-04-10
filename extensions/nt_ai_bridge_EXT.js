@@ -90,7 +90,9 @@ module.exports = {
         global.runNtAiBridge = bridge;
         global.runNtAskBridge = bridge;
       }
-      console.log('[NT AI Bridge EXT] Loaded — use NT AI Bridge MOD action or require(.../nt_ai_bridge_EXT/bridge.js).');
+      console.log(
+        '[NT AI Bridge EXT] Loaded — use NT AI Bridge MOD action or require(.../nt_ai_bridge_EXT/bridge.js).',
+      );
     } catch (e) {
       console.error('[NT AI Bridge EXT] Failed to load bridge:', e && e.message);
     }

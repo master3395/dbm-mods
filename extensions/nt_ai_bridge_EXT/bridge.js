@@ -124,11 +124,11 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
   }
 
   const bodyObj = {
-    prompt: prompt,
+    prompt,
     guild_id: guildId,
     channel_id: channelId,
     user_id: userId,
-    username: username,
+    username,
   };
   const body = JSON.stringify(bodyObj);
   let u;
@@ -153,7 +153,7 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
     'Content-Length': Buffer.byteLength(body, 'utf8'),
   };
   if (useBearer) {
-    headers['Authorization'] = 'Bearer ' + secret;
+    headers['Authorization'] = `Bearer ${secret}`;
   } else {
     headers['X-NT-Bridge-Secret'] = secret;
   }
@@ -161,9 +161,9 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
   const opts = {
     method: 'POST',
     hostname: u.hostname,
-    port: port,
+    port,
     path: u.pathname + (u.search || ''),
-    headers: headers,
+    headers,
     timeout: BRIDGE_HTTP_TIMEOUT_MS,
   };
 
@@ -260,11 +260,9 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
         const emb = makeErrorEmbed(String(errTxt), askT0, botFace);
         if (statusMsg && typeof statusMsg.edit === 'function') {
           finishPrefix(
-            statusMsg
-              .edit({ embeds: [emb], content: null, allowedMentions: NT_ASK_MENTIONS })
-              .catch(function () {
-                return sendPlain(String(errTxt), true);
-              }),
+            statusMsg.edit({ embeds: [emb], content: null, allowedMentions: NT_ASK_MENTIONS }).catch(function () {
+              return sendPlain(String(errTxt), true);
+            }),
           );
         } else {
           finishPrefix(sendPlain(String(errTxt), true));
@@ -291,10 +289,8 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
               const jErr = tryParseJson();
               let errTxt =
                 jErr && (jErr.message || jErr.error)
-                  ? String(jErr.message || 'Error: ' + String(jErr.error))
-                  : 'AI bridge returned HTTP ' +
-                    String(status) +
-                    (data ? ' (non-JSON body).' : '.');
+                  ? String(jErr.message || `Error: ${String(jErr.error)}`)
+                  : `AI bridge returned HTTP ${String(status)}${data ? ' (non-JSON body).' : '.'}`;
               if (status === 524) {
                 errTxt =
                   'AI site took too long behind Cloudflare (HTTP 524). The model or RAG step exceeded the proxy limit (~100s). Try a shorter question, a faster model in AI settings, or ask again.';
@@ -319,7 +315,7 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
                 throw new Error('parse');
               }
               if (j.error) {
-                const errTxt2 = j.message ? String(j.message) : 'Error: ' + String(j.error);
+                const errTxt2 = j.message ? String(j.message) : `Error: ${String(j.error)}`;
                 if (interaction) {
                   ntAiReplySlash(interaction, [makeErrorEmbed(errTxt2, askT0, botFace)], slashOpts).then(function () {
                     resolve();
@@ -367,16 +363,15 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
                 resolve();
               }
             } catch (_e) {
-              console.error(
-                '[nt_ai_bridge] Bad JSON or body from bridge, bytes=',
-                Buffer.byteLength(data, 'utf8'),
-              );
+              console.error('[nt_ai_bridge] Bad JSON or body from bridge, bytes=', Buffer.byteLength(data, 'utf8'));
               if (isPrefix) {
                 deliverPrefixError('Invalid response from AI bridge.');
               } else if (interaction) {
-                ntAiReplySlash(interaction, [makeErrorEmbed('Invalid response from AI bridge.', askT0, botFace)], slashOpts).then(
-                  resolve,
-                );
+                ntAiReplySlash(
+                  interaction,
+                  [makeErrorEmbed('Invalid response from AI bridge.', askT0, botFace)],
+                  slashOpts,
+                ).then(resolve);
               } else {
                 sendPlain('Invalid response from AI bridge.', true).then(resolve);
               }
@@ -390,9 +385,11 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
           if (isPrefix) {
             deliverPrefixError('Could not reach the AI bridge.');
           } else if (interaction) {
-            ntAiReplySlash(interaction, [makeErrorEmbed('Could not reach the AI bridge.', askT0, botFace)], slashOpts).then(
-              resolve,
-            );
+            ntAiReplySlash(
+              interaction,
+              [makeErrorEmbed('Could not reach the AI bridge.', askT0, botFace)],
+              slashOpts,
+            ).then(resolve);
           } else {
             sendPlain('Could not reach the AI bridge.', true).then(resolve);
           }
@@ -408,9 +405,11 @@ module.exports = function ntAiBridge(msg, cache, tempVars, bridgeOpts) {
           if (isPrefix) {
             deliverPrefixError('AI bridge timed out (5 minutes).');
           } else if (interaction) {
-            ntAiReplySlash(interaction, [makeErrorEmbed('AI bridge timed out (5 minutes).', askT0, botFace)], slashOpts).then(
-              resolve,
-            );
+            ntAiReplySlash(
+              interaction,
+              [makeErrorEmbed('AI bridge timed out (5 minutes).', askT0, botFace)],
+              slashOpts,
+            ).then(resolve);
           } else {
             sendPlain('AI bridge timed out.', true).then(resolve);
           }

@@ -1,5 +1,5 @@
 module.exports = {
-  name: "Store Parameter File Info",
+  name: 'Store Parameter File Info',
   section: 'Other Stuff',
   meta: {
     version: '2.1.6',
@@ -11,29 +11,27 @@ module.exports = {
 
   subtitle(data, presets) {
     const info = [
-      "File Object",
-      "File ID",
-      "File URL",
-      "File Name",
-      "File Size",
-      "File Type",
-      "Image Width",
-      "Image height",
+      'File Object',
+      'File ID',
+      'File URL',
+      'File Name',
+      'File Size',
+      'File Type',
+      'Image Width',
+      'Image height',
     ];
     return `${info[parseInt(data.info, 10)]}`;
   },
 
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
+    const prse2 = parseInt(data.info, 10);
+    const info2 = ['Object', 'ID', 'URL Image', 'Name', 'Size', 'Type', 'Width', 'Height'];
+    if (type !== varType) return;
+    return [data.varName2, info2[prse2]];
+  },
 
-  variableStorage: function(data, varType) {
-    const type = parseInt(data.storage);
-    const prse2 = parseInt(data.info);
-    const info2 = ['Object','ID','URL Image','Name', 'Size','Type','Width','Height'];
-    if(type !== varType) return;
-    return ([data.varName2, info2[prse2]]);
-},
-
-
-  fields: ["parametro", "info", "storage", "varName2"],
+  fields: ['parametro', 'info', 'storage', 'varName2'],
 
   html(isEvent, data) {
     return `
@@ -71,13 +69,12 @@ module.exports = {
 	</div>`;
   },
 
-  init: function() {
-    const {glob, document} = this;
-  
+  init() {
+    const { glob, document } = this;
+
     glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
 
-  
   async action(cache) {
     const data = cache.actions[cache.index];
     const interaction = cache.interaction;
@@ -87,29 +84,38 @@ module.exports = {
     let result;
     switch (info) {
       case 0:
-        result = interaction.options._hoistedOptions.find((f) => f.type === "ATTACHMENT" && f.name === parametro).attachment;
+        result = interaction.options._hoistedOptions.find(
+          (f) => f.type === 'ATTACHMENT' && f.name === parametro,
+        ).attachment;
         break;
       case 1:
-        result = interaction.options._hoistedOptions.find((f) => f.type === "ATTACHMENT" && f.name === parametro).attachment.id;
+        result = interaction.options._hoistedOptions.find((f) => f.type === 'ATTACHMENT' && f.name === parametro)
+          .attachment.id;
         break;
       case 2:
-        result = interaction.options._hoistedOptions.find((f) => f.type === "ATTACHMENT" && f.name === parametro).attachment.attachment;
+        result = interaction.options._hoistedOptions.find((f) => f.type === 'ATTACHMENT' && f.name === parametro)
+          .attachment.attachment;
         break;
       case 3:
-        result = interaction.options._hoistedOptions.find((f) => f.type === "ATTACHMENT" && f.name === parametro).attachment.name;
+        result = interaction.options._hoistedOptions.find((f) => f.type === 'ATTACHMENT' && f.name === parametro)
+          .attachment.name;
         break;
       case 4:
-        result = interaction.options._hoistedOptions.find((f) => f.type === "ATTACHMENT" && f.name === parametro).attachment.size;
+        result = interaction.options._hoistedOptions.find((f) => f.type === 'ATTACHMENT' && f.name === parametro)
+          .attachment.size;
         break;
       case 5:
-        result = interaction.options._hoistedOptions.find((f) => f.type === "ATTACHMENT" && f.name === parametro).attachment.contentType;
+        result = interaction.options._hoistedOptions.find((f) => f.type === 'ATTACHMENT' && f.name === parametro)
+          .attachment.contentType;
         break;
-        case 6:
-        result = interaction.options._hoistedOptions.find((f) => f.type === "ATTACHMENT" && f.name === parametro).attachment.width;
+      case 6:
+        result = interaction.options._hoistedOptions.find((f) => f.type === 'ATTACHMENT' && f.name === parametro)
+          .attachment.width;
         break;
-        case 7:
-        result = interaction.options._hoistedOptions.find((f) => f.type === "ATTACHMENT" && f.name === parametro).attachment.height;
-         break;
+      case 7:
+        result = interaction.options._hoistedOptions.find((f) => f.type === 'ATTACHMENT' && f.name === parametro)
+          .attachment.height;
+        break;
       default:
         break;
     }

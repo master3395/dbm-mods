@@ -1,37 +1,55 @@
 module.exports = {
+  name: 'Store Date Timezone Info Plus',
+  section: 'Other Stuff',
+  meta: {
+    version: '2.1.6',
+    preciseCheck: true,
+    author: 'DBM Extended',
+    authorUrl: 'https://github.com/DBM-Extended/mods',
+    downloadURL: 'https://github.com/DBM-Extended/mods',
+  },
 
-   
-    name: "Store Date Timezone Info Plus",
-    section: "Other Stuff",
-    meta: {
-        version: '2.1.6',
-        preciseCheck: true,
-        author: 'DBM Extended',
-        authorUrl: 'https://github.com/DBM-Extended/mods',
-        downloadURL: 'https://github.com/DBM-Extended/mods',
-      },
-   
-    subtitle: function(data) {
-        const info = ['Day of the week', 'Day (number)', 'Day of the year', 'Week of the year', 'Month of the year', 'Month (number)', 'Year', 'Hour', 'Minutes', 'Seconds', 'Milliseconds', 'Time zone', 'Unix Timestamp', 'Data completa']
-        const storage = ['', 'Temporary Variable', 'Server Variable', 'Global Variable']
-        return `${data.modeStorage === "0" ? '"' + info[data.info] + '"' : data.buildInput === "" ? '"Not Configured"' : '"' + data.buildInput + '"'} of a date ~ ${storage[data.storage]}`;
-    },
-    
- 
-    short_description: "Stores something from a date more completely!",
-    depends_on_mods: ["WrexMODS"],
-    
-    variableStorage: function (data, varType) {
-        const type = parseInt(data.storage);
-        if (type !== varType) return;
-        let dataType = 'Date';
-        return ([data.varName, dataType]);
-    },
-        
-    fields: ["sourceDate", 'timezone', "dateLanguage", "modeStorage", "info", "buildInput", "storage", "varName"],
-    
-        html: function(isEvent, data) {
-        return `
+  subtitle(data) {
+    const info = [
+      'Day of the week',
+      'Day (number)',
+      'Day of the year',
+      'Week of the year',
+      'Month of the year',
+      'Month (number)',
+      'Year',
+      'Hour',
+      'Minutes',
+      'Seconds',
+      'Milliseconds',
+      'Time zone',
+      'Unix Timestamp',
+      'Data completa',
+    ];
+    const storage = ['', 'Temporary Variable', 'Server Variable', 'Global Variable'];
+    return `${
+      data.modeStorage === '0'
+        ? `"${info[data.info]}"`
+        : data.buildInput === ''
+        ? '"Not Configured"'
+        : `"${data.buildInput}"`
+    } of a date ~ ${storage[data.storage]}`;
+  },
+
+  short_description: 'Stores something from a date more completely!',
+  depends_on_mods: ['WrexMODS'],
+
+  variableStorage(data, varType) {
+    const type = parseInt(data.storage, 10);
+    if (type !== varType) return;
+    const dataType = 'Date';
+    return [data.varName, dataType];
+  },
+
+  fields: ['sourceDate', 'timezone', 'dateLanguage', 'modeStorage', 'info', 'buildInput', 'storage', 'varName'],
+
+  html(isEvent, data) {
+    return `
 
         <div style="float: left; width: 62%;margin:0px 4px;">
         <span class="dbminputlabel">Date of origin</span><br>
@@ -108,131 +126,124 @@ module.exports = {
                 border-radius: 2px
               }
         </style>
-        `
-    },
+        `;
+  },
 
-    
-    init: function() {
-        const {glob, document} = this;
+  init() {
+    const { glob, document } = this;
 
-        glob.onChangeMode = function(modeStorage) {
-            switch(parseInt(modeStorage.value)) {
-                case 0:
-                    document.getElementById("selectMode").style.display = null;
-                    document.getElementById("buildMode").style.display = "none";
-                    document.getElementById("noteContainer").style.display = "none";
-                    break;
-                case 1:
-                    document.getElementById("selectMode").style.display = "none";
-                    document.getElementById("buildMode").style.display = null;
-                    document.getElementById("noteContainer").style.display = null;
-                    break;
-                }
-            }
-
-        glob.onChangeMode(document.getElementById("modeStorage"));
-
-        var wrexlinks = document.getElementsByClassName("wrexlink")
-        for(var x = 0; x < wrexlinks.length; x++) {
-          
-          var wrexlink = wrexlinks[x];
-          var url = wrexlink.getAttribute('data-url');   
-          if (url) {
-            wrexlink.setAttribute("title", url);
-            wrexlink.addEventListener("click", function(e){
-              e.stopImmediatePropagation();
-              console.log("Posting URL: [" + url + "] in your default browser.")
-              require('child_process').execSync('start ' + url);
-            });
-          }   
-        }  
-    },
-    
-
-    
-    async action(cache) {
-      const data = cache.actions[cache.index];
-      const moment = require('moment-timezone');
-      const dateLanguage = this.evalMessage(data.dateLanguage, cache);
-      const timezone = this.evalMessage(data.timezone, cache);
-      const date = moment(
-        Date.parse(this.evalMessage(data.sourceDate, cache)),
-        '',
-        dateLanguage === '' ? 'pt' : dateLanguage,
-      ).tz(timezone);
-      const buildInput = this.evalMessage(data.buildInput, cache);
-      const modeType = parseInt(this.evalMessage(data.modeStorage, cache), 10);
-      const info = parseInt(data.info, 10);
-  
-      let result;
-        
-        if (modeType === 0) {
-            switch(info) {
-                case 0:
-                    result = date.format("dddd");
-                    break;
-                case 1:
-                    result = date.format("DD");
-                    break;
-                case 2:
-                    result = date.format("DDD");
-                    break;
-                case 3:
-                    result = date.format("ww");
-                    break;
-                case 4:
-                    result = date.format("MMMMM");
-                    break;
-                case 5:
-                    result = date.format("MM");
-                    break;
-                case 6:
-                    result = date.format("YYYY");
-                    break;
-                case 7:
-                    result = date.format("hh");
-                    break;
-                case 8:
-                    result = date.format("mm");
-                    break;
-                case 9:
-                    result = date.format("ss");
-                    break;
-                case 10:
-                    result = date.format("SS");
-                    break;
-                case 11:
-                    result = date.format("ZZ");
-                    break;
-                case 12:
-                    result = date.format("X");
-                    break;
-                case 13:
-                    result = date.format("DD/MM/YYYY HH:mm:ss");
-                    break;
-                   default:
-               }
-          } else {
-             result = date.format(buildInput);
-          }
-
-          if (result === "Invalid date") {
-             return console.log('Invalid Date! Check that your date is valid in "Store Date Info Plus". A Date usually looks like the one stored in a server\'s "Creation Date" (variables work)');
-          }
-    
-          if (result !== undefined) {
-              const storage = parseInt(data.storage);
-              const varName = this.evalMessage(data.varName, cache);
-              this.storeValue(result, storage, varName, cache);
-          }
-	   
-        this.callNextAction(cache);
-    },
-    
-
-    
-    mod: function(DBM) {
-    }
-    
+    glob.onChangeMode = function (modeStorage) {
+      switch (parseInt(modeStorage.value, 10)) {
+        case 0:
+          document.getElementById('selectMode').style.display = null;
+          document.getElementById('buildMode').style.display = 'none';
+          document.getElementById('noteContainer').style.display = 'none';
+          break;
+        case 1:
+          document.getElementById('selectMode').style.display = 'none';
+          document.getElementById('buildMode').style.display = null;
+          document.getElementById('noteContainer').style.display = null;
+          break;
+      }
     };
-    
+
+    glob.onChangeMode(document.getElementById('modeStorage'));
+
+    const wrexlinks = document.getElementsByClassName('wrexlink');
+    for (let x = 0; x < wrexlinks.length; x++) {
+      const wrexlink = wrexlinks[x];
+      var url = wrexlink.getAttribute('data-url');
+      if (url) {
+        wrexlink.setAttribute('title', url);
+        wrexlink.addEventListener('click', function (e) {
+          e.stopImmediatePropagation();
+          console.log(`Posting URL: [${url}] in your default browser.`);
+          require('child_process').execSync(`start ${url}`);
+        });
+      }
+    }
+  },
+
+  async action(cache) {
+    const data = cache.actions[cache.index];
+    const moment = require('moment-timezone');
+    const dateLanguage = this.evalMessage(data.dateLanguage, cache);
+    const timezone = this.evalMessage(data.timezone, cache);
+    const date = moment(
+      Date.parse(this.evalMessage(data.sourceDate, cache)),
+      '',
+      dateLanguage === '' ? 'pt' : dateLanguage,
+    ).tz(timezone);
+    const buildInput = this.evalMessage(data.buildInput, cache);
+    const modeType = parseInt(this.evalMessage(data.modeStorage, cache), 10);
+    const info = parseInt(data.info, 10);
+
+    let result;
+
+    if (modeType === 0) {
+      switch (info) {
+        case 0:
+          result = date.format('dddd');
+          break;
+        case 1:
+          result = date.format('DD');
+          break;
+        case 2:
+          result = date.format('DDD');
+          break;
+        case 3:
+          result = date.format('ww');
+          break;
+        case 4:
+          result = date.format('MMMMM');
+          break;
+        case 5:
+          result = date.format('MM');
+          break;
+        case 6:
+          result = date.format('YYYY');
+          break;
+        case 7:
+          result = date.format('hh');
+          break;
+        case 8:
+          result = date.format('mm');
+          break;
+        case 9:
+          result = date.format('ss');
+          break;
+        case 10:
+          result = date.format('SS');
+          break;
+        case 11:
+          result = date.format('ZZ');
+          break;
+        case 12:
+          result = date.format('X');
+          break;
+        case 13:
+          result = date.format('DD/MM/YYYY HH:mm:ss');
+          break;
+        default:
+      }
+    } else {
+      result = date.format(buildInput);
+    }
+
+    if (result === 'Invalid date') {
+      return console.log(
+        'Invalid Date! Check that your date is valid in "Store Date Info Plus". A Date usually looks like the one stored in a server\'s "Creation Date" (variables work)',
+      );
+    }
+
+    if (result !== undefined) {
+      const storage = parseInt(data.storage, 10);
+      const varName = this.evalMessage(data.varName, cache);
+      this.storeValue(result, storage, varName, cache);
+    }
+
+    this.callNextAction(cache);
+  },
+
+  mod(DBM) {},
+};

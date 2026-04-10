@@ -49,8 +49,8 @@ module.exports = {
         const playerOptions = {
           ytdlOptions: {
             quality: 'highestaudio',
-            highWaterMark: 1 << 25
-          }
+            highWaterMark: 1 << 25,
+          },
         };
 
         // Check if we can safely create Player

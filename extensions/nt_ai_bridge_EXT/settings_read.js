@@ -52,12 +52,7 @@ function readSettingsBase() {
     }
   } catch (_) {}
   try {
-    if (
-      typeof Files !== 'undefined' &&
-      Files.data &&
-      Files.data.settings &&
-      typeof Files.data.settings === 'object'
-    ) {
+    if (typeof Files !== 'undefined' && Files.data && Files.data.settings && typeof Files.data.settings === 'object') {
       return Files.data.settings;
     }
   } catch (_) {}

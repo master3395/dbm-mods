@@ -19,7 +19,7 @@ module.exports = {
     return `If True: ${results[parseInt(data.iftrue, 10)]} ~ If False: ${results[parseInt(data.iffalse, 10)]}`;
   },
 
-  fields: ['find', 'iftrue', 'iftrueVal', 'iffalse', 'iffalseVal', 'varName' , 'info'],
+  fields: ['find', 'iftrue', 'iftrueVal', 'iffalse', 'iffalseVal', 'varName', 'info'],
 
   html(_isEvent, data) {
     return `
@@ -36,7 +36,7 @@ module.exports = {
 	</div>
 <div style="padding-top: 130px;">
   ${data.conditions[0]}
-</div>`
+</div>`;
   },
 
   init() {
