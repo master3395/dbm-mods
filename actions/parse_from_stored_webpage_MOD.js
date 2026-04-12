@@ -18,7 +18,7 @@ module.exports = {
     return [data.varName, 'String'];
   },
 
-  fields: ['debugMode', 'xpath', 'source', 'sourceVarName', 'storage', 'varName'],
+  fields: ['debugMode', 'lenientHtml', 'xpath', 'source', 'sourceVarName', 'storage', 'varName'],
 
   html() {
     return `
@@ -28,7 +28,6 @@ module.exports = {
     1. Input a Path into the XPath textarea<br>
     2. Test Online: <span class="wrexlink" data-url="https://codebeautify.org/Xpath-Tester">X-Path Tester</span><br>
     3. How to get <span class="wrexlink" data-url="https://stackoverflow.com/a/46599584/1422928">XPath from Chrome.</span><br>
-    </p
   </div>
 
   <div>
@@ -56,6 +55,13 @@ module.exports = {
     <select id="debugMode" class="round">
       <option value="1">Enabled</option>
       <option value="0" selected>Disabled</option>
+    </select>
+  </div>
+  <div style="float: right; width: 65%; padding-left: 8px;">
+    <span class="dbminputlabel">Lenient HTML (fixes xmldom invalid-attribute errors on real pages)</span><br>
+    <select id="lenientHtml" class="round" title="Uses node-html-parser to normalize markup before xmldom. Turn off for strict XML/RSS only.">
+      <option value="1" selected>Yes (recommended)</option>
+      <option value="0">No (XML / RSS only)</option>
     </select>
   </div>
 </div>
@@ -143,29 +149,84 @@ module.exports = {
         }
 
         if (html) {
-          const mylocator = {};
-          const parseLog = { errorLevel: 0 };
-          const doc = new DOM({
-            locator: mylocator,
-            errorHandler: {
-              warning: (msg) => {
-                manageXmlParseError(msg, 1, parseLog);
+          const decoded = ent.decode(html);
+          const lenientOn =
+            data.lenientHtml === undefined ||
+            data.lenientHtml === '' ||
+            data.lenientHtml === '1' ||
+            parseInt(data.lenientHtml, 10) === 1;
+
+          function looksLikeHtmlDocument(s) {
+            const t = String(s).trim().toLowerCase();
+            if (t.startsWith('<?xml')) return false;
+            if (t.startsWith('<rss') || t.startsWith('<feed') || t.startsWith('<atom')) return false;
+            return /<[a-z]/i.test(t);
+          }
+
+          function normalizeHtmlMarkup(Mods, raw) {
+            const { parse } = Mods.require('node-html-parser');
+            return parse(String(raw), { comment: true }).toString();
+          }
+
+          function parseStringToDoc(str, parseLog, mylocator) {
+            return new DOM({
+              locator: mylocator,
+              errorHandler: {
+                warning: (msg) => {
+                  manageXmlParseError(msg, 1, parseLog);
+                },
+                error: (msg) => {
+                  manageXmlParseError(msg, 2, parseLog);
+                  if (DEBUG) console.log(`XMLDOMError: ${msg}`);
+                },
+                fatalError: (msg) => {
+                  manageXmlParseError(msg, 3, parseLog);
+                  if (DEBUG) console.log(`FATAL XMLDOMError: ${msg}`);
+                },
               },
-              error: (msg) => {
-                manageXmlParseError(msg, 2, parseLog);
-                if (DEBUG) console.log(`XMLDOMError: ${msg}`);
-              },
-              fatalError: (msg) => {
-                manageXmlParseError(msg, 3, parseLog);
-                if (DEBUG) console.log(`FATAL XMLDOMError: ${msg}`);
-              },
-            },
-          }).parseFromString(ent.decode(html));
+            }).parseFromString(str);
+          }
+
+          const attempts = [];
+          if (lenientOn && looksLikeHtmlDocument(decoded)) {
+            try {
+              attempts.push(normalizeHtmlMarkup(Mods, decoded));
+            } catch (normErr) {
+              if (DEBUG) console.warn('Parse From Stored Webpage: lenient HTML normalize failed:', normErr.message);
+            }
+          }
+          attempts.push(decoded);
 
           let nodes = [];
-          try {
-            nodes = xpath.select(myXPath, doc);
+          let parseLog = { errorLevel: 0 };
+          let mylocator = {};
 
+          for (let a = 0; a < attempts.length; a++) {
+            const candidate = attempts[a];
+            parseLog = { errorLevel: 0 };
+            mylocator = {};
+            let doc;
+            try {
+              doc = parseStringToDoc(candidate, parseLog, mylocator);
+            } catch (parseErr) {
+              if (DEBUG) console.warn('Parse From Stored Webpage: DOMParser threw:', parseErr.message);
+              continue;
+            }
+            try {
+              const sel = xpath.select(myXPath, doc);
+              if (sel && sel.length > 0) {
+                nodes = sel;
+                if (DEBUG && a === 0 && attempts.length > 1) {
+                  console.info('Parse From Stored Webpage: used lenient HTML normalization (dbm-network/mods#309).');
+                }
+                break;
+              }
+            } catch (selErr) {
+              if (DEBUG) console.warn('Parse From Stored Webpage: xpath.select failed:', selErr.message);
+            }
+          }
+
+          try {
             if (nodes && nodes.length > 0) {
               const out = [];
               nodes.forEach((node) => {
@@ -209,10 +270,13 @@ module.exports = {
               this.callNextAction(cache);
             } else {
               console.error(`Could not store a value from path ${myXPath}, Check that the path is valid!\n`);
-              if (DEBUG)
+              if (DEBUG) {
                 console.info(
-                  `parsestatus ==> ${parseLog.errorLevel}\nlocator:${mylocator.columnNumber}/${mylocator.lineNumber}`,
+                  `parsestatus ==> ${parseLog.errorLevel}\nlocator:${mylocator.columnNumber || 0}/${
+                    mylocator.lineNumber || 0
+                  }`,
                 );
+              }
 
               this.storeValue(errored || undefined, storage, varName, cache);
               this.callNextAction(cache);
@@ -223,12 +287,15 @@ module.exports = {
           }
         } else {
           console.error('HTML data Is Not Valid!');
+          this.callNextAction(cache);
         }
       } else {
         console.error(`Path [${myXPath}] Is Not Valid`);
+        this.callNextAction(cache);
       }
     } catch (error) {
       console.error(`Webpage Things:  Error: ${error.stack || error}`);
+      this.callNextAction(cache);
     }
   },
 
