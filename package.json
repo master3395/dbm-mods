@@ -42,7 +42,9 @@
     "xpath": "^0.0.34",
     "youtube-dl-exec": "^3.0.27",
     "youtubei": "^1.5.3",
-    "ytdl-core": "^4.10.0"
+    "ytdl-core": "^4.10.0",
+    "@emnapi/core": "^1.9.2",
+    "@emnapi/runtime": "^1.9.2"
   },
   "overrides": {
     "form-data": "^2.5.4",
