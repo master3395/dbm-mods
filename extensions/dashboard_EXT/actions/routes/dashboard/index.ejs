@@ -13,7 +13,7 @@
     const templateBasePath = (typeof basePath !== 'undefined' && basePath) ? basePath : '';
     %>
     <link rel="stylesheet" href="<%= templateBasePath %>/shared/styles.css">
-    <link rel="shortcut icon" href="<%= data.client.user.displayAvatarURL() || 'https://discordapp.com/assets/322c936a8c8be1b803cd94861bdfa868.png' %>" />
+    <link rel="shortcut icon" href="<%= data.client.user.displayAvatarURL() || 'https://cdn.discordapp.com/embed/avatars/0.png' %>" />
     <meta name="theme-color" content="#5865F2" />
     <meta name="description" content="Manage your Discord servers with <%= data.client.user.username %> bot">
 </head>
@@ -32,7 +32,7 @@
             <div class="dashboard-hero-container">
                 <div class="dashboard-hero-content">
                     <div class="dashboard-avatar-container">
-                        <img src="<%= data.client.user.displayAvatarURL() || 'https://discordapp.com/assets/322c936a8c8be1b803cd94861bdfa868.png' %>" 
+                        <img src="<%= data.client.user.displayAvatarURL() || 'https://cdn.discordapp.com/embed/avatars/0.png' %>" 
                              alt="<%= data.client.user.username %>" 
                              class="dashboard-avatar">
                         <div class="dashboard-status-indicator"></div>

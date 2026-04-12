@@ -960,7 +960,7 @@
     "section": "Permission Control"
   },
   "text_to_speech_MOD.js": {
-    "description": "Convert some text into TTS",
+    "description": "Convert text to speech (DBM 2.2.0; long text; requires npm install simple-tts-mp3; stores local MP3 path for Play File)",
     "name": "Text To Speech",
     "section": "Messaging"
   },

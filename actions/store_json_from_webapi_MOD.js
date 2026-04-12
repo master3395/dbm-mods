@@ -175,13 +175,13 @@ module.exports = {
         return;
       }
     }
-
+    
     // Ensure fetch is a function
     if (typeof fetch !== 'function') {
       console.error('[Store Json From WebAPI] fetch is not a function. Available:', typeof fetch);
       return;
     }
-
+    
     const debugMode = parseInt(data.debugMode, 10);
     const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
@@ -321,14 +321,14 @@ module.exports = {
 
           try {
             const response = await fetch(url, { headers: setHeaders });
-
+            
             // Check if response is OK before parsing JSON
             if (!response.ok) {
               const text = await response.text();
               storeData(`HTTP ${response.status}: ${text}`, response, null);
               return;
             }
-
+            
             // Check content type before parsing JSON
             const contentType = response.headers.get('content-type') || '';
             if (!contentType.includes('application/json') && !contentType.includes('text/json')) {
@@ -336,16 +336,11 @@ module.exports = {
               const text = await response.text();
               storeData(`Response is not JSON (content-type: ${contentType})`, response, null);
               if (debugMode) {
-                console.warn(
-                  `WebAPI: Response is not JSON. Content-Type: ${contentType}, First 100 chars: ${text.substring(
-                    0,
-                    100,
-                  )}`,
-                );
+                console.warn(`WebAPI: Response is not JSON. Content-Type: ${contentType}, First 100 chars: ${text.substring(0, 100)}`);
               }
               return;
             }
-
+            
             // Try to parse JSON with error handling
             let json;
             try {
@@ -359,7 +354,7 @@ module.exports = {
               }
               return;
             }
-
+            
             storeData('', response, json);
           } catch (err) {
             if (debugMode) console.error(err.stack || err);

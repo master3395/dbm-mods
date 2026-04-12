@@ -92,7 +92,7 @@ WrexMODS.runPostJson = function (url, json, returnJson = true, callback) {
 WrexMODS.executeDiscordJSON = function (type, urlPath, json, DBM, cache, callback) {
   return new Promise((resolve, reject) => {
     const axios = this.require('axios');
-    const url = `https://discordapp.com/api/v6/${urlPath}`;
+    const url = `https://discord.com/api/v10/${urlPath}`;
     const config = {
       headers: { Authorization: `Bot ${DBM.Files.data.settings.token}` },
       method: type,

@@ -8,15 +8,12 @@
  ******************************************************/
 
 const DBM = {};
-DBM.version = '2.1.7';
+DBM.version = "2.1.7";
 
-const DiscordJS = (DBM.DiscordJS = require('discord.js'));
-const EPHEMERAL_FLAG =
-  typeof DiscordJS.MessageFlags !== 'undefined' && DiscordJS.MessageFlags.Ephemeral !== undefined
-    ? DiscordJS.MessageFlags.Ephemeral
-    : 64;
+const DiscordJS = (DBM.DiscordJS = require("discord.js"));
+const EPHEMERAL_FLAG = (typeof DiscordJS.MessageFlags !== "undefined" && DiscordJS.MessageFlags.Ephemeral !== undefined) ? DiscordJS.MessageFlags.Ephemeral : 64;
 
-// Support both v13 and v14 - Updated for 13.14.0 and 14.26.2
+// Support both v13 and v14 - Updated for 13.14.0 and 14.24.2
 const majorVersion = parseInt(DiscordJS.version.split('.')[0], 10);
 const minorVersion = parseInt(DiscordJS.version.split('.')[1] || '0', 10);
 const patchVersion = parseInt(DiscordJS.version.split('.')[2] || '0', 10);
@@ -24,38 +21,26 @@ const isV13 = majorVersion === 13;
 const isV14 = majorVersion === 14;
 
 // Version compatibility helpers
-DBM.getDiscordJSVersion = function () {
-  return DiscordJS.version;
-};
-DBM.getDiscordJSMajorVersion = function () {
-  return majorVersion;
-};
-DBM.isDiscordJSv13 = function () {
-  return isV13;
-};
-DBM.isDiscordJSv14 = function () {
-  return isV14;
-};
-DBM.isDiscordJSv13_14_0 = function () {
-  return isV13 && minorVersion >= 14;
-};
-DBM.isDiscordJSv14_24_2 = function () {
-  return isV14 && (minorVersion > 24 || (minorVersion === 24 && patchVersion >= 2));
-};
+DBM.getDiscordJSVersion = function() { return DiscordJS.version; };
+DBM.getDiscordJSMajorVersion = function() { return majorVersion; };
+DBM.isDiscordJSv13 = function() { return isV13; };
+DBM.isDiscordJSv14 = function() { return isV14; };
+DBM.isDiscordJSv13_14_0 = function() { return isV13 && minorVersion >= 14; };
+DBM.isDiscordJSv14_24_2 = function() { return isV14 && (minorVersion > 24 || (minorVersion === 24 && patchVersion >= 2)); };
 
-const requiredDjsVersion = isV14 ? '14.26.2' : '13.14.0';
+const requiredDjsVersion = isV14 ? "14.24.2" : "13.14.0";
 
 // v14 Compatibility: MessageEmbed was replaced with EmbedBuilder
 if (isV14 && !DiscordJS.MessageEmbed) {
   DiscordJS.MessageEmbed = DiscordJS.EmbedBuilder;
   // Also add compatibility for addField (v14 uses addFields with array)
   if (DiscordJS.EmbedBuilder && !DiscordJS.EmbedBuilder.prototype.addField) {
-    DiscordJS.EmbedBuilder.prototype.addField = function (name, value, inline) {
+    DiscordJS.EmbedBuilder.prototype.addField = function(name, value, inline) {
       // Validate and truncate field values to prevent errors
       const maxLength = 1024;
       const safeName = String(name || '\u200B').substring(0, 256);
       const safeValue = String(value || '\u200B').substring(0, maxLength);
-      return this.addFields({ name: safeName, value: safeValue, inline: inline === true || inline === 'true' });
+      return this.addFields({ name: safeName, value: safeValue, inline: inline === true || inline === "true" });
     };
   }
 }
@@ -65,10 +50,10 @@ if (isV14 && !DiscordJS.MessageAttachment) {
   DiscordJS.MessageAttachment = DiscordJS.Attachment;
 }
 
-// Version checking - support 13.14.0+ and 14.26.2+
-const versionCheck = isV14
-  ? '14.26.2'.localeCompare(DiscordJS.version, { numeric: true, sensitivity: 'base' }) > 0
-  : '13.14.0'.localeCompare(DiscordJS.version, { numeric: true, sensitivity: 'base' }) > 0;
+// Version checking - support 13.14.0+ and 14.24.2+
+const versionCheck = isV14 
+	? "14.24.2".localeCompare(DiscordJS.version, { numeric: true, sensitivity: "base" }) > 0
+	: "13.14.0".localeCompare(DiscordJS.version, { numeric: true, sensitivity: "base" }) > 0;
 
 if (versionCheck) {
   console.log(
@@ -120,16 +105,16 @@ const MsgType = {
 };
 
 function PrintError(type) {
-  const { format } = require('node:util');
+  const { format } = require("node:util");
   const { error, warn } = console;
 
   switch (type) {
     case MsgType.MISSING_ACTION: {
-      error(format('%s does not exist!', arguments[1]));
+      error(format("%s does not exist!", arguments[1]));
       break;
     }
     case MsgType.DATA_PARSING_ERROR: {
-      error(format('There was issue parsing %s!', arguments[1]));
+      error(format("There was issue parsing %s!", arguments[1]));
       break;
     }
     case MsgType.MISSING_ACTIONS: {
@@ -142,42 +127,21 @@ function PrintError(type) {
       break;
     }
 
+
     case MsgType.DUPLICATE_SLASH_COMMAND: {
-      warn(
-        format(
-          '[Duplicate Slash Command]\nSlash command with name "%s" already exists!\nThis duplicate will be ignored.\n',
-          arguments[1],
-        ),
-      );
+      warn(format('[Duplicate Slash Command]\nSlash command with name "%s" already exists!\nThis duplicate will be ignored.\n', arguments[1]));
       break;
     }
     case MsgType.TOO_MANY_SPACES_SLASH_NAME: {
-      warn(
-        format(
-          '[Too Many Spaces in Slash Name]\nSlash command with name "%s" has too many spaces!\nSlash command names may only contain a maximum of three different words.\n',
-          arguments[1],
-        ),
-      );
+      warn(format('[Too Many Spaces in Slash Name]\nSlash command with name "%s" has too many spaces!\nSlash command names may only contain a maximum of three different words.\n', arguments[1]));
       break;
     }
     case MsgType.SUB_COMMAND_ALREADY_EXISTS: {
-      warn(
-        format(
-          '[Sub-Command Already Exists]\nSlash command with name "%s" cannot exist.\nIt requires the creation of a "sub-command group" called "%s",\nbut there\'s already a command with that name.',
-          arguments[1],
-          arguments[2],
-        ),
-      );
+      warn(format('[Sub-Command Already Exists]\nSlash command with name "%s" cannot exist.\nIt requires the creation of a "sub-command group" called "%s",\nbut there\'s already a command with that name.', arguments[1], arguments[2]));
       break;
     }
     case MsgType.SUB_COMMAND_GROUP_ALREADY_EXISTS: {
-      warn(
-        format(
-          '[Sub-Command Group Already Exists]\nSlash command with name "%s" cannot exist.\nThere is already a "sub-command group" with that name.\nThe "sub-command group" exists because of a command named something like: "%s _____"',
-          arguments[1],
-          arguments[1],
-        ),
-      );
+      warn(format('[Sub-Command Group Already Exists]\nSlash command with name "%s" cannot exist.\nThere is already a "sub-command group" with that name.\nThe "sub-command group" exists because of a command named something like: "%s _____"', arguments[1], arguments[1]));
       break;
     }
     case MsgType.INVALID_SLASH_NAME: {
@@ -190,21 +154,11 @@ function PrintError(type) {
       break;
     }
     case MsgType.DUPLICATE_USER_COMMAND: {
-      warn(
-        format(
-          '[Duplicate User Command]\nUser command with name "%s" already exists!\nThis duplicate will be ignored.\n',
-          arguments[1],
-        ),
-      );
+      warn(format('[Duplicate User Command]\nUser command with name "%s" already exists!\nThis duplicate will be ignored.\n', arguments[1]));
       break;
     }
     case MsgType.DUPLICATE_MESSAGE_COMMAND: {
-      warn(
-        format(
-          '[Duplicate Message Command]\nMessage command with name "%s" already exists!\nThis duplicate will be ignored.\n',
-          arguments[1],
-        ),
-      );
+      warn(format('[Duplicate Message Command]\nMessage command with name "%s" already exists!\nThis duplicate will be ignored.\n', arguments[1]));
       break;
     }
     case MsgType.DUPLICATE_SLASH_PARAMETER: {
@@ -255,6 +209,7 @@ function PrintError(type) {
       break;
     }
 
+
     case MsgType.MISSING_APPLICATION_COMMAND_ACCESS: {
       warn(
         format(
@@ -267,13 +222,10 @@ function PrintError(type) {
     }
 
     case MsgType.MISSING_MUSIC_MODULES: {
-      warn(
-        format(
-          'Could not load audio-related Node modules.\nPlease run "File -> Music Capabilities -> Update Music Libraries" to ensure they are installed.',
-        ),
-      );
+      warn(format('Could not load audio-related Node modules.\nPlease run "File -> Music Capabilities -> Update Music Libraries" to ensure they are installed.'));
       break;
     }
+
 
     case MsgType.MUTABLE_VOLUME_DISABLED: {
       warn(format('[Mutable Volume Disabled]\nTried setting volume but "Mutable Volume" is disabled.'));
@@ -292,37 +244,26 @@ function PrintError(type) {
       warn(format('Error creating audio resource.\n%s', arguments[1]));
     }
 
+
     case MsgType.MISSING_MEMBER_INTENT_FIND_USER_ID: {
-      warn(
-        ' - DBM Warning - \nFind User (by Name/ID) may freeze or error because\nthe bot has not enabled the Server Member Events Intent.',
-      );
+      warn(' - DBM Warning - \nFind User (by Name/ID) may freeze or error because\nthe bot has not enabled the Server Member Events Intent.')
     }
     case MsgType.CANNOT_FIND_USER_BY_ID: {
       warn(format('[Cannot Find User by ID]\nCannot find user by id: %s', arguments[1]));
     }
 
     case MsgType.SERVER_MESSAGE_INTENT_REQUIRED: {
-      warn(
-        format(
-          '[Message Content Intent Required]\n%s commands found that require the "Message Content" intent.\nThese commands require the bot to be able to read messages from Discord servers.\nTo enable this behavior, first ensure the "MESSAGE CONTENT INTENT" is enabled in the "Bot" section on the Discord Developer Portal (the same page you got your bot token from).\nSecondly, in Discord Bot Maker, select Extensions -> Bot Intents from the title menu bar, and in this dialog, make sure "Message Content" is checked.',
-          arguments[1],
-        ),
-      );
+      warn(format('[Message Content Intent Required]\n%s commands found that require the "Message Content" intent.\nThese commands require the bot to be able to read messages from Discord servers.\nTo enable this behavior, first ensure the "MESSAGE CONTENT INTENT" is enabled in the "Bot" section on the Discord Developer Portal (the same page you got your bot token from).\nSecondly, in Discord Bot Maker, select Extensions -> Bot Intents from the title menu bar, and in this dialog, make sure "Message Content" is checked.', arguments[1]));
       break;
     }
     case MsgType.CHANNEL_PARTIAL_REQUIRED: {
-      warn(
-        format(
-          '[Channel Partial Required]\n%s commands are set to "DMs Only", but the Channel partial is not enabled.\nTo allow the bot to read messages from DMs, do the following: In Discord Bot Maker, on the title menu bar, go to Extensions -> Bot Partials.\nIn the dialog that appears, select "Custom" and then make sure "Channel (Enables DMs)" is checked.',
-          arguments[1],
-        ),
-      );
+      warn(format('[Channel Partial Required]\n%s commands are set to "DMs Only", but the Channel partial is not enabled.\nTo allow the bot to read messages from DMs, do the following: In Discord Bot Maker, on the title menu bar, go to Extensions -> Bot Partials.\nIn the dialog that appears, select "Custom" and then make sure "Channel (Enables DMs)" is checked.', arguments[1]))
     }
   }
 }
 
 function GetActionErrorText(location, index, dataName) {
-  return 'Error with the ' + location + (dataName ? ` - Action #${index} (${dataName})` : '');
+  return "Error with the " + location + (dataName ? ` - Action #${index} (${dataName})` : "");
 }
 
 //#endregion
@@ -357,14 +298,17 @@ Bot.applicationCommandData = [];
 const Intents = isV14 ? DiscordJS.IntentsBitField.Flags : DiscordJS.Intents.FLAGS;
 
 // MESSAGE_CONTENT not defined in v13
-if (!isV14 && typeof Intents.MESSAGE_CONTENT === 'undefined') {
-  Intents.MESSAGE_CONTENT = 1 << 15;
+if (!isV14 && typeof Intents.MESSAGE_CONTENT === "undefined") {
+  Intents.MESSAGE_CONTENT = (1 << 15);
 }
 
 // GuildModeration is v14 name, GUILD_BANS is v13 name
 const GuildModeration = isV14 ? Intents.GuildModeration : Intents.GUILD_BANS;
 
-Bot.PRIVILEGED_INTENTS = Intents.GuildMembers | Intents.GuildPresences | Intents.MessageContent;
+Bot.PRIVILEGED_INTENTS =
+  Intents.GuildMembers |
+  Intents.GuildPresences |
+  Intents.MessageContent;
 
 Bot.NON_PRIVILEGED_INTENTS =
   Intents.Guilds |
@@ -396,35 +340,30 @@ Bot.init = function () {
       const errorMessage = error.message || String(error);
       const errorCode = error.code || '';
       const errorName = error.name || '';
-
+      
       // Skip logging known non-critical errors
-      if (
-        errorCode === 'FetchOwnerId' ||
-        errorMessage.includes('FetchOwnerId') ||
-        errorMessage.includes("Couldn't resolve the guild ownerId")
-      ) {
+      if (errorCode === 'FetchOwnerId' || 
+          errorMessage.includes('FetchOwnerId') ||
+          errorMessage.includes('Couldn\'t resolve the guild ownerId')) {
         // This is a known issue when bot can't fetch owner (e.g., owner left, no permissions)
         return;
       }
-
+      
       if (errorMessage.includes('customData') && errorMessage.includes('undefined')) {
         // This is usually a configuration issue, not critical
         console.warn('[Unhandled Rejection] Configuration issue:', errorMessage);
         return;
       }
-
+      
       // Handle JSON parsing errors from fetch/undici - these are usually from invalid API responses
-      if (
-        errorName === 'SyntaxError' &&
-        errorMessage.includes('JSON') &&
-        (errorMessage.includes('Unexpected') || errorMessage.includes('non-whitespace'))
-      ) {
+      if (errorName === 'SyntaxError' && errorMessage.includes('JSON') && 
+          (errorMessage.includes('Unexpected') || errorMessage.includes('non-whitespace'))) {
         // This happens when an API returns non-JSON content but we try to parse it as JSON
         // Log but don't crash - the response might be HTML error page or plain text
         console.warn('[Unhandled Rejection] JSON parsing error (likely non-JSON API response):', errorMessage);
         return;
       }
-
+      
       // Log other errors
       console.error('[Unhandled Rejection]', errorMessage);
       if (error.stack) {
@@ -432,12 +371,7 @@ Bot.init = function () {
       }
     }
     // Handle Discord API Missing Access errors gracefully
-    if (
-      error &&
-      (error.code === 50001 ||
-        error.message === 'Missing Access' ||
-        (error.constructor && error.constructor.name === 'DiscordAPIError' && error.code === 50001))
-    ) {
+    if (error && (error.code === 50001 || error.message === 'Missing Access' || (error.constructor && error.constructor.name === 'DiscordAPIError' && error.code === 50001))) {
       // These are expected when bot doesn't have permissions - don't crash
       return; // Silently ignore Missing Access errors
     }
@@ -471,7 +405,7 @@ Bot.makeClientOptions = function () {
 
 Bot.intents = function () {
   // Check if custom intents are specified in settings
-  const customIntents = Files.data.settings?.['Bot Intents']?.customData?.['Bot Intents']?.intents;
+  const customIntents = Files.data.settings?.["Bot Intents"]?.customData?.["Bot Intents"]?.intents;
   let base;
   if (customIntents !== undefined && customIntents !== null) {
     base = customIntents;
@@ -480,7 +414,7 @@ Bot.intents = function () {
   }
   // Prefix / includes / regex / any-message commands need message text in guilds.
   // Discord treats Message Content as privileged; without it, msg.content is empty (especially on v14).
-  const textCmdCount = typeof this._textCommandCount === 'number' ? this._textCommandCount : 0;
+  const textCmdCount = typeof this._textCommandCount === "number" ? this._textCommandCount : 0;
   if (textCmdCount > 0 && this._Intents && this._Intents.MessageContent) {
     const mc = this._Intents.MessageContent;
     if ((base & mc) !== mc) {
@@ -499,11 +433,11 @@ Bot.partials = function () {
 };
 
 Bot.setupBot = function () {
-  this.bot.on('raw', this.onRawData);
+  this.bot.on("raw", this.onRawData);
 };
 
 Bot.onRawData = function (packet) {
-  if (packet.t !== 'MESSAGE_REACTION_ADD' || packet.t !== 'MESSAGE_REACTION_REMOVE') return;
+  if (packet.t !== "MESSAGE_REACTION_ADD" || packet.t !== "MESSAGE_REACTION_REMOVE") return;
 
   const client = Bot.bot;
   const channel = client.channels.resolve(packet.d.channel_id);
@@ -514,11 +448,11 @@ Bot.onRawData = function (packet) {
     .then((message) => {
       const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
       const reaction = message.reactions.resolve(emoji);
-      if (packet.t === 'MESSAGE_REACTION_ADD') {
-        client.emit('messageReactionAdd', reaction, client.users.resolve(packet.d.user_id));
+      if (packet.t === "MESSAGE_REACTION_ADD") {
+        client.emit("messageReactionAdd", reaction, client.users.resolve(packet.d.user_id));
       }
-      if (packet.t === 'MESSAGE_REACTION_REMOVE') {
-        client.emit('messageReactionRemove', reaction, client.users.resolve(packet.d.user_id));
+      if (packet.t === "MESSAGE_REACTION_REMOVE") {
+        client.emit("messageReactionRemove", reaction, client.users.resolve(packet.d.user_id));
       }
     })
     .catch(noop);
@@ -535,21 +469,21 @@ Bot.reformatCommands = function () {
   this._hasTextCommands = false;
   this._textCommandCount = 0;
   this._dmTextCommandCount = 0;
-  this._caseSensitive = Files.data.settings.case === 'true';
+  this._caseSensitive = Files.data.settings.case === "true";
   for (let i = 0; i < data.length; i++) {
     const com = data[i];
     if (com) {
       this.prepareActions(com.actions);
 
-      if (com.comType <= '3') {
+      if(com.comType <= "3") {
         this._textCommandCount++;
-        if (com.restriction === '3') {
+        if(com.restriction === "3") {
           this._dmTextCommandCount++;
         }
       }
 
       switch (com.comType) {
-        case '0': {
+        case "0": {
           this._hasTextCommands = true;
           if (this._caseSensitive) {
             this.$cmds[com.name] = com;
@@ -570,25 +504,25 @@ Bot.reformatCommands = function () {
           }
           break;
         }
-        case '1': {
+        case "1": {
           this.$icds.push(com);
           break;
         }
-        case '2': {
+        case "2": {
           this.$regx.push(com);
           break;
         }
-        case '3': {
+        case "3": {
           this.$anym.push(com);
           break;
         }
-        case '4': {
+        case "4": {
           const names = this.validateSlashCommandName(com.name);
           if (names) {
             if (names.length > 3) {
               PrintError(MsgType.TOO_MANY_SPACES_SLASH_NAME, com.name);
             } else {
-              const keyName = names.join(' ');
+              const keyName = names.join(" ");
               if (this.$slash[keyName]) {
                 PrintError(MsgType.DUPLICATE_SLASH_COMMAND, keyName);
               } else {
@@ -596,10 +530,7 @@ Bot.reformatCommands = function () {
                 if (names.length === 1) {
                   this.applicationCommandData.push(this.createApiJsonFromCommand(com, keyName));
                 } else {
-                  this.mergeSubCommandIntoCommandData(
-                    names,
-                    this.createApiJsonFromCommand(com, names[names.length - 1]),
-                  );
+                  this.mergeSubCommandIntoCommandData(names, this.createApiJsonFromCommand(com, names[names.length - 1]));
                 }
               }
             }
@@ -608,7 +539,7 @@ Bot.reformatCommands = function () {
           }
           break;
         }
-        case '5': {
+        case "5": {
           const name = com.name;
           if (this.$user[name]) {
             PrintError(MsgType.DUPLICATE_USER_COMMAND, name);
@@ -618,7 +549,7 @@ Bot.reformatCommands = function () {
           }
           break;
         }
-        case '6': {
+        case "6": {
           const name = com.name;
           if (this.$msge[name]) {
             PrintError(MsgType.DUPLICATE_MESSAGE_COMMAND, name);
@@ -645,26 +576,20 @@ Bot.createApiJsonFromCommand = function (com, name) {
   // Use v14 enums if available, fallback to strings for v13
   const ApplicationCommandType = isV14 ? DiscordJS.ApplicationCommandType : null;
   switch (com.comType) {
-    case '4': {
-      result.type = ApplicationCommandType
-        ? ApplicationCommandType.ChatInput
-        : DiscordJS.Constants.ApplicationCommandTypes.CHAT_INPUT;
+    case "4": {
+      result.type = ApplicationCommandType ? ApplicationCommandType.ChatInput : DiscordJS.Constants.ApplicationCommandTypes.CHAT_INPUT;
       break;
     }
-    case '5': {
-      result.type = ApplicationCommandType
-        ? ApplicationCommandType.User
-        : DiscordJS.Constants.ApplicationCommandTypes.USER;
+    case "5": {
+      result.type = ApplicationCommandType ? ApplicationCommandType.User : DiscordJS.Constants.ApplicationCommandTypes.USER;
       break;
     }
-    case '6': {
-      result.type = ApplicationCommandType
-        ? ApplicationCommandType.Message
-        : DiscordJS.Constants.ApplicationCommandTypes.MESSAGE;
+    case "6": {
+      result.type = ApplicationCommandType ? ApplicationCommandType.Message : DiscordJS.Constants.ApplicationCommandTypes.MESSAGE;
       break;
     }
   }
-  if (com.comType === '4' && com.parameters && Array.isArray(com.parameters)) {
+  if (com.comType === "4" && com.parameters && Array.isArray(com.parameters)) {
     result.options = this.validateSlashCommandParameters(com.parameters, result.name);
   }
   return result;
@@ -672,16 +597,14 @@ Bot.createApiJsonFromCommand = function (com, name) {
 
 Bot.mergeSubCommandIntoCommandData = function (names, data) {
   // Use v14 enums if available, fallback to v13 constants
-  const ApplicationCommandOptionType = isV14
-    ? DiscordJS.ApplicationCommandOptionType
-    : DiscordJS.Constants.ApplicationCommandOptionTypes;
-  const subCommandType = isV14 ? ApplicationCommandOptionType.Subcommand : 'SUB_COMMAND';
-  const subCommandGroupType = isV14 ? ApplicationCommandOptionType.SubcommandGroup : 'SUB_COMMAND_GROUP';
-
+  const ApplicationCommandOptionType = isV14 ? DiscordJS.ApplicationCommandOptionType : DiscordJS.Constants.ApplicationCommandOptionTypes;
+  const subCommandType = isV14 ? ApplicationCommandOptionType.Subcommand : "SUB_COMMAND";
+  const subCommandGroupType = isV14 ? ApplicationCommandOptionType.SubcommandGroup : "SUB_COMMAND_GROUP";
+  
   data.type = subCommandType;
 
   const baseName = names[0];
-  let baseCommand = this.applicationCommandData.find((data) => data.name === baseName) ?? null;
+  let baseCommand = this.applicationCommandData.find(data => data.name === baseName) ?? null;
   if (baseCommand === null) {
     baseCommand = {
       name: baseName,
@@ -695,8 +618,8 @@ Bot.mergeSubCommandIntoCommandData = function (names, data) {
     if (!baseCommand.options) {
       baseCommand.options = [];
     }
-    if (baseCommand.options.find((d) => d.name === data.name && d.type === subCommandGroupType)) {
-      PrintError(MsgType.SUB_COMMAND_GROUP_ALREADY_EXISTS, names.join(' '));
+    if (baseCommand.options.find(d => d.name === data.name && d.type === subCommandGroupType)) {
+      PrintError(MsgType.SUB_COMMAND_GROUP_ALREADY_EXISTS, names.join(" "));
     } else {
       baseCommand.options.push(data);
     }
@@ -706,17 +629,17 @@ Bot.mergeSubCommandIntoCommandData = function (names, data) {
     }
 
     const groupName = names[1];
-    let baseGroup = baseCommand.options.find((option) => option.name === groupName) ?? null;
+    let baseGroup = baseCommand.options.find(option => option.name === groupName) ?? null;
     if (baseGroup === null) {
       baseGroup = {
         name: groupName,
         description: this.getNoDescriptionText(),
         type: subCommandGroupType,
         options: [],
-      };
+      }
       baseCommand.options.push(baseGroup);
     } else if (baseGroup.type === subCommandType) {
-      PrintError(MsgType.SUB_COMMAND_ALREADY_EXISTS, names.join(' '), `${names[0]} ${names[1]}`);
+      PrintError(MsgType.SUB_COMMAND_ALREADY_EXISTS, names.join(" "), `${names[0]} ${names[1]}`);
       return;
     }
 
@@ -731,8 +654,8 @@ Bot.validateSlashCommandName = function (name) {
 
   const names = name
     .split(/\s+/)
-    .map((name) => this.validateSlashCommandParameterName(name))
-    .filter((name) => typeof name === 'string');
+    .map(name => this.validateSlashCommandParameterName(name))
+    .filter(name => typeof name === "string");
 
   return names.length > 0 ? names : false;
 };
@@ -744,7 +667,7 @@ Bot.validateSlashCommandParameterName = function (name) {
   if (name.length > 32) {
     name = name.substring(0, 32);
   }
-  if (name.match(/^[\p{L}\w-]{1,32}$/iu)) {
+  if (name.match(/^[\p{L}\w-]{1,32}$/ui)) {
     return name.toLowerCase();
   }
   return false;
@@ -752,8 +675,8 @@ Bot.validateSlashCommandParameterName = function (name) {
 
 Bot.generateSlashCommandDescription = function (com) {
   const desc = com.description;
-  if (com.comType !== '4') {
-    return '';
+  if (com.comType !== "4") {
+    return "";
   }
   return this.validateSlashCommandDescription(desc);
 };
@@ -766,7 +689,7 @@ Bot.validateSlashCommandDescription = function (desc) {
 };
 
 Bot.getNoDescriptionText = function () {
-  return Files.data.settings.noDescriptionText ?? '(no description)';
+  return Files.data.settings.noDescriptionText ?? "(no description)";
 };
 
 Bot.validateSlashCommandParameters = function (parameters, commandName) {
@@ -774,10 +697,8 @@ Bot.validateSlashCommandParameters = function (parameters, commandName) {
   const optionalParams = [];
   const existingNames = {};
   // Use v14 enums if available, fallback to v13 constants
-  const ApplicationCommandOptionType = isV14
-    ? DiscordJS.ApplicationCommandOptionType
-    : DiscordJS.Constants.ApplicationCommandOptionTypes;
-
+  const ApplicationCommandOptionType = isV14 ? DiscordJS.ApplicationCommandOptionType : DiscordJS.Constants.ApplicationCommandOptionTypes;
+  
   for (let i = 0; i < parameters.length; i++) {
     const paramsData = parameters[i];
     const name = this.validateSlashCommandParameterName(paramsData.name);
@@ -786,7 +707,7 @@ Bot.validateSlashCommandParameters = function (parameters, commandName) {
         existingNames[name] = true;
         paramsData.name = name;
         paramsData.description = this.validateSlashCommandDescription(paramsData.description);
-        switch (paramsData.type) {
+        switch(paramsData.type) {
           case 'STRING':
             paramsData.type = ApplicationCommandOptionType.String;
             break;
@@ -834,7 +755,7 @@ Bot.reformatEvents = function () {
     const com = data[i];
     if (com) {
       this.prepareActions(com.actions);
-      const type = com['event-type'];
+      const type = com["event-type"];
       if (!this.$evts[type]) this.$evts[type] = [];
       this.$evts[type].push(com);
     }
@@ -880,7 +801,7 @@ Bot.checkForCommandErrors = function () {
   if (this._textCommandCount > 0 && !this.hasMessageContentIntents) {
     PrintError(MsgType.SERVER_MESSAGE_INTENT_REQUIRED, this._textCommandCount);
   }
-  if (this._dmTextCommandCount > 0 && (!this.usePartials() || !this.partials().includes('CHANNEL'))) {
+  if (this._dmTextCommandCount > 0 && (!this.usePartials() || !this.partials().includes("CHANNEL"))) {
     PrintError(MsgType.CHANNEL_PARTIAL_REQUIRED, this._dmTextCommandCount);
   }
 };
@@ -889,13 +810,13 @@ Bot.initEvents = function () {
   // v14 uses "clientReady" instead of "ready" to avoid deprecation warning
   // Extensions that use "ready" will still work as clientReady is emitted before ready
   if (isV14) {
-    this.bot.on('clientReady', this.onReady.bind(this));
+    this.bot.on("clientReady", this.onReady.bind(this));
   } else {
-    this.bot.on('ready', this.onReady.bind(this));
+    this.bot.on("ready", this.onReady.bind(this));
   }
-  this.bot.on('guildCreate', this.onServerJoin.bind(this));
-  this.bot.on('messageCreate', this.onMessage.bind(this));
-  this.bot.on('interactionCreate', this.onInteraction.bind(this));
+  this.bot.on("guildCreate", this.onServerJoin.bind(this));
+  this.bot.on("messageCreate", this.onMessage.bind(this));
+  this.bot.on("interactionCreate", this.onInteraction.bind(this));
   Events.registerEvents(this.bot);
 };
 
@@ -916,8 +837,8 @@ Bot.login = function () {
 };
 
 Bot.onReady = function () {
-  process.send?.('BotReady');
-  console.log('Bot is ready!'); // Tells editor to start!
+  process.send?.("BotReady");
+  console.log("Bot is ready!"); // Tells editor to start!
   this.restoreVariables();
   this.registerApplicationCommands();
   this.preformInitialization();
@@ -929,14 +850,14 @@ Bot.restoreVariables = function () {
 };
 
 Bot.registerApplicationCommands = function () {
-  let slashType = Files.data.settings.slashType ?? 'auto';
+  let slashType = Files.data.settings.slashType ?? "auto";
 
-  if (slashType === 'auto') {
+  if (slashType === "auto") {
     const serverCount = this.bot.guilds.cache.size;
     if (serverCount <= 15) {
-      slashType = 'all';
+      slashType = "all";
     } else {
-      slashType = 'global';
+      slashType = "global";
     }
   }
 
@@ -944,22 +865,22 @@ Bot.registerApplicationCommands = function () {
   this._slashCommandServerList = Files.data.settings?.slashServers?.split?.(/[\n\r]+/) ?? [];
 
   switch (slashType) {
-    case 'all': {
+    case "all": {
       this.setAllServerCommands(this.applicationCommandData);
       this.setGlobalCommands([]);
       break;
     }
-    case 'global': {
+    case "global": {
       this.setAllServerCommands([], false);
       this.setGlobalCommands(this.applicationCommandData);
       break;
     }
-    case 'manual': {
+    case "manual": {
       this.setCertainServerCommands(this.applicationCommandData, this._slashCommandServerList);
       this.setGlobalCommands([]);
       break;
     }
-    case 'manualglobal': {
+    case "manualglobal": {
       this.setCertainServerCommands(this.applicationCommandData, this._slashCommandServerList);
       this.setGlobalCommands(this.applicationCommandData);
       break;
@@ -973,10 +894,10 @@ Bot.onServerJoin = function (guild) {
 
 Bot.initializeCommandsForNewServer = function (guild) {
   switch (this._slashCommandCreateType) {
-    case 'all':
-    case 'manual':
-    case 'manualglobal': {
-      if (this._slashCommandCreateType === 'all' || this._slashCommandServerList.includes(guild.id)) {
+    case "all":
+    case "manual":
+    case "manualglobal": {
+      if (this._slashCommandCreateType === "all" || this._slashCommandServerList.includes(guild.id)) {
         this.setCommandsForServer(guild, this.applicationCommandData, true);
       }
       break;
@@ -999,7 +920,7 @@ Bot.clearUnspecifiedServerCommands = function () {
  */
 Bot.mergeFetchedPrimaryEntryPoints = function (baseCommands, existingCollection) {
   const merged = Array.isArray(baseCommands) ? [...baseCommands] : [];
-  if (!existingCollection || typeof existingCollection.forEach !== 'function') {
+  if (!existingCollection || typeof existingCollection.forEach !== "function") {
     return merged;
   }
   const ApplicationCommandType = isV14 ? DiscordJS.ApplicationCommandType : null;
@@ -1016,9 +937,9 @@ Bot.mergeFetchedPrimaryEntryPoints = function (baseCommands, existingCollection)
       const dup = merged.some((c) => c && c.name === cmd.name && c.type === t);
       if (!dup) {
         try {
-          merged.push(typeof cmd.toJSON === 'function' ? cmd.toJSON() : cmd);
+          merged.push(typeof cmd.toJSON === "function" ? cmd.toJSON() : cmd);
         } catch (e) {
-          console.warn('[Discord API] Could not serialize entry point command:', e?.message || e);
+          console.warn("[Discord API] Could not serialize entry point command:", e?.message || e);
         }
       }
     }
@@ -1033,29 +954,26 @@ Bot.setGlobalCommands = function (commands) {
   }
 
   const applySet = (payload) => {
-    appCmds
-      .set(payload)
-      .then(function () {})
-      .catch(function (err) {
-        if (err.code === 50240) {
-          console.warn(
-            '[Discord API] Entry Point command cannot be removed in bulk update. This is normal for some bot configurations.',
-          );
-          return;
-        }
-        if (err.code === 50001) {
-          console.warn(
-            '[Discord API] Missing access to update global commands. Bot may not have required permissions.',
-          );
-          return;
-        }
-        console.error('[Discord API Error]', err.code || err.message || err);
-      });
+    appCmds.set(payload).then(function () {}).catch(function (err) {
+      if (err.code === 50240) {
+        console.warn(
+          "[Discord API] Entry Point command cannot be removed in bulk update. This is normal for some bot configurations.",
+        );
+        return;
+      }
+      if (err.code === 50001) {
+        console.warn(
+          "[Discord API] Missing access to update global commands. Bot may not have required permissions.",
+        );
+        return;
+      }
+      console.error("[Discord API Error]", err.code || err.message || err);
+    });
   };
 
   const base = Array.isArray(commands) ? commands : [];
 
-  if (typeof appCmds.fetch === 'function') {
+  if (typeof appCmds.fetch === "function") {
     appCmds
       .fetch()
       .then((existing) => {
@@ -1063,7 +981,7 @@ Bot.setGlobalCommands = function (commands) {
       })
       .catch((fetchErr) => {
         console.warn(
-          '[Discord API] Could not fetch existing global commands to preserve entry points; registering without merge.',
+          "[Discord API] Could not fetch existing global commands to preserve entry points; registering without merge.",
           fetchErr?.message || fetchErr,
         );
         applySet(base);
@@ -1080,35 +998,32 @@ Bot.setCommandsForServer = function (guild, commands, printMissingAccessError) {
   }
 
   const applyGuildSet = (payload) => {
-    gCmds
-      .set(payload)
-      .then(function () {})
-      .catch((err) => {
-        if (err.code === 50001) {
-          if (this.shouldPrintAnyMissingAccessError() && printMissingAccessError) {
-            PrintError(MsgType.MISSING_APPLICATION_COMMAND_ACCESS, guild.name, guild.id);
-          }
-        } else if (err.code === 50240) {
-          console.warn(
-            `[Discord API] Entry Point command cannot be removed in bulk update for ${guild.name}. This is normal for some bot configurations.`,
-          );
-        } else {
-          console.error('[Discord API Error]', err.code || err.message || err);
+    gCmds.set(payload).then(function () {}).catch((err) => {
+      if (err.code === 50001) {
+        if (this.shouldPrintAnyMissingAccessError() && printMissingAccessError) {
+          PrintError(MsgType.MISSING_APPLICATION_COMMAND_ACCESS, guild.name, guild.id);
         }
-      });
+      } else if (err.code === 50240) {
+        console.warn(
+          `[Discord API] Entry Point command cannot be removed in bulk update for ${guild.name}. This is normal for some bot configurations.`,
+        );
+      } else {
+        console.error("[Discord API Error]", err.code || err.message || err);
+      }
+    });
   };
 
   const base = Array.isArray(commands) ? commands : [];
 
-  if (typeof gCmds.fetch === 'function') {
+  if (typeof gCmds.fetch === "function") {
     gCmds
       .fetch()
       .then((existing) => {
         applyGuildSet(Bot.mergeFetchedPrimaryEntryPoints(base, existing));
       })
       .catch((fetchErr) => {
-        if (fetchErr?.code === 50001 || fetchErr?.message === 'Missing Access') {
-          if (process.env.DEBUG_DISCORD_ERRORS === 'true') {
+        if (fetchErr?.code === 50001 || fetchErr?.message === "Missing Access") {
+          if (process.env.DEBUG_DISCORD_ERRORS === "true") {
             console.warn(
               `[Discord API] Could not fetch guild commands for ${guild.name} (Missing Access); registering without merge.`,
             );
@@ -1171,13 +1086,13 @@ Bot.setCertainServerCommands = function (commands, serverIdList) {
 
 Bot.preformInitialization = function () {
   const bot = this.bot;
-  if (this.$evts['1']) {
+  if (this.$evts["1"]) {
     Events.onInitialization(bot);
   }
-  if (this.$evts['48']) {
+  if (this.$evts["48"]) {
     Events.onInitializationOnce(bot);
   }
-  if (this.$evts['3']) {
+  if (this.$evts["3"]) {
     Events.setupIntervals(bot);
   }
 };
@@ -1196,7 +1111,7 @@ Bot.onMessage = function (msg) {
   };
   // With Partials.Message enabled (Bot Partials), messageCreate can deliver a partial Message
   // where body fields are missing until fetch() — prefix commands see no text otherwise.
-  if (msg.partial && typeof msg.fetch === 'function') {
+  if (msg.partial && typeof msg.fetch === "function") {
     msg
       .fetch()
       .then(function (full) {
@@ -1226,29 +1141,29 @@ Bot.checkCommand = function (msg) {
 };
 
 Bot.escapeRegExp = function (text) {
-  return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
 };
 
 Bot.generateTagRegex = function (tag, allowPrefixSpace) {
-  return new RegExp(`^${this.escapeRegExp(tag)}${allowPrefixSpace ? '\\s*' : ''}`);
+  return new RegExp(`^${this.escapeRegExp(tag)}${allowPrefixSpace ? "\\s*" : ""}`);
 };
 
 Bot.populateTagRegex = function () {
   if (this.tagRegex) return;
   const tag = Files.data.settings.tag;
-  const allowPrefixSpace = Files.data.settings.allowPrefixSpace === 'true';
+  const allowPrefixSpace = Files.data.settings.allowPrefixSpace === "true";
   this.tagRegex = this.generateTagRegex(tag, allowPrefixSpace);
   return this.tagRegex;
 };
 
 Bot.checkTag = function (content) {
-  const allowPrefixSpace = Files.data.settings.allowPrefixSpace === 'true';
+  const allowPrefixSpace = Files.data.settings.allowPrefixSpace === "true";
   const tag = Files.data.settings.tag;
   this.populateTagRegex();
-  const separator = Files.data.settings.separator || '\\s+';
+  const separator = Files.data.settings.separator || "\\s+";
   if (content.startsWith(tag)) {
     if (allowPrefixSpace && this.tagRegex.test(content)) {
-      content = content.replace(this.tagRegex, '');
+      content = content.replace(this.tagRegex, "");
       return content.split(new RegExp(separator))[0];
     } else {
       content = content.split(new RegExp(separator))[0];
@@ -1262,8 +1177,8 @@ Bot.onAnyMessage = function (msg) {
   this.checkIncludes(msg);
   this.checkRegExps(msg);
   if (!msg.author.bot) {
-    if (this.$evts['2']) {
-      Events.callEvents('2', 1, 0, 2, false, '', msg);
+    if (this.$evts["2"]) {
+      Events.callEvents("2", 1, 0, 2, false, "", msg);
     }
     const anym = this.$anym;
     for (let i = 0; i < anym.length; i++) {
@@ -1283,10 +1198,10 @@ Bot.checkIncludes = function (msg) {
     if (!icds[i]?.name) continue;
     if (icds[i]._aliases) {
       const words = [icds[i].name].concat(icds[i]._aliases);
-      if (text.match(new RegExp('\\b(?:' + words.join('|') + ')\\b', 'i'))) {
+      if (text.match(new RegExp("\\b(?:" + words.join("|") + ")\\b", "i"))) {
         Actions.preformActionsFromMessage(msg, icds[i]);
       }
-    } else if (text.match(new RegExp('\\b' + icds[i].name + '\\b', 'i'))) {
+    } else if (text.match(new RegExp("\\b" + icds[i].name + "\\b", "i"))) {
       Actions.preformActionsFromMessage(msg, icds[i]);
     }
   }
@@ -1299,13 +1214,13 @@ Bot.checkRegExps = function (msg) {
   const regx_len = regx.length;
   for (let i = 0; i < regx_len; i++) {
     if (regx[i]?.name) {
-      if (text.match(new RegExp(regx[i].name, 'i'))) {
+      if (text.match(new RegExp(regx[i].name, "i"))) {
         Actions.preformActionsFromMessage(msg, regx[i]);
       } else if (regx[i]._aliases) {
         const aliases = regx[i]._aliases;
         const aliases_len = aliases.length;
         for (let j = 0; j < aliases_len; j++) {
-          if (text.match(new RegExp('\\b' + aliases[j] + '\\b', 'i'))) {
+          if (text.match(new RegExp("\\b" + aliases[j] + "\\b", "i"))) {
             Actions.preformActionsFromMessage(msg, regx[i]);
             break;
           }
@@ -1317,11 +1232,9 @@ Bot.checkRegExps = function (msg) {
 
 Bot.onInteraction = function (interaction) {
   // v14 uses isChatInputCommand, v13 uses isCommand (v14 also supports isCommand for compatibility)
-  const isCommand = isV14 ? interaction.isChatInputCommand?.() ?? interaction.isCommand?.() : interaction.isCommand();
-  const isContextMenu = isV14
-    ? interaction.isContextMenuCommand?.() ?? interaction.isContextMenu?.()
-    : interaction.isContextMenu();
-
+  const isCommand = isV14 ? (interaction.isChatInputCommand?.() ?? interaction.isCommand?.()) : interaction.isCommand();
+  const isContextMenu = isV14 ? (interaction.isContextMenuCommand?.() ?? interaction.isContextMenu?.()) : interaction.isContextMenu();
+  
   if (isCommand) {
     this.onSlashCommandInteraction(interaction);
   } else if (isContextMenu) {
@@ -1333,7 +1246,7 @@ Bot.onInteraction = function (interaction) {
     const ComponentType = isV14 ? DiscordJS.ComponentType : DiscordJS.Constants.MessageComponentTypes;
     const buttonType = isV14 ? ComponentType.Button : ComponentType.BUTTON;
     const selectType = isV14 ? ComponentType.StringSelect : ComponentType.SELECT_MENU;
-
+    
     if (interaction.component?.type === buttonType) {
       interaction._button = interaction.component;
     } else if (interaction.component?.type === selectType) {
@@ -1344,9 +1257,7 @@ Bot.onInteraction = function (interaction) {
         this.onButtonInteraction(interaction);
       } else {
         // v14 uses isStringSelectMenu, v13 uses isSelectMenu (v14 also supports isSelectMenu for compatibility)
-        const isSelect = isV14
-          ? interaction.isStringSelectMenu?.() ?? interaction.isSelectMenu?.()
-          : interaction.isSelectMenu();
+        const isSelect = isV14 ? (interaction.isStringSelectMenu?.() ?? interaction.isSelectMenu?.()) : interaction.isSelectMenu();
         if (isSelect) {
           this.onSelectMenuInteraction(interaction);
         }
@@ -1360,12 +1271,12 @@ Bot.onSlashCommandInteraction = function (interaction) {
 
   const group = interaction.options.getSubcommandGroup(false);
   if (group) {
-    interactionName += ' ' + group;
+    interactionName += " " + group;
   }
 
   const sub = interaction.options.getSubcommand(false);
   if (sub) {
-    interactionName += ' ' + sub;
+    interactionName += " " + sub;
   }
 
   if (this.$slash[interactionName]) {
@@ -1375,13 +1286,9 @@ Bot.onSlashCommandInteraction = function (interaction) {
 
 Bot.onContextMenuInteraction = function (interaction) {
   // v14 uses isUserContextMenuCommand, v13 uses isUserContextMenu (v14 also supports isUserContextMenu for compatibility)
-  const isUserMenu = isV14
-    ? interaction.isUserContextMenuCommand?.() ?? interaction.isUserContextMenu?.()
-    : interaction.isUserContextMenu();
-  const isMessageMenu = isV14
-    ? interaction.isMessageContextMenuCommand?.() ?? interaction.isMessageContextMenu?.()
-    : interaction.isMessageContextMenu();
-
+  const isUserMenu = isV14 ? (interaction.isUserContextMenuCommand?.() ?? interaction.isUserContextMenu?.()) : interaction.isUserContextMenu();
+  const isMessageMenu = isV14 ? (interaction.isMessageContextMenuCommand?.() ?? interaction.isMessageContextMenu?.()) : interaction.isMessageContextMenu();
+  
   if (isUserMenu) {
     this.onUserContextMenuInteraction(interaction);
   } else if (isMessageMenu) {
@@ -1393,13 +1300,10 @@ Bot.onUserContextMenuInteraction = function (interaction) {
   const interactionName = interaction.commandName;
   if (this.$user[interactionName]) {
     if (interaction.guild) {
-      interaction.guild.members
-        .fetch(interaction.targetId)
-        .then((member) => {
-          interaction._targetMember = member;
-          Actions.preformActionsFromInteraction(interaction, this.$user[interactionName], true);
-        })
-        .catch(console.error);
+      interaction.guild.members.fetch(interaction.targetId).then((member) => {
+        interaction._targetMember = member;
+        Actions.preformActionsFromInteraction(interaction, this.$user[interactionName], true);
+      }).catch(console.error);
     } else {
       interaction._targetMember = interaction.targetUser;
       Actions.preformActionsFromInteraction(interaction, this.$user[interactionName], true);
@@ -1412,13 +1316,10 @@ Bot.onMessageContextMenuInteraction = function (interaction) {
   if (this.$msge[interactionName]) {
     const msg = interaction.targetMessage;
     if (!(msg instanceof DiscordJS.Message) && interaction.channel) {
-      interaction.channel.messages
-        .fetch(interaction.targetId)
-        .then((message) => {
-          interaction._targetMessage = message;
-          Actions.preformActionsFromInteraction(interaction, this.$msge[interactionName], true);
-        })
-        .catch(console.error);
+      interaction.channel.messages.fetch(interaction.targetId).then((message) => {
+        interaction._targetMessage = message;
+        Actions.preformActionsFromInteraction(interaction, this.$msge[interactionName], true);
+      }).catch(console.error);
     } else {
       interaction._targetMessage = msg;
       Actions.preformActionsFromInteraction(interaction, this.$msge[interactionName], true);
@@ -1477,7 +1378,7 @@ const ActionsCache = (Actions.ActionsCache = class ActionsCache {
     this.msg = options.msg ?? null;
     this.interaction = options.interaction ?? null;
     this.isSubCache = options.isSubCache ?? false;
-    this.meta = options.meta ?? { isEvent: false, name: '' };
+    this.meta = options.meta ?? { isEvent: false, name: "" };
   }
 
   onCompleted() {
@@ -1489,8 +1390,8 @@ const ActionsCache = (Actions.ActionsCache = class ActionsCache {
   onMainCacheCompleted() {
     if (this.interaction) {
       // /ask (nt_ai_bridge) must editReply itself; never replace AI output with generic success.
-      const autoName = this.meta?.name != null ? String(this.meta.name).toLowerCase() : '';
-      if (autoName === 'ask') {
+      const autoName = this.meta?.name != null ? String(this.meta.name).toLowerCase() : "";
+      if (autoName === "ask") {
         return;
       }
       if (!this.interaction.replied) {
@@ -1499,9 +1400,11 @@ const ActionsCache = (Actions.ActionsCache = class ActionsCache {
           content: Actions.getDefaultResponseText(),
         };
         if (this.interaction.deferred) {
-          this.interaction.editReply(replyData).catch((err) => Actions.displayError(null, this, err));
+          this.interaction.editReply(replyData)
+            .catch((err) => Actions.displayError(null, this, err));
         } else {
-          this.interaction.reply(replyData).catch((err) => Actions.displayError(null, this, err));
+          this.interaction.reply(replyData)
+            .catch((err) => Actions.displayError(null, this, err));
         }
       }
     }
@@ -1527,18 +1430,18 @@ const ActionsCache = (Actions.ActionsCache = class ActionsCache {
 
   goToAnchor(anchorName) {
     const index = this.actions?._customData?.anchors?.[anchorName];
-    if (typeof index === 'number' && this.actions[index]) {
+    if (typeof index === "number" && this.actions[index]) {
       this.index = index - 1;
       Actions.callNextAction(this);
     }
   }
 
   toString() {
-    let result = `${this.meta.isEvent ? 'Event' : 'Command'} "${this.meta.name}"`;
+    let result = `${this.meta.isEvent ? "Event" : "Command"} "${this.meta.name}"`;
     if (this.interaction?.isButton()) {
-      result += ', Button' + (this.interaction._button ? ` "${this.interaction._button.label}"` : '');
+      result += ", Button" + (this.interaction._button ? ` "${this.interaction._button.label}"` : "");
     } else if (this.interaction?.isSelectMenu()) {
-      result += ', Select Menu' + (this.interaction._select ? ` "${this.interaction._select.placeholder}"` : '');
+      result += ", Select Menu" + (this.interaction._select ? ` "${this.interaction._select.placeholder}"` : "");
     }
     return result;
   }
@@ -1556,11 +1459,11 @@ const ActionsCache = (Actions.ActionsCache = class ActionsCache {
 
 Actions.exists = function (action) {
   if (!action) return false;
-  return typeof this[action] === 'function';
+  return typeof this[action] === "function";
 };
 
 Actions.getLocalFile = function (url) {
-  return require('node:path').join(process.cwd(), url);
+  return require("node:path").join(process.cwd(), url);
 };
 
 Actions.getDBM = function () {
@@ -1577,7 +1480,7 @@ Actions.callListFunc = function (list, funcName, args) {
         return;
       }
       const item = list[curr++];
-      if (typeof item?.[funcName] === 'function') {
+      if (typeof item?.[funcName] === "function") {
         item[funcName].apply(item, args).then(callItem).catch(callItem);
       } else {
         callItem();
@@ -1599,7 +1502,7 @@ Actions.getSlashParameter = function (interaction, name, defaultValue) {
     return defaultValue ?? null;
   }
 
-  if (interaction.__originalInteraction) {
+  if(interaction.__originalInteraction) {
     const result = this.getParameterFromInteraction(interaction.__originalInteraction, name);
     if (result !== null) {
       return result;
@@ -1614,14 +1517,14 @@ Actions.getSlashParameter = function (interaction, name, defaultValue) {
   return defaultValue !== undefined ? defaultValue : result;
 };
 
-Actions._letterEmojis = '🇦 🇧 🇨 🇩 🇪 🇫 🇬 🇭 🇮 🇯 🇰 🇱 🇲 🇳 🇴 🇵 🇶 🇷 🇸 🇹 🇺 🇻 🇼 🇽 🇾 🇿'.split(' ');
+Actions._letterEmojis = "🇦 🇧 🇨 🇩 🇪 🇫 🇬 🇭 🇮 🇯 🇰 🇱 🇲 🇳 🇴 🇵 🇶 🇷 🇸 🇹 🇺 🇻 🇼 🇽 🇾 🇿".split(" ");
 
 Actions.convertTextToEmojis = function (text, useRegional = true) {
-  let result = '';
+  let result = "";
   for (let i = 0; i < text.length; i++) {
     const code = text.toUpperCase().charCodeAt(i) - 65;
     if (code >= 0 && code <= 26) {
-      result += useRegional ? ':regional_indicator_' + text[i].toLowerCase() + ':' : '\\' + this._letterEmojis[code];
+      result += useRegional ? (":regional_indicator_" + text[i].toLowerCase() + ":") : ("\\" + this._letterEmojis[code]);
     } else {
       result += text[i];
     }
@@ -1630,7 +1533,7 @@ Actions.convertTextToEmojis = function (text, useRegional = true) {
 };
 
 Actions.getFlagEmoji = function (flagName) {
-  if (flagName.startsWith('flag_')) {
+  if (flagName.startsWith("flag_")) {
     flagName = flagName.substring(5);
   }
   flagName = flagName.toUpperCase();
@@ -1654,33 +1557,33 @@ Actions.eval = function (content, cache, logError = true) {
   const customEmoji = this.getCustomEmoji.bind(this);
   const msg = cache.msg;
   const interaction = cache.interaction;
-  const button = interaction?._button ?? '';
-  const select = interaction?._select ?? '';
+  const button = interaction?._button ?? "";
+  const select = interaction?._select ?? "";
   const server = cache.server;
   const client = DBM.Bot.bot;
   const bot = DBM.Bot.bot;
   // v14: server.me is deprecated, use server.members.me instead
-  const me = isV14 ? server?.members?.me ?? null : server?.me ?? null;
-  let user = '',
-    member = '',
-    channel = '',
-    mentionedUser = '',
-    mentionedChannel = '',
-    defaultChannel = '';
+  const me = isV14 ? (server?.members?.me ?? null) : (server?.me ?? null);
+  let user = "",
+    member = "",
+    channel = "",
+    mentionedUser = "",
+    mentionedChannel = "",
+    defaultChannel = "";
   if (msg) {
     user = msg.author;
     member = msg.member;
     channel = msg.channel;
-    mentionedUser = msg.mentions.users.first() ?? '';
-    mentionedChannel = msg.mentions.channels.first() ?? '';
+    mentionedUser = msg.mentions.users.first() ?? "";
+    mentionedChannel = msg.mentions.channels.first() ?? "";
   }
   if (interaction) {
     user = interaction.user;
     member = interaction.member;
     channel = interaction.channel;
     if (interaction.options) {
-      mentionedUser = interaction.options.resolved?.users?.first?.() ?? '';
-      mentionedChannel = interaction.options.resolved?.channels?.first?.() ?? '';
+      mentionedUser = interaction.options.resolved?.users?.first?.() ?? "";
+      mentionedChannel = interaction.options.resolved?.channels?.first?.() ?? "";
     }
   }
   if (server) {
@@ -1695,9 +1598,9 @@ Actions.eval = function (content, cache, logError = true) {
 };
 
 Actions.evalMessage = function (content, cache) {
-  if (!content) return '';
+  if (!content) return "";
   if (!content.match(/\$\{.*\}/im)) return content;
-  return this.eval('`' + content.replace(/`/g, '\\`') + '`', cache);
+  return this.eval("`" + content.replace(/`/g, "\\`") + "`", cache);
 };
 
 Actions.evalIfPossible = function (content, cache) {
@@ -1714,8 +1617,8 @@ Actions.evalIfPossible = function (content, cache) {
 
 Actions.initMods = function () {
   this.modInitReferences = {};
-  const fs = require('node:fs');
-  const path = require('node:path');
+  const fs = require("node:fs");
+  const path = require("node:path");
   this.modDirectories().forEach((dir) => {
     fs.readdirSync(dir).forEach((file) => {
       if (!/\.js/i.test(file)) return;
@@ -1762,8 +1665,8 @@ Actions.preformActionsFromInteraction = function (interaction, cmd, meta = null,
     if (timeRestriction === true) {
       this.invokeInteraction(interaction, cmd.actions, initialTempVars, meta === true ? cmd : meta);
     } else if (invalidCooldown) {
-      const { format } = require('node:util');
-      const content = typeof timeRestriction === 'string' ? format(invalidCooldown, timeRestriction) : invalidCooldown;
+      const { format } = require("node:util");
+      const content = typeof timeRestriction === "string" ? format(invalidCooldown, timeRestriction) : invalidCooldown;
       interaction.reply({ content: content, flags: EPHEMERAL_FLAG });
     }
   } else if (invalidPermissions) {
@@ -1773,7 +1676,7 @@ Actions.preformActionsFromInteraction = function (interaction, cmd, meta = null,
 
 Actions.preformActionsFromSelectInteraction = function (interaction, select, meta = null, initialTempVars = null) {
   const tempVars = initialTempVars ?? {};
-  if (typeof select.tempVarName === 'string') {
+  if (typeof select.tempVarName === "string") {
     const values = interaction.values;
     tempVars[select.tempVarName] = !values || values.length === 0 ? 0 : values.length === 1 ? values[0] : values;
   }
@@ -1823,7 +1726,7 @@ Actions.checkTimeRestriction = function (user, msgOrInteraction, cmd, returnTime
     } else {
       const remaining = cmd._timeRestriction - Math.floor(diff / 1000);
       const timeString = this.generateTimeString(remaining);
-      Events.callEvents('38', 1, 3, 2, false, '', msgOrInteraction?.member, timeString);
+      Events.callEvents("38", 1, 3, 2, false, "", msgOrInteraction?.member, timeString);
       return returnTimeString ? timeString : false;
     }
   }
@@ -1836,33 +1739,33 @@ Actions.generateTimeString = function (milliseconds) {
   const days = Math.floor(remaining / 60 / 60 / 24);
   if (days > 0) {
     remaining -= days * 60 * 60 * 24;
-    times.push(days + (days === 1 ? ' day' : ' days'));
+    times.push(days + (days === 1 ? " day" : " days"));
   }
   const hours = Math.floor(remaining / 60 / 60);
   if (hours > 0) {
     remaining -= hours * 60 * 60;
-    times.push(hours + (hours === 1 ? ' hour' : ' hours'));
+    times.push(hours + (hours === 1 ? " hour" : " hours"));
   }
   const minutes = Math.floor(remaining / 60);
   if (minutes > 0) {
     remaining -= minutes * 60;
-    times.push(minutes + (minutes === 1 ? ' minute' : ' minutes'));
+    times.push(minutes + (minutes === 1 ? " minute" : " minutes"));
   }
   const seconds = Math.floor(remaining);
   if (seconds > 0) {
     remaining -= seconds;
-    times.push(seconds + (seconds === 1 ? ' second' : ' seconds'));
+    times.push(seconds + (seconds === 1 ? " second" : " seconds"));
   }
 
-  let result = '';
+  let result = "";
   if (times.length === 1) {
     result = times[0];
   } else if (times.length === 2) {
-    result = times[0] + ' and ' + times[1];
+    result = times[0] + " and " + times[1];
   } else if (times.length === 3) {
-    result = times[0] + ', ' + times[1] + ', and ' + times[2];
+    result = times[0] + ", " + times[1] + ", and " + times[2];
   } else if (times.length === 4) {
-    result = times[0] + ', ' + times[1] + ', ' + times[2] + ', and ' + times[3];
+    result = times[0] + ", " + times[1] + ", " + times[2] + ", and " + times[3];
   }
   return result;
 };
@@ -1870,29 +1773,27 @@ Actions.generateTimeString = function (milliseconds) {
 Actions.checkPermissions = function (member, permissions) {
   if (!permissions) return true;
   if (!member) return false;
-  if (permissions === 'NONE') return true;
+  if (permissions === "NONE") return true;
   if (member.guild?.ownerId === member.id) return true;
   return member.permissions.has(permissions);
 };
 
 Actions.invokeActions = function (msg, actions, cmd = null) {
   if (actions.length > 0) {
-    this.callNextAction(
-      new ActionsCache(actions, msg.guild, {
-        msg,
-        meta: {
-          name: cmd?.name,
-          isEvent: false,
-        },
-      }),
-    );
+    this.callNextAction(new ActionsCache(actions, msg.guild, {
+      msg,
+      meta: {
+        name: cmd?.name,
+        isEvent: false
+      }
+    }));
   }
 };
 
 Actions.invokeInteraction = function (interaction, actions, initialTempVars, meta = null) {
   const cacheData = {
     interaction,
-    temp: initialTempVars || {},
+    temp: (initialTempVars || {}),
   };
   if (meta) {
     cacheData.meta = {
@@ -1911,8 +1812,8 @@ Actions.invokeEvent = function (event, server, temp) {
       temp: { ...temp },
       meta: {
         name: event.name,
-        isEvent: true,
-      },
+        isEvent: true
+      }
     });
     this.callNextAction(cache);
   }
@@ -1945,27 +1846,27 @@ Actions.endActions = function (cache) {
 };
 
 Actions.getInvalidButtonResponseText = function () {
-  return Files.data.settings.invalidButtonText ?? 'Button response no longer valid.';
+  return Files.data.settings.invalidButtonText ?? "Button response no longer valid.";
 };
 
 Actions.getInvalidSelectResponseText = function () {
-  return Files.data.settings.invalidSelectText ?? 'Select menu response no longer valid.';
+  return Files.data.settings.invalidSelectText ?? "Select menu response no longer valid.";
 };
 
 Actions.getDefaultResponseText = function () {
-  return Files.data.settings.autoResponseText ?? 'Command successfully run!';
+  return Files.data.settings.autoResponseText ?? "Command successfully run!";
 };
 
 Actions.getInvalidPermissionsResponse = function () {
-  return Files.data.settings.invalidPermissionsText ?? 'Invalid permissions!';
+  return Files.data.settings.invalidPermissionsText ?? "Invalid permissions!";
 };
 
 Actions.getInvalidUserResponse = function () {
-  return Files.data.settings.invalidUserText ?? 'Invalid user!';
+  return Files.data.settings.invalidUserText ?? "Invalid user!";
 };
 
 Actions.getInvalidCooldownResponse = function () {
-  return Files.data.settings.invalidCooldownText ?? 'Must wait %s before using this action.';
+  return Files.data.settings.invalidCooldownText ?? "Must wait %s before using this action.";
 };
 
 Actions.getErrorString = function (data, cache) {
@@ -1975,12 +1876,7 @@ Actions.getErrorString = function (data, cache) {
 
 Actions.displayError = function (data, cache, err) {
   // Handle Discord API Missing Access errors gracefully - don't log as errors
-  if (
-    err &&
-    (err.code === 50001 ||
-      err.message === 'Missing Access' ||
-      (err.constructor && err.constructor.name === 'DiscordAPIError' && err.code === 50001))
-  ) {
+  if (err && (err.code === 50001 || err.message === 'Missing Access' || (err.constructor && err.constructor.name === 'DiscordAPIError' && err.code === 50001))) {
     // Missing Access is expected when bot doesn't have permissions in a channel
     // Only log at debug level, not as an error
     if (process.env.DEBUG_DISCORD_ERRORS === 'true') {
@@ -1988,18 +1884,17 @@ Actions.displayError = function (data, cache, err) {
     }
     return; // Don't log or process Missing Access errors
   }
-
+  
   if (!data) data = cache.actions[cache.index];
   const dbm = this.getErrorString(data, cache);
-  console.error(dbm + ':\n' + (err.stack ?? err));
+  console.error(dbm + ":\n" + (err.stack ?? err));
   Events.onError(dbm, err.stack ?? err, cache);
 
   const interaction = cache?.interaction?.__originalInteraction ?? cache?.interaction;
-  if (interaction && typeof interaction.editReply === 'function' && interaction.deferred && !interaction.replied) {
-    const msg =
-      err && err.message && String(err.message).includes('429')
-        ? 'Image service is temporarily rate limited. Please try again in a moment.'
-        : 'Something went wrong.';
+  if (interaction && typeof interaction.editReply === "function" && interaction.deferred && !interaction.replied) {
+    const msg = (err && err.message && String(err.message).includes("429"))
+      ? "Image service is temporarily rate limited. Please try again in a moment."
+      : "Something went wrong.";
     interaction.editReply({ content: msg }).catch(() => {});
   }
 };
@@ -2019,7 +1914,7 @@ Actions.getParameterFromInteraction = function (interaction, name) {
 };
 
 Actions.getParameterFromParameterData = function (option) {
-  if (option == null || typeof option !== 'object') {
+  if (option == null || typeof option !== "object") {
     return null;
   }
   const t = option.type;
@@ -2041,30 +1936,30 @@ Actions.getParameterFromParameterData = function (option) {
       return option.member ?? option.channel ?? option.role ?? option.user;
     }
     if (t === A.Attachment) {
-      return option.attachment?.url ?? '';
+      return option.attachment?.url ?? "";
     }
   }
   switch (t) {
-    case 'STRING':
-    case 'INTEGER':
-    case 'BOOLEAN':
-    case 'NUMBER': {
+    case "STRING":
+    case "INTEGER":
+    case "BOOLEAN":
+    case "NUMBER": {
       return option.value;
     }
-    case 'USER': {
+    case "USER": {
       return option.member ?? option.user;
     }
-    case 'CHANNEL': {
+    case "CHANNEL": {
       return option.channel;
     }
-    case 'ROLE': {
+    case "ROLE": {
       return option.role;
     }
-    case 'MENTIONABLE': {
+    case "MENTIONABLE": {
       return option.member ?? option.channel ?? option.role ?? option.user;
     }
-    case 'ATTACHMENT': {
-      return option.attachment?.url ?? '';
+    case "ATTACHMENT": {
+      return option.attachment?.url ?? "";
     }
     default: {
       return null;
@@ -2519,16 +2414,11 @@ Actions.getVoiceChannel = async function (type, varName, cache) {
 
 Actions.getAnyChannel = async function (type, varName, cache) {
   switch (type) {
-    case 10:
-      return await this.getVoiceChannel(0, varName, cache);
-    case 11:
-      return await this.getVoiceChannel(1, varName, cache);
-    case 12:
-      return await this.getVoiceChannel(7, varName, cache);
-    case 13:
-      return await this.getVoiceChannel(2, varName, cache);
-    default:
-      return await this.getChannel(type, varName, cache);
+    case 10: return await this.getVoiceChannel(0, varName, cache);
+    case 11: return await this.getVoiceChannel(1, varName, cache);
+    case 12: return await this.getVoiceChannel(7, varName, cache);
+    case 13: return await this.getVoiceChannel(2, varName, cache);
+    default: return await this.getChannel(type, varName, cache);
   }
   return null;
 };
@@ -2668,11 +2558,11 @@ Actions.generateSubCache = function (cache, actions) {
 };
 
 Actions.generateButton = function (button, cache) {
-  const style = button.url ? 'LINK' : button.type;
+  const style = button.url ? "LINK" : button.type;
   // Use v14 enums if available, fallback to v13 constants
   const ComponentType = isV14 ? DiscordJS.ComponentType : DiscordJS.Constants.MessageComponentTypes;
   const ButtonStyle = isV14 ? DiscordJS.ButtonStyle : DiscordJS.Constants.MessageButtonStyles;
-
+  
   const buttonData = {
     type: ComponentType.Button,
     label: this.evalMessage(button.name, cache),
@@ -2691,15 +2581,15 @@ Actions.generateButton = function (button, cache) {
 
 Actions.convertStringButtonStyleToEnum = function (style, ButtonStyle) {
   switch (style) {
-    case 'PRIMARY':
+    case "PRIMARY":
       return ButtonStyle.Primary;
-    case 'SECONDARY':
+    case "SECONDARY":
       return ButtonStyle.Secondary;
-    case 'SUCCESS':
+    case "SUCCESS":
       return ButtonStyle.Success;
-    case 'DANGER':
+    case "DANGER":
       return ButtonStyle.Danger;
-    case 'LINK':
+    case "LINK":
       return ButtonStyle.Link;
     default:
       return ButtonStyle.Primary;
@@ -2709,7 +2599,7 @@ Actions.convertStringButtonStyleToEnum = function (style, ButtonStyle) {
 Actions.generateSelectMenu = function (select, cache) {
   // Use v14 enums if available, fallback to v13 constants
   const ComponentType = isV14 ? DiscordJS.ComponentType : DiscordJS.Constants.MessageComponentTypes;
-
+  
   const selectData = {
     type: isV14 ? ComponentType.StringSelect : ComponentType.SELECT_MENU,
     customId: this.evalMessage(select.id, cache),
@@ -2717,8 +2607,8 @@ Actions.generateSelectMenu = function (select, cache) {
     minValues: parseInt(this.evalMessage(select.min, cache), 10) ?? 1,
     maxValues: parseInt(this.evalMessage(select.max, cache), 10) ?? 1,
     options: select.options.map((option, index) => {
-      option.label = this.evalMessage(option.label, cache) || 'No Label';
-      option.description = this.evalMessage(option.description, cache) || '';
+      option.label = this.evalMessage(option.label, cache) || "No Label";
+      option.description = this.evalMessage(option.description, cache) || "";
       option.value = this.evalMessage(option.value, cache) || index.toString();
       return option;
     }),
@@ -2730,7 +2620,7 @@ Actions.generateTextInput = function (textInput, defaultCustomId, cache) {
   // Use v14 enums if available, fallback to v13 constants
   const ComponentType = isV14 ? DiscordJS.ComponentType : DiscordJS.Constants.MessageComponentTypes;
   const TextInputStyle = isV14 ? DiscordJS.TextInputStyle : DiscordJS.Constants.TextInputStyles;
-
+  
   const inputTextData = {
     type: ComponentType.TextInput,
     customId: !!textInput.id ? textInput.id : defaultCustomId,
@@ -2746,9 +2636,9 @@ Actions.generateTextInput = function (textInput, defaultCustomId, cache) {
 
 Actions.convertStringTextInputStyleToEnum = function (style, TextInputStyle) {
   switch (style) {
-    case 'PARAGRAPH':
+    case "PARAGRAPH":
       return TextInputStyle.Paragraph;
-    case 'SHORT':
+    case "SHORT":
       return TextInputStyle.Short;
     default:
       return TextInputStyle.Short;
@@ -2759,7 +2649,7 @@ Actions.addButtonToActionRowArray = function (array, rowText, buttonData, cache)
   // Use v14 enums if available, fallback to v13 constants
   const ComponentType = isV14 ? DiscordJS.ComponentType : DiscordJS.Constants.MessageComponentTypes;
   const buttonType = isV14 ? ComponentType.Button : ComponentType.BUTTON;
-
+  
   let row = 0;
   // Handle empty string, null, undefined, or whitespace-only strings
   if (!rowText || (typeof rowText === 'string' && rowText.trim() === '')) {
@@ -2792,7 +2682,7 @@ Actions.addButtonToActionRowArray = function (array, rowText, buttonData, cache)
       array.push([]);
     }
     if (array[row].length >= 5) {
-      this.displayError(null, cache, 'Action row #' + (row + 1) + ' exceeded the maximum of 5 buttons!');
+      this.displayError(null, cache, "Action row #" + (row + 1) + " exceeded the maximum of 5 buttons!");
     } else {
       array[row].push(buttonData);
     }
@@ -2920,7 +2810,7 @@ Actions.registerTemporaryInteraction = function (messageId, time, customId, user
 
   this._temporaryInteractions[messageId].push({ customId, userId, callback, uniqueId });
   if (time > 0) {
-    require('node:timers').setTimeout(removeInteraction, time).unref();
+    require("node:timers").setTimeout(removeInteraction, time).unref();
   }
 };
 
@@ -2930,7 +2820,7 @@ Actions.removeTemporaryInteraction = function (messageId, uniqueOrCustomId) {
     let i = 0;
     for (; i < interactions.length; i++) {
       if (
-        (typeof uniqueOrCustomId === 'string' && interactions[i].customId === uniqueOrCustomId) ||
+        (typeof uniqueOrCustomId === "string" && interactions[i].customId === uniqueOrCustomId) ||
         interactions[i].uniqueId === uniqueOrCustomId
       ) {
         break;
@@ -2958,11 +2848,9 @@ Actions.registerModalSubmitResponses = function (interactionId, callback) {
   this._temporaryInteractions[interactionId] = callback;
 
   // clear up interaction after a while
-  require('node:timers')
-    .setTimeout(() => {
-      this.clearAllTemporaryInteractions(interactionId);
-    }, 60 * 60 * 1000)
-    .unref();
+  require("node:timers").setTimeout(() => {
+    this.clearAllTemporaryInteractions(interactionId);
+  }, 60 * 60 * 1000).unref();
 };
 
 Actions.checkModalSubmitResponses = function (interaction) {
@@ -2990,53 +2878,53 @@ Events.generateData = function () {
     [],
     [],
     [],
-    ['guildCreate', 0, 0, 1],
-    ['guildDelete', 0, 0, 1],
-    ['guildMemberAdd', 1, 0, 2],
-    ['guildMemberRemove', 1, 0, 2],
-    ['channelCreate', 1, 0, 2, true, (arg1) => arg1.type === 'GUILD_TEXT'],
-    ['channelDelete', 1, 0, 2, true, (arg1) => arg1.type === 'GUILD_TEXT'],
-    ['roleCreate', 1, 0, 2],
-    ['roleDelete', 1, 0, 2],
-    ['guildBanAdd', 200, 0, 2],
-    ['guildBanRemove', 200, 0, 2],
-    ['channelCreate', 1, 0, 2, true, (arg1) => arg1.type === 'GUILD_VOICE'],
-    ['channelDelete', 1, 0, 2, true, (arg1) => arg1.type === 'GUILD_VOICE'],
-    ['emojiCreate', 1, 0, 2],
-    ['emojiDelete', 1, 0, 2],
-    ['messageDelete', 1, 0, 2, true],
-    ['guildUpdate', 1, 3, 3],
-    ['guildMemberUpdate', 1, 3, 4],
-    ['presenceUpdate', 1, 3, 4],
-    ['voiceStateUpdate', 1, 3, 4],
-    ['channelUpdate', 1, 3, 4, true],
-    ['channelPinsUpdate', 1, 0, 2, true],
-    ['roleUpdate', 1, 3, 4],
-    ['messageUpdate', 1, 3, 4, true, (arg1, arg2) => !!arg2.content],
-    ['emojiUpdate', 1, 3, 4],
+    ["guildCreate", 0, 0, 1],
+    ["guildDelete", 0, 0, 1],
+    ["guildMemberAdd", 1, 0, 2],
+    ["guildMemberRemove", 1, 0, 2],
+    ["channelCreate", 1, 0, 2, true, (arg1) => arg1.type === "GUILD_TEXT"],
+    ["channelDelete", 1, 0, 2, true, (arg1) => arg1.type === "GUILD_TEXT"],
+    ["roleCreate", 1, 0, 2],
+    ["roleDelete", 1, 0, 2],
+    ["guildBanAdd", 200, 0, 2],
+    ["guildBanRemove", 200, 0, 2],
+    ["channelCreate", 1, 0, 2, true, (arg1) => arg1.type === "GUILD_VOICE"],
+    ["channelDelete", 1, 0, 2, true, (arg1) => arg1.type === "GUILD_VOICE"],
+    ["emojiCreate", 1, 0, 2],
+    ["emojiDelete", 1, 0, 2],
+    ["messageDelete", 1, 0, 2, true],
+    ["guildUpdate", 1, 3, 3],
+    ["guildMemberUpdate", 1, 3, 4],
+    ["presenceUpdate", 1, 3, 4],
+    ["voiceStateUpdate", 1, 3, 4],
+    ["channelUpdate", 1, 3, 4, true],
+    ["channelPinsUpdate", 1, 0, 2, true],
+    ["roleUpdate", 1, 3, 4],
+    ["messageUpdate", 1, 3, 4, true, (arg1, arg2) => !!arg2.content],
+    ["emojiUpdate", 1, 3, 4],
     [],
     [],
-    ['messageReactionRemoveAll', 1, 0, 2, true],
-    ['guildMemberAvailable', 1, 0, 2],
-    ['guildMembersChunk', 1, 0, 3],
-    ['guildMemberSpeaking', 1, 3, 2],
+    ["messageReactionRemoveAll", 1, 0, 2, true],
+    ["guildMemberAvailable", 1, 0, 2],
+    ["guildMembersChunk", 1, 0, 3],
+    ["guildMemberSpeaking", 1, 3, 2],
     [],
     [],
-    ['guildUnavailable', 1, 0, 1],
+    ["guildUnavailable", 1, 0, 1],
     [],
     [],
-    ['channelCreate', 1, 0, 2, true, (arg1) => arg1.type !== 'GUILD_TEXT' && arg1.type !== 'GUILD_VOICE'],
-    ['channelDelete', 1, 0, 2, true, (arg1) => arg1.type !== 'GUILD_TEXT' && arg1.type !== 'GUILD_VOICE'],
-    ['stickerCreate', 1, 0, 2, true],
-    ['stickerDelete', 1, 0, 2, true],
-    ['threadCreate', 1, 0, 2, true],
-    ['threadDelete', 1, 0, 2, true],
-    ['stickerUpdate', 1, 3, 4, true],
-    ['threadUpdate', 1, 3, 4, true],
-    ['threadMemberUpdate', 1, 3, 100, true],
+    ["channelCreate", 1, 0, 2, true, (arg1) => arg1.type !== "GUILD_TEXT" && arg1.type !== "GUILD_VOICE"],
+    ["channelDelete", 1, 0, 2, true, (arg1) => arg1.type !== "GUILD_TEXT" && arg1.type !== "GUILD_VOICE"],
+    ["stickerCreate", 1, 0, 2, true],
+    ["stickerDelete", 1, 0, 2, true],
+    ["threadCreate", 1, 0, 2, true],
+    ["threadDelete", 1, 0, 2, true],
+    ["stickerUpdate", 1, 3, 4, true],
+    ["threadUpdate", 1, 3, 4, true],
+    ["threadMemberUpdate", 1, 3, 100, true],
     [],
-    ['inviteCreate', 1, 0, 2],
-    ['inviteDelete', 1, 0, 2],
+    ["inviteCreate", 1, 0, 2],
+    ["inviteDelete", 1, 0, 2],
   ];
 };
 
@@ -3050,9 +2938,9 @@ Events.registerEvents = function (bot) {
       bot.on(d[0], this.callEvents.bind(this, String(i), d[1], d[2], d[3], !!d[4], d[5]));
     }
   }
-  if ($evts['28']) bot.on('messageReactionAdd', this.onReaction.bind(this, '28'));
-  if ($evts['29']) bot.on('messageReactionRemove', this.onReaction.bind(this, '29'));
-  if ($evts['34']) bot.on('typingStart', this.onTyping.bind(this, '34'));
+  if ($evts["28"]) bot.on("messageReactionAdd", this.onReaction.bind(this, "28"));
+  if ($evts["29"]) bot.on("messageReactionRemove", this.onReaction.bind(this, "29"));
+  if ($evts["34"]) bot.on("typingStart", this.onTyping.bind(this, "34"));
 };
 
 Events.callEvents = function (id, temp1, temp2, server, mustServe, condition, arg1, arg2) {
@@ -3087,7 +2975,7 @@ Events.getObject = function (id, arg1, arg2) {
 };
 
 Events.onInitialization = function (bot) {
-  const events = $evts['1'];
+  const events = $evts["1"];
   for (let i = 0; i < events.length; i++) {
     const event = events[i];
     for (const server of bot.guilds.cache.values()) {
@@ -3097,7 +2985,7 @@ Events.onInitialization = function (bot) {
 };
 
 Events.onInitializationOnce = function (bot) {
-  const events = $evts['48'];
+  const events = $evts["48"];
   const server = bot.guilds.cache.first();
   for (let i = 0; i < events.length; i++) {
     Actions.invokeEvent(events[i], server, {});
@@ -3105,7 +2993,7 @@ Events.onInitializationOnce = function (bot) {
 };
 
 Events.setupIntervals = function (bot) {
-  const events = $evts['3'];
+  const events = $evts["3"];
   for (let i = 0; i < events.length; i++) {
     const event = events[i];
     const time = event.temp ? parseFloat(event.temp) : 60;
@@ -3148,7 +3036,7 @@ Events.onTyping = function (id, channel, user) {
 };
 
 Events.onError = function (text, text2, cache) {
-  const events = $evts['37'];
+  const events = $evts["37"];
   if (!events) return;
   for (let i = 0; i < events.length; i++) {
     const event = events[i];
@@ -3171,42 +3059,39 @@ const Images = (DBM.Images = {});
 Images.JIMP = null;
 Images._jimpRoot = null;
 try {
-  const jimpMod = require('jimp');
+  const jimpMod = require("jimp");
   Images._jimpRoot = jimpMod;
-  Images.JIMP =
-    jimpMod && jimpMod.Jimp && typeof jimpMod.Jimp.read === 'function'
-      ? jimpMod.Jimp
-      : jimpMod && typeof jimpMod.read === 'function'
-      ? jimpMod
-      : null;
+  Images.JIMP = (jimpMod && jimpMod.Jimp && typeof jimpMod.Jimp.read === "function")
+    ? jimpMod.Jimp
+    : (jimpMod && typeof jimpMod.read === "function" ? jimpMod : null);
 } catch {}
 
 Images.getImage = function (url) {
   const Jimp = Images.JIMP;
-  if (!Jimp || typeof Jimp.read !== 'function') {
-    return Promise.reject(new Error('JIMP is not available. Install jimp or check compatibility.'));
+  if (!Jimp || typeof Jimp.read !== "function") {
+    return Promise.reject(new Error("JIMP is not available. Install jimp or check compatibility."));
   }
-  if (!url.startsWith('http')) url = Actions.getLocalFile(url);
+  if (!url.startsWith("http")) url = Actions.getLocalFile(url);
   return Jimp.read(url);
 };
 
 Images.getFont = function (url) {
   const root = Images._jimpRoot;
-  if (!root || typeof root.loadFont !== 'function') {
-    return Promise.reject(new Error('JIMP loadFont is not available. Install jimp or check compatibility.'));
+  if (!root || typeof root.loadFont !== "function") {
+    return Promise.reject(new Error("JIMP loadFont is not available. Install jimp or check compatibility."));
   }
   return root.loadFont(Actions.getLocalFile(url));
 };
 
-Images.isImage = function (obj) {
+Images.isImage = function(obj) {
   if (!Images.JIMP) {
     return false;
   }
   return obj instanceof Images.JIMP;
-};
+}
 
 Images.createBuffer = function (image) {
-  const mime = (Images._jimpRoot && Images._jimpRoot.JimpMime && Images._jimpRoot.JimpMime.png) || 'image/png';
+  const mime = (Images._jimpRoot && Images._jimpRoot.JimpMime && Images._jimpRoot.JimpMime.png) || "image/png";
   return Promise.resolve(image.getBuffer(mime));
 };
 
@@ -3240,23 +3125,23 @@ try {
 
 Files.data = {};
 Files.writers = {};
-Files.crypto = require('node:crypto');
+Files.crypto = require("node:crypto");
 Files.dataFiles = [
-  'commands.json',
-  'events.json',
-  'settings.json',
-  'players.json',
-  'servers.json',
-  'messages.json',
-  'serverVars.json',
-  'globalVars.json',
+  "commands.json",
+  "events.json",
+  "settings.json",
+  "players.json",
+  "servers.json",
+  "messages.json",
+  "serverVars.json",
+  "globalVars.json",
 ];
 
 Files.startBot = function () {
-  const path = require('node:path');
-  Actions.actionsLocation = path.join(__dirname, 'actions');
-  Actions.eventsLocation = path.join(__dirname, 'events');
-  Actions.extensionsLocation = path.join(__dirname, 'extensions');
+  const path = require("node:path");
+  Actions.actionsLocation = path.join(__dirname, "actions");
+  Actions.eventsLocation = path.join(__dirname, "events");
+  Actions.extensionsLocation = path.join(__dirname, "extensions");
   if (this.verifyDirectory(Actions.actionsLocation)) {
     Actions.initMods();
     this.readData(Bot.init.bind(Bot));
@@ -3266,16 +3151,16 @@ Files.startBot = function () {
 };
 
 Files.verifyDirectory = function (dir) {
-  return typeof dir === 'string' && require('node:fs').existsSync(dir);
+  return typeof dir === "string" && require("node:fs").existsSync(dir);
 };
 
 Files.readData = function (callback) {
-  const fs = require('node:fs');
-  const path = require('node:path');
+  const fs = require("node:fs");
+  const path = require("node:path");
   let max = this.dataFiles.length;
   let cur = 0;
   for (let i = 0; i < max; i++) {
-    const filePath = path.join(process.cwd(), 'data', this.dataFiles[i]);
+    const filePath = path.join(process.cwd(), "data", this.dataFiles[i]);
     const filename = this.dataFiles[i].slice(0, -5);
 
     const setData = (data) => {
@@ -3291,7 +3176,7 @@ Files.readData = function (callback) {
       fs.readFile(filePath, (_error, content) => {
         let data;
         try {
-          if (typeof content !== 'string' && content.toString) content = content.toString();
+          if (typeof content !== "string" && content.toString) content = content.toString();
           data = JSON.parse(this.decrypt(content));
         } catch {
           PrintError(MsgType.DATA_PARSING_ERROR, this.dataFiles[i]);
@@ -3304,33 +3189,33 @@ Files.readData = function (callback) {
 };
 
 Files.saveData = function (file, callback) {
-  const path = require('node:path');
+  const path = require("node:path");
   const data = this.data[file];
   if (!this.writers[file]) {
-    const fstorm = require('fstorm');
-    this.writers[file] = fstorm(path.join(process.cwd(), 'data', file + '.json'));
+    const fstorm = require("fstorm");
+    this.writers[file] = fstorm(path.join(process.cwd(), "data", file + ".json"));
   }
   this.writers[file].write(this.encrypt(JSON.stringify(data)), () => callback?.());
 };
 
 Files.initEncryption = function () {
   try {
-    this.password = require('discord-bot-maker');
+    this.password = require("discord-bot-maker");
   } catch {
-    this.password = '';
+    this.password = "";
   }
 };
 
 Files.encrypt = function (text) {
   if (this.password.length === 0) return text;
-  const cipher = this.crypto.createCipher('aes-128-ofb', this.password);
-  return cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+  const cipher = this.crypto.createCipher("aes-128-ofb", this.password);
+  return cipher.update(text, "utf8", "hex") + cipher.final("hex");
 };
 
 Files.decrypt = function (text) {
   if (this.password.length === 0) return text;
-  const decipher = this.crypto.createDecipher('aes-128-ofb', this.password);
-  return decipher.update(text, 'hex', 'utf8') + decipher.final('utf8');
+  const decipher = this.crypto.createDecipher("aes-128-ofb", this.password);
+  return decipher.update(text, "hex", "utf8") + decipher.final("utf8");
 };
 
 Files.convertItem = function (item) {
@@ -3341,12 +3226,12 @@ Files.convertItem = function (item) {
       result[i] = this.convertItem(item[i]);
     }
     return result;
-  } else if (typeof item !== 'object') {
-    let result = '';
+  } else if (typeof item !== "object") {
+    let result = "";
     try {
       result = JSON.stringify(item);
     } catch {}
-    if (result !== '{}') {
+    if (result !== "{}") {
       return item;
     }
   } else if (item.convertToString) {
@@ -3361,7 +3246,7 @@ Files.saveServerVariable = function (serverId, varName, item) {
   if (strItem !== null) {
     this.data.serverVars[serverId][varName] = strItem;
   }
-  this.saveData('serverVars');
+  this.saveData("serverVars");
 };
 
 Files.restoreServerVariables = function () {
@@ -3379,7 +3264,7 @@ Files.saveGlobalVariable = function (varName, item) {
   if (strItem !== null) {
     this.data.globalVars[varName] = strItem;
   }
-  this.saveData('globalVars');
+  this.saveData("globalVars");
 };
 
 Files.restoreGlobalVariables = function () {
@@ -3394,7 +3279,7 @@ Files.restoreVariable = function (value, type, varName, serverId) {
   if (serverId) {
     cache.server = { id: serverId };
   }
-  if (typeof value === 'string' || Array.isArray(value)) {
+  if (typeof value === "string" || Array.isArray(value)) {
     this.restoreValue(value, Bot.bot)
       .then((finalValue) => {
         if (finalValue) {
@@ -3409,22 +3294,22 @@ Files.restoreVariable = function (value, type, varName, serverId) {
 
 Files.restoreValue = function (value, bot) {
   return new Promise((resolve, reject) => {
-    if (typeof value === 'string') {
-      if (value.startsWith('mem-')) {
+    if (typeof value === "string") {
+      if (value.startsWith("mem-")) {
         return resolve(this.restoreMember(value, bot));
-      } else if (value.startsWith('msg-')) {
+      } else if (value.startsWith("msg-")) {
         return this.restoreMessage(value, bot).then(resolve).catch(reject);
-      } else if (value.startsWith('tc-')) {
+      } else if (value.startsWith("tc-")) {
         return resolve(this.restoreTextChannel(value, bot));
-      } else if (value.startsWith('vc-')) {
+      } else if (value.startsWith("vc-")) {
         return resolve(this.restoreVoiceChannel(value, bot));
-      } else if (value.startsWith('r-')) {
+      } else if (value.startsWith("r-")) {
         return resolve(this.restoreRole(value, bot));
-      } else if (value.startsWith('s-')) {
+      } else if (value.startsWith("s-")) {
         return resolve(this.restoreServer(value, bot));
-      } else if (value.startsWith('e-')) {
+      } else if (value.startsWith("e-")) {
         return resolve(this.restoreEmoji(value, bot));
-      } else if (value.startsWith('usr-')) {
+      } else if (value.startsWith("usr-")) {
         return resolve(this.restoreUser(value, bot));
       }
       resolve(value);
@@ -3453,7 +3338,7 @@ Files.restoreValue = function (value, bot) {
 };
 
 Files.restoreMember = function (value, bot) {
-  const split = value.split('_');
+  const split = value.split("_");
   const memId = split[0].slice(4);
   const serverId = split[1].slice(2);
   const server = bot.guilds.get(serverId);
@@ -3464,7 +3349,7 @@ Files.restoreMember = function (value, bot) {
 };
 
 Files.restoreMessage = function (value, bot) {
-  const split = value.split('_');
+  const split = value.split("_");
   const msgId = split[0].slice(4);
   const channelId = split[1].slice(2);
   const channel = bot.channels.resolve(channelId);
@@ -3485,7 +3370,7 @@ Files.restoreVoiceChannel = function (value, bot) {
 };
 
 Files.restoreRole = function (value, bot) {
-  const split = value.split('_');
+  const split = value.split("_");
   const roleId = split[0].slice(2);
   const serverId = split[1].slice(2);
   const server = bot.guilds.resolve(serverId);
@@ -3520,49 +3405,49 @@ Files.initEncryption();
 //---------------------------------------------------------------------
 
 const Audio = (DBM.Audio = {});
-const { setTimeout } = require('node:timers/promises');
+const { setTimeout } = require("node:timers/promises");
 
-Audio.checkIfHasDependency = function (key) {
-  if (!Audio.packageJson) {
-    const path = require('node:path');
-    Audio.packageJson = require('node:fs').readFileSync(path.join(__dirname, 'package.json'));
+Audio.checkIfHasDependency = function(key) {
+  if(!Audio.packageJson) {
+    const path = require("node:path");
+    Audio.packageJson = require("node:fs").readFileSync(path.join(__dirname, "package.json"));
     Audio.packageJson = JSON.parse(Audio.packageJson).dependencies;
-    if (!Audio.packageJson) {
+    if(!Audio.packageJson) {
       Audio.packageJson = 1;
     }
   }
-  if (Audio.packageJson !== 1) {
+  if(Audio.packageJson !== 1) {
     return !!Audio.packageJson[key];
   }
   return false;
-};
+}
 
 Audio.ytdl = null;
 try {
-  Audio.ytdl = require('ytdl-core');
-} catch (e) {
+  Audio.ytdl = require("ytdl-core");
+} catch(e) {
   Audio.ytdl = null;
-  if (Audio.checkIfHasDependency('ytdl-core')) {
+  if(Audio.checkIfHasDependency("ytdl-core")) {
     console.error(e);
   }
 }
 
 Audio.voice = null;
 try {
-  Audio.voice = require('@discordjs/voice');
-} catch (e) {
+  Audio.voice = require("@discordjs/voice");
+} catch(e) {
   Audio.voice = null;
-  if (Audio.checkIfHasDependency('@discordjs/voice')) {
+  if(Audio.checkIfHasDependency("@discordjs/voice")) {
     console.error(e);
   }
 }
 
 Audio.rawYtdl = null;
 try {
-  Audio.rawYtdl = require('youtube-dl-exec').exec;
-} catch (e) {
+  Audio.rawYtdl = require("youtube-dl-exec").exec;
+} catch(e) {
   Audio.rawYtdl = null;
-  if (Audio.checkIfHasDependency('youtube-dl-exec')) {
+  if(Audio.checkIfHasDependency("youtube-dl-exec")) {
     console.error(e);
   }
 }
@@ -3576,7 +3461,7 @@ Audio.Subscription = class {
     this.volume = 0.5;
     this.bitrate = 96;
 
-    this.voiceConnection.on('stateChange', async (_, newState) => {
+    this.voiceConnection.on("stateChange", async (_, newState) => {
       if (newState.status === Audio.voice.VoiceConnectionStatus.Disconnected) {
         if (
           newState.reason === Audio.voice.VoiceConnectionDisconnectReason.WebSocketClose &&
@@ -3617,7 +3502,7 @@ Audio.Subscription = class {
       }
     });
 
-    this.audioPlayer.on('stateChange', (oldState, newState) => {
+    this.audioPlayer.on("stateChange", (oldState, newState) => {
       if (
         newState.status === Audio.voice.AudioPlayerStatus.Idle &&
         oldState.status !== Audio.voice.AudioPlayerStatus.Idle
@@ -3626,7 +3511,7 @@ Audio.Subscription = class {
       }
     });
 
-    this.audioPlayer.on('error', console.error);
+    this.audioPlayer.on("error", console.error);
 
     voiceConnection.subscribe(this.audioPlayer);
   }
@@ -3649,18 +3534,18 @@ Audio.Subscription = class {
     }
 
     if (this.queue.length === 0) {
-      const leaveVoiceTimeout = Files.data.settings.leaveVoiceTimeout ?? '0';
+      const leaveVoiceTimeout = Files.data.settings.leaveVoiceTimeout ?? "0";
       let seconds = parseInt(leaveVoiceTimeout, 10);
 
       if (isNaN(seconds) || seconds < 0) seconds = 0;
-      if (leaveVoiceTimeout === '' || !isFinite(seconds)) return;
+      if (leaveVoiceTimeout === "" || !isFinite(seconds)) return;
 
-      require('node:timers')
+      require("node:timers")
         .setTimeout(async () => {
           let guild = null;
           try {
             guild = await Bot.bot.guilds.resolve(this.voiceConnection.joinConfig.guildId);
-          } catch (e) {
+          } catch(e) {
             console.error(e);
           }
           if (guild) {
@@ -3676,14 +3561,14 @@ Audio.Subscription = class {
     const nextTrack = this.queue.shift();
     try {
       const resource = await nextTrack.createAudioResource();
-      if (Audio.inlineVolume && typeof resource?.volume?.volume === 'number') {
+      if (Audio.inlineVolume && typeof resource?.volume?.volume === "number") {
         resource.volume.volume = this.volume ?? 0.5;
       }
       // resource.encoder.setBitrate(this.bitrate * 1e3);
       this.audioPlayer.play(resource);
       this.queueLock = false;
-    } catch (e) {
-      if (e.toString().includes('opus.node')) {
+    } catch(e) {
+      if(e.toString().includes("opus.node")) {
         console.warn(`-- DBM Error Note --
 If you're seeing an error here, it's likely that the version of
 NodeJS/NPM or the operating system used to install @discordjs/opus
@@ -3714,15 +3599,15 @@ Audio.Track = class {
       const child = Audio.rawYtdl(
         this.url,
         {
-          o: '-',
-          q: '',
-          f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-          r: '100K',
+          o: "-",
+          q: "",
+          f: "bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio",
+          r: "100K",
         },
-        { stdio: ['ignore', 'pipe', 'ignore'] },
+        { stdio: ["ignore", "pipe", "ignore"] },
       );
       if (!child.stdout) {
-        reject(new Error('Got not stdout from child'));
+        reject(new Error("Got not stdout from child"));
         return;
       }
       const stream = child.stdout;
@@ -3732,7 +3617,7 @@ Audio.Track = class {
         reject(error);
       };
       child
-        .once('spawn', () =>
+        .once("spawn", () =>
           Audio.voice
             .demuxProbe(stream)
             .then((probe) =>
@@ -3754,10 +3639,10 @@ Audio.Track = class {
     let info = null;
     try {
       info = await Audio.ytdl.getInfo(url);
-    } catch (e) {
+    } catch(e) {
       PrintError(MsgType.ERROR_GETTING_YT_INFO, e.stack.toString());
     }
-    return new Audio.Track({ title: info?.videoDetails?.title ?? '', url });
+    return new Audio.Track({ title: info?.videoDetails?.title ?? "", url });
   }
 };
 
@@ -3785,10 +3670,11 @@ Audio.connectToVoice = function (voiceChannel) {
     return PrintError(MsgType.MISSING_MUSIC_MODULES);
   }
 
-  Audio.inlineVolume ??= (Files.data.settings.mutableVolume ?? 'true') === 'true';
+  Audio.inlineVolume ??= (Files.data.settings.mutableVolume ?? "true") === "true";
 
   var existingSubscription = this.subscriptions.get(voiceChannel?.guild?.id);
   if (existingSubscription) {
+
     const status = existingSubscription.voiceConnection?.state?.status;
     if (status === Audio.voice.VoiceConnectionStatus.Disconnected) {
       existingSubscription.voiceConnection.destroy();
@@ -3807,11 +3693,14 @@ Audio.connectToVoice = function (voiceChannel) {
       adapterCreator: voiceChannel.guild.voiceAdapterCreator,
       channelId: voiceChannel.id,
       guildId: voiceChannel.guildId,
-      selfDeaf: (Files.data.settings.autoDeafen ?? 'true') === 'true',
+      selfDeaf: (Files.data.settings.autoDeafen ?? "true") === "true",
     }),
   );
 
-  this.subscriptions.set(voiceChannel.guildId, subscription);
+  this.subscriptions.set(
+    voiceChannel.guildId,
+    subscription,
+  );
 
   return subscription;
 };
@@ -3860,12 +3749,12 @@ Audio.addToQueue = async function ([type, options, url], guild) {
   const id = guild.id;
   const subscription = this.getSubscription(guild);
   if (!subscription) return;
-  if (typeof options.volume !== 'undefined') this.setVolume(options.volume, guild);
-  if (typeof options.bitrate !== 'undefined') subscription.bitrate = options.bitrate;
+  if (typeof options.volume !== "undefined") this.setVolume(options.volume, guild);
+  if (typeof options.bitrate !== "undefined") subscription.bitrate = options.bitrate;
   let track = null;
   try {
     track = await this.getTrack(url, type);
-  } catch (e) {
+  } catch(e) {
     PrintError(MsgType.ERROR_CREATING_AUDIO, e.stack.toString());
   }
   if (track !== null) {
@@ -3877,12 +3766,12 @@ Audio.playImmediately = async function ([type, options, url], guild) {
   if (!guild) return;
   const subscription = this.getSubscription(guild);
   if (!subscription) return;
-  if (typeof options.volume !== 'undefined') this.setVolume(options.volume, guild);
-  if (typeof options.bitrate !== 'undefined') subscription.bitrate = options.bitrate;
+  if (typeof options.volume !== "undefined") this.setVolume(options.volume, guild);
+  if (typeof options.bitrate !== "undefined") subscription.bitrate = options.bitrate;
   let track = null;
   try {
     track = await this.getTrack(url, type);
-  } catch (e) {
+  } catch(e) {
     PrintError(MsgType.ERROR_CREATING_AUDIO, e.stack.toString());
   }
   if (track !== null) {
@@ -3900,11 +3789,11 @@ Audio.clearQueue = function (cache) {
 
 Audio.getTrack = function (url, type) {
   switch (type) {
-    case 'file':
+    case "file":
       return new this.BasicTrack({ url: Actions.getLocalFile(url) });
-    case 'url':
+    case "url":
       return new this.BasicTrack({ url });
-    case 'yt':
+    case "yt":
       return this.Track.from(url);
   }
 };
@@ -3919,37 +3808,37 @@ Audio.getTrack = function (url, type) {
 // GuildMember
 //---------------------------------------------------------------------
 
-Reflect.defineProperty(DiscordJS.GuildMember.prototype, 'unban', {
+Reflect.defineProperty(DiscordJS.GuildMember.prototype, "unban", {
   value(server, reason) {
     return server.bans.remove(this.id, reason);
   },
 });
 
-Reflect.defineProperty(DiscordJS.GuildMember.prototype, 'data', {
+Reflect.defineProperty(DiscordJS.GuildMember.prototype, "data", {
   value(name, defaultValue) {
     return DiscordJS.User.prototype.data.apply(this, arguments);
   },
 });
 
-Reflect.defineProperty(DiscordJS.GuildMember.prototype, 'setData', {
+Reflect.defineProperty(DiscordJS.GuildMember.prototype, "setData", {
   value(name, value) {
     return DiscordJS.User.prototype.setData.apply(this, arguments);
   },
 });
 
-Reflect.defineProperty(DiscordJS.GuildMember.prototype, 'addData', {
+Reflect.defineProperty(DiscordJS.GuildMember.prototype, "addData", {
   value(name, value) {
     return DiscordJS.User.prototype.addData.apply(this, arguments);
   },
 });
 
-Reflect.defineProperty(DiscordJS.GuildMember.prototype, 'clearData', {
+Reflect.defineProperty(DiscordJS.GuildMember.prototype, "clearData", {
   value(name) {
     return DiscordJS.User.prototype.clearData.apply(this, arguments);
   },
 });
 
-Reflect.defineProperty(DiscordJS.GuildMember.prototype, 'convertToString', {
+Reflect.defineProperty(DiscordJS.GuildMember.prototype, "convertToString", {
   value() {
     return `mem-${this.id}_s-${this.guild.id}`;
   },
@@ -3959,7 +3848,7 @@ Reflect.defineProperty(DiscordJS.GuildMember.prototype, 'convertToString', {
 // User
 //---------------------------------------------------------------------
 
-Reflect.defineProperty(DiscordJS.User.prototype, 'data', {
+Reflect.defineProperty(DiscordJS.User.prototype, "data", {
   value(name, defaultValue) {
     const id = this.id;
     const data = Files.data.players;
@@ -3977,7 +3866,7 @@ Reflect.defineProperty(DiscordJS.User.prototype, 'data', {
   },
 });
 
-Reflect.defineProperty(DiscordJS.User.prototype, 'setData', {
+Reflect.defineProperty(DiscordJS.User.prototype, "setData", {
   value(name, value) {
     const id = this.id;
     const data = Files.data.players;
@@ -3985,11 +3874,11 @@ Reflect.defineProperty(DiscordJS.User.prototype, 'setData', {
       data[id] = {};
     }
     data[id][name] = value;
-    Files.saveData('players');
+    Files.saveData("players");
   },
 });
 
-Reflect.defineProperty(DiscordJS.User.prototype, 'addData', {
+Reflect.defineProperty(DiscordJS.User.prototype, "addData", {
   value(name, value) {
     const id = this.id;
     const data = Files.data.players;
@@ -4004,25 +3893,25 @@ Reflect.defineProperty(DiscordJS.User.prototype, 'addData', {
   },
 });
 
-Reflect.defineProperty(DiscordJS.User.prototype, 'clearData', {
+Reflect.defineProperty(DiscordJS.User.prototype, "clearData", {
   value(name) {
     const id = this.id;
     const data = Files.data.players;
     if (data[id] !== undefined) {
-      if (typeof name === 'string') {
+      if (typeof name === "string") {
         if (data[id][name] !== undefined) {
           delete data[id][name];
-          Files.saveData('players');
+          Files.saveData("players");
         }
       } else {
         delete data[id];
-        Files.saveData('players');
+        Files.saveData("players");
       }
     }
   },
 });
 
-Reflect.defineProperty(DiscordJS.User.prototype, 'convertToString', {
+Reflect.defineProperty(DiscordJS.User.prototype, "convertToString", {
   value() {
     return `usr-${this.id}`;
   },
@@ -4032,20 +3921,16 @@ Reflect.defineProperty(DiscordJS.User.prototype, 'convertToString', {
 // Guild
 //---------------------------------------------------------------------
 
-Reflect.defineProperty(DiscordJS.Guild.prototype, 'getDefaultChannel', {
+Reflect.defineProperty(DiscordJS.Guild.prototype, "getDefaultChannel", {
   value() {
     let channel = this.channels.resolve(this.id);
     if (!channel) {
       [...this.channels.cache.values()].forEach((c) => {
         const ChannelType = isV14 ? DiscordJS.ChannelType : null;
-        const textType = isV14 ? ChannelType.GuildText : 'GUILD_TEXT';
-        const newsType = isV14 ? ChannelType.GuildAnnouncement : 'GUILD_NEWS';
+        const textType = isV14 ? ChannelType.GuildText : "GUILD_TEXT";
+        const newsType = isV14 ? ChannelType.GuildAnnouncement : "GUILD_NEWS";
         if (
-          c
-            .permissionsFor(DBM.Bot.bot.user)
-            ?.has(
-              isV14 ? DiscordJS.PermissionsBitField.Flags.SendMessages : DiscordJS.Permissions.FLAGS.SEND_MESSAGES,
-            ) &&
+          c.permissionsFor(DBM.Bot.bot.user)?.has(isV14 ? DiscordJS.PermissionsBitField.Flags.SendMessages : DiscordJS.Permissions.FLAGS.SEND_MESSAGES) &&
           (c.type === textType || c.type === newsType)
         ) {
           if (!channel || channel.position > c.position) {
@@ -4058,19 +3943,15 @@ Reflect.defineProperty(DiscordJS.Guild.prototype, 'getDefaultChannel', {
   },
 });
 
-Reflect.defineProperty(DiscordJS.Guild.prototype, 'getDefaultVoiceChannel', {
+Reflect.defineProperty(DiscordJS.Guild.prototype, "getDefaultVoiceChannel", {
   value() {
     let channel = this.channels.resolve(this.id);
     if (!channel) {
       [...this.channels.cache.values()].forEach((c) => {
         const ChannelType = isV14 ? DiscordJS.ChannelType : null;
-        const voiceType = isV14 ? ChannelType.GuildVoice : 'GUILD_VOICE';
+        const voiceType = isV14 ? ChannelType.GuildVoice : "GUILD_VOICE";
         if (
-          c
-            .permissionsFor(DBM.Bot.bot.user)
-            ?.has(
-              isV14 ? DiscordJS.PermissionsBitField.Flags.SendMessages : DiscordJS.Permissions.FLAGS.SEND_MESSAGES,
-            ) &&
+          c.permissionsFor(DBM.Bot.bot.user)?.has(isV14 ? DiscordJS.PermissionsBitField.Flags.SendMessages : DiscordJS.Permissions.FLAGS.SEND_MESSAGES) &&
           c.type === voiceType
         ) {
           if (!channel || channel.position > c.position) {
@@ -4083,7 +3964,7 @@ Reflect.defineProperty(DiscordJS.Guild.prototype, 'getDefaultVoiceChannel', {
   },
 });
 
-Reflect.defineProperty(DiscordJS.Guild.prototype, 'data', {
+Reflect.defineProperty(DiscordJS.Guild.prototype, "data", {
   value(name, defaultValue) {
     const id = this.id;
     const data = Files.data.servers;
@@ -4101,7 +3982,7 @@ Reflect.defineProperty(DiscordJS.Guild.prototype, 'data', {
   },
 });
 
-Reflect.defineProperty(DiscordJS.Guild.prototype, 'setData', {
+Reflect.defineProperty(DiscordJS.Guild.prototype, "setData", {
   value(name, value) {
     const id = this.id;
     const data = Files.data.servers;
@@ -4109,11 +3990,11 @@ Reflect.defineProperty(DiscordJS.Guild.prototype, 'setData', {
       data[id] = {};
     }
     data[id][name] = value;
-    Files.saveData('servers');
+    Files.saveData("servers");
   },
 });
 
-Reflect.defineProperty(DiscordJS.Guild.prototype, 'addData', {
+Reflect.defineProperty(DiscordJS.Guild.prototype, "addData", {
   value(name, value) {
     const id = this.id;
     const data = Files.data.servers;
@@ -4128,25 +4009,25 @@ Reflect.defineProperty(DiscordJS.Guild.prototype, 'addData', {
   },
 });
 
-Reflect.defineProperty(DiscordJS.Guild.prototype, 'clearData', {
+Reflect.defineProperty(DiscordJS.Guild.prototype, "clearData", {
   value(name) {
     const id = this.id;
     const data = Files.data.servers;
     if (data[id] !== undefined) {
-      if (typeof name === 'string') {
+      if (typeof name === "string") {
         if (data[id][name] !== undefined) {
           delete data[id][name];
-          Files.saveData('servers');
+          Files.saveData("servers");
         }
       } else {
         delete data[id];
-        Files.saveData('servers');
+        Files.saveData("servers");
       }
     }
   },
 });
 
-Reflect.defineProperty(DiscordJS.Guild.prototype, 'convertToString', {
+Reflect.defineProperty(DiscordJS.Guild.prototype, "convertToString", {
   value() {
     return `s-${this.id}`;
   },
@@ -4156,7 +4037,7 @@ Reflect.defineProperty(DiscordJS.Guild.prototype, 'convertToString', {
 // Message
 //---------------------------------------------------------------------
 
-Reflect.defineProperty(DiscordJS.Message.prototype, 'data', {
+Reflect.defineProperty(DiscordJS.Message.prototype, "data", {
   value(name, defaultValue) {
     const id = this.id;
     const data = Files.data.messages;
@@ -4174,7 +4055,7 @@ Reflect.defineProperty(DiscordJS.Message.prototype, 'data', {
   },
 });
 
-Reflect.defineProperty(DiscordJS.Message.prototype, 'setData', {
+Reflect.defineProperty(DiscordJS.Message.prototype, "setData", {
   value(name, value) {
     const id = this.id;
     const data = Files.data.messages;
@@ -4182,11 +4063,11 @@ Reflect.defineProperty(DiscordJS.Message.prototype, 'setData', {
       data[id] = {};
     }
     data[id][name] = value;
-    Files.saveData('messages');
+    Files.saveData("messages");
   },
 });
 
-Reflect.defineProperty(DiscordJS.Message.prototype, 'addData', {
+Reflect.defineProperty(DiscordJS.Message.prototype, "addData", {
   value(name, value) {
     const id = this.id;
     const data = Files.data.messages;
@@ -4201,25 +4082,25 @@ Reflect.defineProperty(DiscordJS.Message.prototype, 'addData', {
   },
 });
 
-Reflect.defineProperty(DiscordJS.Message.prototype, 'clearData', {
+Reflect.defineProperty(DiscordJS.Message.prototype, "clearData", {
   value(name) {
     const id = this.id;
     const data = Files.data.messages;
     if (data[id] !== undefined) {
-      if (typeof name === 'string') {
+      if (typeof name === "string") {
         if (data[id][name] !== undefined) {
           delete data[id][name];
-          Files.saveData('messages');
+          Files.saveData("messages");
         }
       } else {
         delete data[id];
-        Files.saveData('messages');
+        Files.saveData("messages");
       }
     }
   },
 });
 
-Reflect.defineProperty(DiscordJS.Message.prototype, 'convertToString', {
+Reflect.defineProperty(DiscordJS.Message.prototype, "convertToString", {
   value() {
     return `msg-${this.id}_c-${this.channel.id}`;
   },
@@ -4229,13 +4110,13 @@ Reflect.defineProperty(DiscordJS.Message.prototype, 'convertToString', {
 // TextChannel
 //---------------------------------------------------------------------
 
-Reflect.defineProperty(DiscordJS.TextChannel.prototype, 'startThread', {
+Reflect.defineProperty(DiscordJS.TextChannel.prototype, "startThread", {
   value(options) {
     return this.threads.create(options);
   },
 });
 
-Reflect.defineProperty(DiscordJS.TextChannel.prototype, 'convertToString', {
+Reflect.defineProperty(DiscordJS.TextChannel.prototype, "convertToString", {
   value() {
     return `tc-${this.id}`;
   },
@@ -4245,7 +4126,7 @@ Reflect.defineProperty(DiscordJS.TextChannel.prototype, 'convertToString', {
 // VoiceChannel
 //---------------------------------------------------------------------
 
-Reflect.defineProperty(DiscordJS.VoiceChannel.prototype, 'convertToString', {
+Reflect.defineProperty(DiscordJS.VoiceChannel.prototype, "convertToString", {
   value() {
     return `vc-${this.id}`;
   },
@@ -4255,7 +4136,7 @@ Reflect.defineProperty(DiscordJS.VoiceChannel.prototype, 'convertToString', {
 // Role
 //---------------------------------------------------------------------
 
-Reflect.defineProperty(DiscordJS.Role.prototype, 'convertToString', {
+Reflect.defineProperty(DiscordJS.Role.prototype, "convertToString", {
   value() {
     return `r-${this.id}_s-${this.guild.id}`;
   },
@@ -4265,7 +4146,7 @@ Reflect.defineProperty(DiscordJS.Role.prototype, 'convertToString', {
 // Emoji
 //---------------------------------------------------------------------
 
-Reflect.defineProperty(DiscordJS.GuildEmoji.prototype, 'convertToString', {
+Reflect.defineProperty(DiscordJS.GuildEmoji.prototype, "convertToString", {
   value() {
     return `e-${this.id}`;
   },
