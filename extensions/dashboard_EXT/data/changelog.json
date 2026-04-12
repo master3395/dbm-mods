@@ -48,14 +48,8 @@
       "type": "patch",
       "title": "Code Quality Improvements",
       "categories": {
-        "Fixed": [
-          "Fixed ESLint errors and warnings throughout codebase",
-          "Improved code consistency and formatting"
-        ],
-        "Changed": [
-          "Updated dependencies and build configuration",
-          "General codebase maintenance and improvements"
-        ]
+        "Fixed": ["Fixed ESLint errors and warnings throughout codebase", "Improved code consistency and formatting"],
+        "Changed": ["Updated dependencies and build configuration", "General codebase maintenance and improvements"]
       }
     },
     {
@@ -65,10 +59,7 @@
       "type": "minor",
       "title": "Documentation and Cleanup",
       "categories": {
-        "Changed": [
-          "Updated README.md with improved documentation",
-          "Removed deprecated dashboard_EXT.js file"
-        ]
+        "Changed": ["Updated README.md with improved documentation", "Removed deprecated dashboard_EXT.js file"]
       }
     },
     {
@@ -92,14 +83,8 @@
       "type": "minor",
       "title": "Dashboard Panel Updates",
       "categories": {
-        "Added": [
-          "Enhanced dashboard panel functionality",
-          "Improved user interface components"
-        ],
-        "Fixed": [
-          "Fixed various dashboard extension issues",
-          "Resolved panel rendering problems"
-        ]
+        "Added": ["Enhanced dashboard panel functionality", "Improved user interface components"],
+        "Fixed": ["Fixed various dashboard extension issues", "Resolved panel rendering problems"]
       }
     },
     {
@@ -127,10 +112,7 @@
           "Updated API calls to match v12 syntax",
           "Refactored event handlers for v12 compatibility"
         ],
-        "Breaking": [
-          "Breaking changes: Requires Discord.js v12 or higher",
-          "Some deprecated methods removed"
-        ]
+        "Breaking": ["Breaking changes: Requires Discord.js v12 or higher", "Some deprecated methods removed"]
       }
     },
     {
@@ -140,10 +122,7 @@
       "type": "minor",
       "title": "Webhook Creation Feature",
       "categories": {
-        "Added": [
-          "Added create_webhook.js action for webhook management",
-          "Enhanced webhook creation capabilities"
-        ]
+        "Added": ["Added create_webhook.js action for webhook management", "Enhanced webhook creation capabilities"]
       }
     },
     {
@@ -153,10 +132,7 @@
       "type": "patch",
       "title": "Bot Ping Mod Update",
       "categories": {
-        "Changed": [
-          "Updated bot_ping_mod.js with improvements",
-          "Enhanced ping measurement accuracy"
-        ]
+        "Changed": ["Updated bot_ping_mod.js with improvements", "Enhanced ping measurement accuracy"]
       }
     },
     {
@@ -166,10 +142,7 @@
       "type": "minor",
       "title": "Server Member Count Feature",
       "categories": {
-        "Added": [
-          "Added server member count functionality",
-          "Implemented member count tracking and display"
-        ]
+        "Added": ["Added server member count functionality", "Implemented member count tracking and display"]
       }
     },
     {
@@ -179,10 +152,7 @@
       "type": "minor",
       "title": "Dashboard Updates",
       "categories": {
-        "Changed": [
-          "Updated dashboard.js with new features",
-          "Improved dashboard functionality and UI"
-        ]
+        "Changed": ["Updated dashboard.js with new features", "Improved dashboard functionality and UI"]
       }
     },
     {
@@ -192,10 +162,7 @@
       "type": "minor",
       "title": "Bulk Messages Feature",
       "categories": {
-        "Added": [
-          "Added bulk message deletion functionality",
-          "Implemented efficient message management tools"
-        ]
+        "Added": ["Added bulk message deletion functionality", "Implemented efficient message management tools"]
       }
     },
     {
@@ -205,10 +172,7 @@
       "type": "minor",
       "title": "Member Messaging Feature",
       "categories": {
-        "Added": [
-          "Added send message for members functionality",
-          "Implemented member communication tools"
-        ]
+        "Added": ["Added send message for members functionality", "Implemented member communication tools"]
       }
     },
     {
@@ -223,9 +187,7 @@
           "Added variables for network extension",
           "Added support for Silver's website integration"
         ],
-        "Changed": [
-          "Updated dashboard extension configuration"
-        ]
+        "Changed": ["Updated dashboard extension configuration"]
       }
     },
     {
@@ -249,9 +211,7 @@
       "type": "patch",
       "title": "File Cleanup",
       "categories": {
-        "Removed": [
-          "Removed deprecated dbm_dashboard_extension_EXT.js file"
-        ]
+        "Removed": ["Removed deprecated dbm_dashboard_extension_EXT.js file"]
       }
     },
     {
@@ -307,4 +267,3 @@
     "source": "Historical entries from https://github.com/your-a-nerd/mods/commits/master/extensions/dbm_dashboard"
   }
 }
-

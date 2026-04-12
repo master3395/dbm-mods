@@ -34,6 +34,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
+        env:
+          # Lint does not need yt-dlp; postinstall hits GitHub API and can fail on rate limits without auth.
+          YOUTUBE_DL_SKIP_DOWNLOAD: '1'
+          GITHUB_TOKEN: ${{ github.token }}
         run: npm ci
 
       - name: Run ESLint (JS + TS)
