@@ -70,9 +70,9 @@ module.exports = {
     </div>
     <div style="padding-left: 5%; float: left; width: 59%;">
       Restrict By:<br>
-      <select id="restrict" class="round"><br>
-        <option value="0" selected>Global</option>
-        <option value="1">Server</option>
+      <select id="restrict" class="round" title="Entire server: one shared cooldown for all members in this guild (issue #808 style). Per channel: separate cooldown per text channel within the guild.">
+        <option value="0" selected>Entire server (guild-wide)</option>
+        <option value="1">Per channel (within server)</option>
       </select>
     </div>
   </div><br><br><br>
