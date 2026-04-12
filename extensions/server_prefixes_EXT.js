@@ -75,7 +75,7 @@ module.exports = {
         const p = merged[server.id];
         server.prefix = typeof p === 'string' && p.length > 0 ? p : undefined;
       });
-      console.log('[server_prefixes_EXT] Server prefixes loaded (' + client.guilds.cache.size + ' guilds).');
+      console.log(`[server_prefixes_EXT] Server prefixes loaded (${client.guilds.cache.size} guilds).`);
     };
 
     Bot.checkTag = function checkTag(msgOrContent) {
@@ -95,10 +95,7 @@ module.exports = {
       const allowPrefixSpace = Files.data.settings.allowPrefixSpace === 'true';
       const separator = Files.data.settings.separator || '\\s+';
       const sepRe = new RegExp(separator);
-      const isDm =
-        !msg.guild ||
-        msg.channel?.type === ChannelType.DM ||
-        msg.channel?.type === ChannelType.GroupDM;
+      const isDm = !msg.guild || msg.channel?.type === ChannelType.DM || msg.channel?.type === ChannelType.GroupDM;
       const globalTag = String(Files.data.settings.tag || '');
       const guildTag =
         !isDm && msg.guild && msg.guild.prefix != null && String(msg.guild.prefix).length > 0

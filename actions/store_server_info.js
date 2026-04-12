@@ -1,212 +1,212 @@
 module.exports = {
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Name
   //
   // This is the name of the action displayed in the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  name: "Store Server Info",
+  name: 'Store Server Info',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Section
   //
   // This is the section the action will fall into.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  section: "Server Control",
+  section: 'Server Control',
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Subtitle
   //
   // This function generates the subtitle displayed next to the name.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   subtitle(data, presets) {
     const info = [
-      "Server Object",
-      "Server ID",
-      "Server Name",
-      "Server Name Acronym",
-      "Server Region (Removed)",
-      "Server Icon URL",
-      "Server Verification Level",
-      "Server Default Channel",
-      "Server AFK Channel",
-      "Server System Channel",
-      "Server Default Role",
-      "Server Owner Object",
-      "Server Bot Member",
-      "Server Channels List",
-      "Server Roles List",
-      "Server Members List",
-      "Server Emojis List",
-      "Server Member Count",
-      "Server Created At",
-      "Server AFK Timeout",
-      "Server Available",
-      "Server Large",
-      "Server Joined At",
-      "Server Channels Count",
-      "Server Emojis Count",
-      "Server Embed Enabled",
-      "Server Do Not Disturb Members Count",
-      "Server Online Members Count",
-      "Server Offline Members Count",
-      "Server Idle Members Count",
-      "Server Bot Count",
-      "Server Channels IDs List",
-      "Server Roles IDs List",
-      "Server Members IDs List",
-      "",
-      "Server Human Count",
-      "",
-      "Server Roles Count",
-      "Server Text Channels Count",
-      "Server Voice Channels Count",
-      "Server Verified",
-      "Server Bans List",
-      "Server Invites List",
-      "Server Explicit Content Filter",
-      "Server Boosts Count",
-      "Server Boost Tier",
-      "Server Banner URL",
-      "Server Features List",
-      "Server Owner ID",
-      "Server Vanity URL Code",
-      "Server Widget Channel ID",
+      'Server Object',
+      'Server ID',
+      'Server Name',
+      'Server Name Acronym',
+      'Server Region (Removed)',
+      'Server Icon URL',
+      'Server Verification Level',
+      'Server Default Channel',
+      'Server AFK Channel',
+      'Server System Channel',
+      'Server Default Role',
+      'Server Owner Object',
+      'Server Bot Member',
+      'Server Channels List',
+      'Server Roles List',
+      'Server Members List',
+      'Server Emojis List',
+      'Server Member Count',
+      'Server Created At',
+      'Server AFK Timeout',
+      'Server Available',
+      'Server Large',
+      'Server Joined At',
+      'Server Channels Count',
+      'Server Emojis Count',
+      'Server Embed Enabled',
+      'Server Do Not Disturb Members Count',
+      'Server Online Members Count',
+      'Server Offline Members Count',
+      'Server Idle Members Count',
+      'Server Bot Count',
+      'Server Channels IDs List',
+      'Server Roles IDs List',
+      'Server Members IDs List',
+      '',
+      'Server Human Count',
+      '',
+      'Server Roles Count',
+      'Server Text Channels Count',
+      'Server Voice Channels Count',
+      'Server Verified',
+      'Server Bans List',
+      'Server Invites List',
+      'Server Explicit Content Filter',
+      'Server Boosts Count',
+      'Server Boost Tier',
+      'Server Banner URL',
+      'Server Features List',
+      'Server Owner ID',
+      'Server Vanity URL Code',
+      'Server Widget Channel ID',
     ];
     return `${presets.getServerText(data.server, data.varName)} - ${info[parseInt(data.info, 10)]}`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Storage Function
   //
   // Stores the relevant variable info for the editor.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   variableStorage(data, varType) {
     const type = parseInt(data.storage, 10);
     if (type !== varType) return;
     const info = parseInt(data.info, 10);
-    let dataType = "Unknown Type";
+    let dataType = 'Unknown Type';
     switch (info) {
       case 0:
-        dataType = "Server";
+        dataType = 'Server';
         break;
       case 1:
-        dataType = "Server ID";
+        dataType = 'Server ID';
         break;
       case 2:
       case 3:
       case 5:
-        dataType = "Icon URL";
+        dataType = 'Icon URL';
         break;
       case 6:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 7:
       case 8:
       case 9:
-        dataType = "Channel";
+        dataType = 'Channel';
         break;
       case 10:
-        dataType = "Role";
+        dataType = 'Role';
         break;
       case 11:
-        dataType = "Server Member";
+        dataType = 'Server Member';
         break;
       case 12:
-        dataType = "Server Member";
+        dataType = 'Server Member';
         break;
       case 13:
-        dataType = "Channels List";
+        dataType = 'Channels List';
         break;
       case 14:
-        dataType = "Roles List";
+        dataType = 'Roles List';
         break;
       case 15:
-        dataType = "Members List";
+        dataType = 'Members List';
         break;
       case 16:
-        dataType = "Emojis List";
+        dataType = 'Emojis List';
         break;
       case 17:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 18:
-        dataType = "Date";
+        dataType = 'Date';
         break;
       case 19:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 20:
       case 21:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 22:
-        dataType = "Date";
+        dataType = 'Date';
         break;
       case 23:
       case 24:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 25:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 26:
       case 27:
       case 28:
       case 29:
       case 30:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 31:
       case 32:
       case 33:
-        dataType = "IDs List";
+        dataType = 'IDs List';
         break;
       case 35:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 37:
       case 38:
       case 39:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 40:
-        dataType = "Boolean";
+        dataType = 'Boolean';
         break;
       case 41:
-        dataType = "Bans List";
+        dataType = 'Bans List';
         break;
       case 42:
-        dataType = "Invites List";
+        dataType = 'Invites List';
         break;
       case 43:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 44:
       case 45:
-        dataType = "Number";
+        dataType = 'Number';
         break;
       case 46:
-        dataType = "Banner URL";
+        dataType = 'Banner URL';
         break;
       case 47:
-        dataType = "Server Features List";
+        dataType = 'Server Features List';
         break;
       case 48:
       case 49:
-        dataType = "Text";
+        dataType = 'Text';
         break;
       case 50:
-        dataType = "Channel ID";
+        dataType = 'Channel ID';
         break;
     }
     return [data.varName2, dataType];
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Meta Data
   //
   // Helps check for updates and provides info if a custom mod.
@@ -214,21 +214,21 @@ module.exports = {
   //
   // It's highly recommended "preciseCheck" is set to false for third-party mods.
   // This will make it so the patch version (0.0.X) is not checked.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+  meta: { version: '2.1.7', preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Fields
   //
   // These are the fields for the action. These fields are customized
   // by creating elements with corresponding IDs in the HTML. These
   // are also the names of the fields stored in the action's JSON data.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  fields: ["server", "varName", "info", "storage", "varName2"],
+  fields: ['server', 'varName', 'info', 'storage', 'varName2'],
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Command HTML
   //
   // This function returns a string containing the HTML used for
@@ -237,7 +237,7 @@ module.exports = {
   // The "isEvent" parameter will be true if this action is being used
   // for an event. Due to their nature, events lack certain information,
   // so edit the HTML to reflect this.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
@@ -307,23 +307,23 @@ module.exports = {
 <store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>`;
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Editor Init Code
   //
   // When the HTML is first applied to the action editor, this code
   // is also run. This helps add modifications or setup reactionary
   // functions for the DOM elements.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   init() {},
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Function
   //
   // This is the function for the action within the Bot's Action class.
   // Keep in mind event calls won't have access to the "msg" parameter,
   // so be sure to provide checks for variable existence.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   async action(cache) {
     const data = cache.actions[cache.index];
@@ -337,7 +337,7 @@ module.exports = {
       if (targetServer.memberCount !== targetServer.members.cache.size) {
         await targetServer.members.fetch({ withPresences });
       }
-    }
+    };
 
     const info = parseInt(data.info, 10);
 
@@ -356,10 +356,10 @@ module.exports = {
         result = targetServer.nameAcronym;
         break;
       case 4: // Server region
-        result = "unknown";
+        result = 'unknown';
         break;
       case 5:
-        result = targetServer.iconURL({ dynamic: true, format: "png", size: 4096 });
+        result = targetServer.iconURL({ dynamic: true, format: 'png', size: 4096 });
         break;
       case 6:
         result = targetServer.verificationLevel;
@@ -388,10 +388,7 @@ module.exports = {
               result = null;
             }
           } catch (error2) {
-            console.warn(
-              `[Store Server Info] Could not fetch owner for server ${targetServer.id}:`,
-              error.message,
-            );
+            console.warn(`[Store Server Info] Could not fetch owner for server ${targetServer.id}:`, error.message);
             result = null;
           }
         }
@@ -437,23 +434,23 @@ module.exports = {
         result = targetServer.emojis.cache.size;
         break;
       case 25:
-        result = !!targetServer.widgetEnabled;
+        result = Boolean(targetServer.widgetEnabled);
         break;
       case 26:
         await fetchMembers(true);
-        result = targetServer.members.cache.filter((m) => m.presence?.status === "dnd").size;
+        result = targetServer.members.cache.filter((m) => m.presence?.status === 'dnd').size;
         break;
       case 27:
         await fetchMembers(true);
-        result = targetServer.members.cache.filter((m) => m.presence?.status === "online").size;
+        result = targetServer.members.cache.filter((m) => m.presence?.status === 'online').size;
         break;
       case 28:
         await fetchMembers(true);
-        result = targetServer.members.cache.filter((m) => m.presence?.status === "offline").size;
+        result = targetServer.members.cache.filter((m) => m.presence?.status === 'offline').size;
         break;
       case 29:
         await fetchMembers(true);
-        result = targetServer.members.cache.filter((m) => m.presence?.status === "idle").size;
+        result = targetServer.members.cache.filter((m) => m.presence?.status === 'idle').size;
         break;
       case 30:
         result = targetServer.members.cache.filter((m) => m.user?.bot).size;
@@ -476,10 +473,10 @@ module.exports = {
         result = targetServer.roles.cache.size;
         break;
       case 38:
-        result = targetServer.channels.cache.filter((c) => c.type === "GUILD_TEXT" || c.type === "GUILD_NEWS").size;
+        result = targetServer.channels.cache.filter((c) => c.type === 'GUILD_TEXT' || c.type === 'GUILD_NEWS').size;
         break;
       case 39:
-        result = targetServer.channels.cache.filter((c) => c.type === "GUILD_VOICE").size;
+        result = targetServer.channels.cache.filter((c) => c.type === 'GUILD_VOICE').size;
         break;
       case 40:
         result = targetServer.verified;
@@ -502,7 +499,7 @@ module.exports = {
         result = targetServer.premiumTier;
         break;
       case 46:
-        result = targetServer.bannerURL({ format: "png", size: 4096 });
+        result = targetServer.bannerURL({ format: 'png', size: 4096 });
         break;
       case 47:
         result = targetServer.features;
@@ -529,14 +526,14 @@ module.exports = {
     this.callNextAction(cache);
   },
 
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
   // Action Bot Mod
   //
   // Upon initialization of the bot, this code is run. Using the bot's
   // DBM namespace, one can add/modify existing functions if necessary.
   // In order to reduce conflicts between mods, be sure to alias
   // functions you wish to overwrite.
-  //---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   mod() {},
 };

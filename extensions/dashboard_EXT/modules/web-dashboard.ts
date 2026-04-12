@@ -525,7 +525,7 @@ export class WebDashboard {
         try {
             const serverId = req.params.serverId || null;
             const scope = req.query.scope as string || (serverId ? 'server' : 'global');
-            const page = parseInt(req.query.page as string) || 1;
+            const page = parseInt(req.query.page as string, 10) || 1;
             const limit = 25;
             const offset = (page - 1) * limit;
 
