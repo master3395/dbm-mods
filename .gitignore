@@ -40,3 +40,6 @@ nt-backups/
 
 config.secrets.json
 extensions/dashboard_EXT/data/giveaways/settings.json
+
+# ESLint cache
+.eslintcache
